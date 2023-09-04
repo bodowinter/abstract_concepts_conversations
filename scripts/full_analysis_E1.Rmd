@@ -1,0 +1,2600 @@
+---
+title: "Abstract Concepts & Conversation: Analysis, Experiment 1"
+author: "Bodo Winter"
+date: "2/6/2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This script is structured as follows:
+
+- **setup**: loading packages and data
+- **overview**: displaying values such as N of participants, items, etc.
+- **preprocessing**: data wrangling steps
+- **descriptive statistics**: summary stats for said patterns
+- **data visualization**: visualizing the main data patterns we want to report
+- **data visualization: covariates**: plots for each covariate in relationship with IOS
+
+Main bits necessary to understand the following analysis:
+
+- the column `condition` differentiates `interactive` versus `non-interactive`
+- the column `category` differentiates `abstract` versus `concrete`
+- the two main dependent variables are `closeness` and `IOS` (self-other inclusion)
+
+The following baseline analyses will be performed:
+
+- assess correlations between covariates
+- assess the effect of `condition` on `IOS`
+- assess the effect of `condition` on `closeness`
+- assess the effect of all covariates on `IOS`
+- assess the effect of all covariates on `closeness`
+
+The following main analyses will be performed:
+
+- assess the interaction of `category` and `other_inclusion` on `IOS`
+- assess the interaction of `category` and `other_inclusion` on `closeness`
+
+Then, we will look additionally also at `difficulty`:
+
+- assess the effect of `category` on `difficulty`
+- perform both main analyses again, this time controlling for `difficulty`
+
+For all `brms` model fits, corresponding code chunks are set to `eval = FALSE` with pre-compiled models saved in `models` folder that are loaded into this script to save the user time.
+
+# Setup
+
+Load packages:
+
+```{r load_packages, warning = FALSE, message = FALSE}
+library(tidyverse) # for data processing
+library(brms) # for Bayesian mixed models
+library(tidybayes) # for half-eye plots of posteriors
+library(ggridges) # for joy plots
+library(patchwork) # for multiplot arrays
+library(gridExtra) # for multiplot arrays when patchwork fails us
+library(plotly) # for scatterplot matrix
+library(GGally) # for scatterplot matrix
+```
+
+Load data:
+
+```{r load_data, warning = FALSE, message = FALSE}
+# Load data:
+
+df <- read_csv('../data/abstract_concepts_conversations_all.csv')
+
+# Show some random rows:
+
+sample_n(df, 5)
+```
+
+# Reproducibility and reporting
+
+For reporting, get R version:
+
+```{r}
+R.Version()$version.string
+```
+
+For reporting, get package versions:
+
+```{r package_versions}
+packageVersion('tidyverse') # for data processing
+packageVersion('brms') # for Bayesian mixed models
+packageVersion('tidybayes') # for half-eye plots of posteriors
+packageVersion('ggridges') # for joy plots
+packageVersion('patchwork') # for multiplot arrays
+packageVersion('gridExtra') # for multiplot arrays when patchwork fails us
+packageVersion('plotly') # for scatterplot matrix
+packageVersion('GGally') # for scatterplot matrix
+```
+
+For reporting, get citations versions:
+
+```{r citations}
+citation('tidyverse') # for data processing
+citation('brms') # for Bayesian mixed models
+citation('tidybayes') # for half-eye plots of posteriors
+citation('ggridges') # for joy plots
+citation('patchwork') # for multiplot arrays
+citation('gridExtra') # for multiplot arrays when patchwork fails us
+citation('plotly') # for scatterplot matrix
+citation('GGally') # for scatterplot matrix
+```
+
+# Data cleaning and processing
+
+How many participants will be excluded?
+
+```{r}
+filter(df, data_exclusion == 'yes') %>% count(participant)
+
+# Sum of data points:
+
+filter(df, data_exclusion == 'yes') %>%
+  count(participant) %>% 
+  summarize(n = sum(n))
+```
+
+8 participants. How much data is this of the total?
+
+```{r}
+nrow(filter(df, data_exclusion == 'yes')) / nrow(df)
+```
+
+
+Exclude participants for which the `data_exclusion` column is equal to `yes`, or conversely, only take those for which it is `no`:
+
+```{r exclude_participants}
+df <- filter(df,
+             data_exclusion == 'no')
+```
+
+For the main model later, we want to look at how category influences IOS when interacting with `other_contribution`. For this we need to center `other_contribution` first. We'll do this here already so that subsets of this data also contain the centered covariate `other_contribution_c`. We'll later also use `difficulty` as a control covariate, so let's center that as well just in case.
+
+```{r center_continuous_preds}
+# For IOS analysis:
+
+df <- mutate(df,
+             other_contribution_c = other_contribution - mean(other_contribution,
+                                                              na.rm = TRUE),
+             self_contribution_c = self_contribution - mean(self_contribution,
+                                                              na.rm = TRUE),
+             difficulty_c = difficulty - mean(difficulty,
+                                              na.rm = TRUE))
+```
+
+Clean the content of the condition column so as to also make the labels ready for plotting (no obscure characters etc.). We'll also hand-convert to factor so that `not interactive` will come before `interactive` in all plots and outputs, which is more intuitive.
+
+```{r clean_condition_column}
+df <- mutate(df,
+             condition = ifelse(condition == 'No_interactive',
+                                'non-interactive', 'interactive'),
+             condition = factor(condition,
+                                levels = c('non-interactive', 'interactive')))
+```
+
+Also change the content of the `category` column so that the labels say `abstract` and `concrete`, and make the latter come first, which is more intuitive:
+
+```{r clean_category_column}
+df <- mutate(df,
+             category = str_to_lower(category),
+             category = factor(category,
+                               levels = c('concrete', 'abstract')))
+```
+
+The `closeness` dependent measure is a VAS scale between 0 and 100. This needs to be scaled to [0, 1] for the beta distribution.
+
+```{r df_closeness_01}
+df <- mutate(df, closeness_01 = closeness / 100)
+```
+
+Check correlation between `closeness` values from `active` and `passive` in the `type_D` column. An easy way of doing this is to split that column into two tibbles, one for each type. But then we absolutely have to make sure that it's `active` -> `passive` all throughout the tibble, always in that order, i.e., the rows still need to match for the correlation analysis. To assess that rows match, I'll create a unique identifier variable by pasting the `participant` and `word` columns together:
+
+```{r extract_type_D}
+
+# Create unique identifier to double check that values are same after splitting:
+
+df <- mutate(df, unique_id = str_c(participant, '_', word))
+
+# Separate active and passive:
+
+active <- filter(df, type_D == 'active')
+passive <- filter(df, type_D == 'passive')
+
+# Double-check that they are the same (i.e., rows aren't mixed up):
+
+all(active$unique_id == passive$unique_id)
+```
+
+Now we can perform the correlation. Let's do a quick-and-dirty frequentist Pearson correlation here:
+
+```{r correlate_type_D}
+cor.test(active$closeness, passive$closeness, method = 'spearman')
+```
+
+Very very high correlation. I'd say that for the main closeness analysis, we'd probably average over the two respective `type_D` values so as to be extra sure not to incur any 'independence violation', or however we might want to call the Bayesian equivalent of that. We'll also make sure that we average these two values for plotting so that each of the `closeness` values in the graphs below is actually just one trial.
+
+Make tibble with averages across `active` and `passive`. We also need to re-scale the resulting means for this tibble, the new `dist_df`.
+
+```{r average_type_D}
+dist_df <- df %>% 
+  group_by(participant, word, category, condition,
+           pleasantness, commitment, intimacy,
+           difficulty, self_contribution, other_contribution) %>% 
+  summarize(closeness = mean(closeness)) %>% 
+  mutate(closeness_01 = closeness / 100)
+```
+
+For all other analyses then, we will just get the `active` one (it doesn't matter, could've just as well taken the other). This way we make sure that we don't accidentally duplicate the values:
+
+```{r reduce_duplicates}
+df <- filter(df, type_D == 'active')
+```
+
+Get a subset with just the interactive condition, which we'll need for all the covariates that are only attested in this condition (`difficulty`, `self_contribution`, `other_contribution`).
+
+```{r make_interactive_df}
+inter_df <- filter(df, condition == 'interactive')
+```
+
+Create another version from this, a tibble that only contains the `interactive` condition and that also averages across `active` and `passive`:
+
+```{r average_type_D_interactive}
+dist_inter_df <- inter_df %>% 
+  group_by(participant, word, condition, category,
+           other_contribution, other_contribution_c,
+           self_contribution, self_contribution_c,
+           difficulty, difficulty_c) %>% 
+  summarize(closeness = mean(closeness)) %>% 
+  mutate(closeness_01 = closeness / 100)
+```
+
+# Overview
+
+Check participants prior to exclusion:
+
+```{r count_participants}
+# Count rows per participants:
+
+df %>% 
+  count(participant)
+
+# Count rows of this table to print number of participants into console:
+
+df %>% 
+  count(participant) %>% 
+  nrow()
+```
+
+66 participants.
+
+Let's do the same for words (= items):
+
+```{r count_items}
+# Count rows per participants:
+
+df %>% 
+  count(word)
+
+# Count rows of this table to print number of participants into console:
+
+df %>% 
+  count(word) %>% 
+  nrow()
+```
+
+16 items.
+
+What are these words?
+
+```{r which_words}
+distinct(df, category, word) %>% 
+  arrange(category)
+```
+
+We will have to decide whether items need condition random slopes. For this, it's crucial to know whether this is within- or between- items?
+
+```{r is_it_within_items}
+df %>% 
+  count(word, condition)
+```
+
+Within items, so by-item random slopes are possible for the condition effect and will be fitted in all models below if they feature the predictor `condition`.
+
+Check how `condition` and `category` behave with respect to each other:
+
+```{r}
+df %>% 
+  count(condition, category)
+```
+
+Looks nicely balanced.
+
+# Descriptive statistics
+
+Calculate `closeness` as a function of `condition` (using the data where `active` and `passive` have been averaged into one data point):
+
+```{r avg_closeness_by_condition}
+dist_df %>% 
+  group_by(condition) %>% 
+  summarize(M = mean(closeness))
+```
+
+Calculate `IOS` as a function of `condition`:
+
+```{r avg_ios_by_condition}
+df %>% 
+  group_by(condition) %>% 
+  summarize(M = mean(IOS))
+```
+
+Calculate `closeness` as a function of `category` now:
+
+```{r avg_closeness_by_category}
+dist_df %>% 
+  group_by(category) %>% 
+  summarize(M = mean(closeness))
+```
+
+Calculate `IOS` as a function of `category`:
+
+```{r avg_ios_by_category}
+df %>% 
+  group_by(category) %>% 
+  summarize(M = mean(IOS))
+```
+
+Raw descriptive correlation between covariates:
+
+```{r covariate_correlations}
+# Extract covariates into one object:
+
+covs <- inter_df %>% 
+  select(pleasantness:other_contribution)
+
+# Perform pairwise correlations for all covariates:
+
+cor_tab <- round(cor(covs), 2)
+
+# Show:
+
+cor_tab
+
+# Save:
+
+cor_tab %>% 
+  as.data.frame() %>%
+  rownames_to_column(var = 'variable') %>% 
+  write_csv('../results_tables/E1_covariate_correlations.csv')
+```
+
+The highest correlations are between `self_contribution` and `commitment`. Also relatively high is `pleasantness` and `other_contribution`. The `pleasantness` variable seems to moderately correlate with almost every other variable, including `commitment` (positive), `intimacy` (positive), `self_contribution` (positive), and `difficulty` (negative).
+
+For the description of IOS as a function of the different covariates, I think it would be most intuitive to talk about the means of the highest and lowest scale points, as well as perhaps report Spearman's rho. Let's do that for each covariate in turn.
+
+Pleasantness:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(pleasantness))
+
+with(df, cor(IOS, pleasantness, method = 'spearman'))
+```
+
+Commitment:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(commitment))
+
+with(df, cor(IOS, commitment, method = 'spearman'))
+```
+
+Intimacy:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(intimacy))
+
+with(df, cor(IOS, intimacy, method = 'spearman'))
+```
+
+Difficulty:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(difficulty, na.rm = TRUE))
+
+with(df, cor(IOS, difficulty,
+             method = 'spearman',
+             use = 'complete.obs'))
+```
+
+Self-contribution:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(self_contribution, na.rm = TRUE))
+
+with(df, cor(IOS, self_contribution,
+             method = 'spearman',
+             use = 'complete.obs'))
+```
+
+Other-contribution:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(other_contribution, na.rm = TRUE))
+
+with(df, cor(IOS, other_contribution,
+             method = 'spearman',
+             use = 'complete.obs'))
+```
+
+For presentation purposes only, dichotomize the `other_contribution` variable, and order it in such a way that `low other` comes before `high other`. This will be used in the `median_split_p` code chunk below as well.
+
+```{r median_split}
+# Calculate median:
+
+md <- median(inter_df$other_contribution)
+
+# Create median split variable:
+
+inter_df <- mutate(inter_df,
+                   other_cat = ifelse(other_contribution > md,
+                                      'high other contribution',
+                                      'low other contribution'),
+                   other_cat = factor(other_cat,
+                                      levels = c('low other contribution',
+                                                 'high other contribution')))
+```
+
+Let's look at the average IOS for abstract and concrete as a function of the median split:
+
+```{r median_split_avg}
+inter_df %>% 
+  group_by(other_cat, category) %>% 
+  summarize(M_IOS = mean(IOS),
+            M_dist = mean(closeness))
+```
+
+How many are scale point 1 and high other contribution?
+
+```{r}
+inter_df %>% 
+  count(other_cat, category, IOS) %>% 
+  filter(IOS == 1, other_cat == 'high other contribution')
+```
+
+# Data visualization
+
+Check closeness as a function of `interactive` versus `non-interactive`:
+
+```{r condition_closeness_p}
+# Plot core:
+
+condition_closeness_p <- dist_df %>% 
+  ggplot(aes(x = closeness, fill = condition)) +
+  geom_density(alpha = 0.55) +
+  annotate(geom = 'text',
+           label = 'interactive condition',
+           color = 'purple3',
+           x = 75.6, y = 0.03,
+           hjust = 1, size = 4) +
+  annotate(geom = 'text',
+           label = 'non-interactive condition',
+           color = 'grey55',
+           x = 66.35, y = 0.020,
+           hjust = 1, size = 4)
+
+# Scales and axes:
+
+condition_closeness_p <- condition_closeness_p +
+  scale_x_continuous(expand = c(0, 0),
+                     breaks = seq(0, 100, 25)) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 0.06)) +
+  scale_fill_manual(values = c('grey55', 'purple3')) +
+  xlab('Closeness') +
+  ylab('Density')
+
+# Cosmetics:
+
+condition_closeness_p <- condition_closeness_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show:
+
+condition_closeness_p
+ggsave('../figures_E1/condition_closeness.pdf', plot = condition_closeness_p,
+       width = 5, height = 3.5)
+ggsave('../figures_E1/condition_closeness.png', plot = condition_closeness_p,
+       width = 5, height = 3.5)
+```
+
+Let's visualize `IOS` as a function of `condition`.
+
+```{r condition_ios_p}
+# Plot core:
+
+condition_ios_p <- df %>% 
+  count(IOS, condition) %>% 
+  ggplot(aes(x = IOS, y = n, fill = condition)) +
+  geom_col(position = 'dodge', width = 0.7,
+           col = 'black', size = 0.3) +
+  annotate(geom = 'text',
+           label = 'interactive condition',
+           color = 'purple3',
+           x = 4, y = 61 + 4.2,
+           hjust = 0, size = 4) +
+  annotate(geom = 'text',
+           label = 'non-interactive condition',
+           color = 'grey55',
+           x = 1.65, y = 102 + 4.2,
+           hjust = 0, size = 4)
+
+# Scales and axes:
+
+condition_ios_p <- condition_ios_p +
+  scale_fill_manual(values = c('grey55', 'purple2')) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 7),
+                     breaks = 1:6) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 120),
+                     breaks = seq(0, 120, 20)) +
+  ylab('Number of responses') +
+  xlab('IOS (inclusion of other scale)')
+
+# Cosmetic tweaking:
+
+condition_ios_p <- condition_ios_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+condition_ios_p
+ggsave(plot = condition_ios_p,
+       filename = '../figures_E1/condition_ios.pdf',
+       width = 5, height = 3.5)
+ggsave(plot = condition_ios_p,
+       filename = '../figures_E1/condition_ios.png',
+       width = 5, height = 3.5)
+```
+
+We'll put both into one plot together:
+
+```{r}
+# Add titles for differentiation:
+
+condition_closeness_p <- condition_closeness_p + 
+  ggtitle('a) Closeness by condition') +
+  theme(title = element_text(face = 'bold',
+                             size = 16))
+condition_ios_p <- condition_ios_p + 
+  ggtitle('b) Inclusion-of-other scale by condition') +
+  theme(title = element_text(face = 'bold',
+                             size = 16))
+
+# Patch them together:
+
+both_p <- condition_closeness_p + condition_ios_p +
+  plot_layout(nrow = 1, ncol = 2, width = c(6, 6), heights = c(3, 3))
+
+# Save the dobule plot:
+
+ggsave(plot = both_p, filename = '../figures_E1/double_plot.pdf',
+       width = 12, height = 4)
+ggsave(plot = both_p, filename = '../figures_E1/double_plot.png',
+       width = 12, height = 4)
+```
+
+Make a plot of `IOS` as a function of `category` (= concept type, `abstract` v `concrete`).
+
+```{r category_ios_p}
+# Plot core:
+
+category_ios_p <- df %>% 
+  count(IOS, category) %>% 
+  ggplot(aes(x = IOS, y = n, fill = category)) +
+  geom_col(position = 'dodge', width = 0.7,
+           col = 'black', size = 0.3)
+
+# Scales and axes:
+
+category_ios_p <- category_ios_p +
+  scale_fill_manual(values = c('goldenrod3', 'steelblue')) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 7),
+                     breaks = 1:6) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 100),
+                     breaks = seq(0, 100, 20)) +
+  ylab('Number of responses') +
+  xlab('IOS (inclusion of other scale)')
+
+# Cosmetic tweaking:
+
+category_ios_p <- category_ios_p +
+  theme_classic() +
+  theme(legend.position = 'top',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+category_ios_p
+ggsave(plot = category_ios_p,
+       filename = '../figures_E1/category_ios.pdf',
+       width = 5, height = 3.5)
+ggsave(plot = category_ios_p,
+       filename = '../figures_E1/category_ios.png',
+       width = 5, height = 3.5)
+```
+
+Make a plot of this with a facet wrap for the median split:
+
+```{r median_split_p}
+# Plot core:
+
+median_split_p <- inter_df %>% 
+  count(IOS, other_cat, category) %>% 
+  ggplot(aes(x = IOS, y = n, fill = category)) +
+  geom_bar(position = 'fill', width = 0.7,
+           stat = 'identity',
+           col = 'black', size = 0.3) +
+  facet_wrap(~other_cat, ncol = 2)
+
+# Scales and axes:
+
+median_split_p <- median_split_p +
+  scale_fill_manual(values = c('goldenrod3', 'steelblue')) +
+  scale_x_continuous(breaks = 1:6) +
+  scale_y_continuous(expand = c(0, 0)) +
+  ylab('Proportion') +
+  xlab('IOS (inclusion of other scale)')
+  # + annotate(geom = 'text',
+  #          label = 'concrete concepts',
+  #          color = 'goldenrod3',
+  #          x = 6.5, y = 0.86,
+  #          hjust = 0, size = 4) +
+  # annotate(geom = 'text',
+  #          label = 'abstract concepts',
+  #          color = 'steelblue',
+  #          x = 6.5, y = 0.47,
+  #          hjust = 0, size = 4)
+
+# Cosmetic tweaking:
+
+median_split_p <- median_split_p +
+  theme_classic() +
+  theme(legend.position = 'top',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)),
+        plot.margin = margin(r = 30))
+
+# Show in markdown and save in folder:
+
+median_split_p
+ggsave(plot = median_split_p,
+       filename = '../figures_E1/median_split_p.pdf',
+       width = 6, height = 3)
+ggsave(plot = median_split_p,
+       filename = '../figures_E1/median_split_p.png',
+       width = 6, height = 3)
+```
+
+The issue with this figure is that the IOS = 1 within the `high other contribution` facet is just a few datapoints. Because the proportions are categorical, it makes it seem as if actually high other contribution has lower IOS for abstract.
+
+... although, the fact that the predicted pattern is not readily available in this plot should make us hault as it already suggests this is not a strong result.
+
+But anyway, let's see what we can do with averages, even though averaging an ordinal scale is a bit contentious, but hey, if it helps us visualize this pattern! Let's make a plot that has on the x-axis the covariate, and then we show as two separate lines the IOS average for abstract and concrete. Hopefully we should see these two lines as diverging. The `other_contribution` variable however is continuous, so in order to do averages across multiple values, let's bin the scale into 20-40, 40-60, 60-80, and 80-100.
+
+```{r}
+inter_df <- mutate(inter_df,
+                   other_bin = case_when(other_contribution < 40 ~ '20-40',
+                                         other_contribution >= 40 & other_contribution < 60 ~ '40-60',
+                                         other_contribution >= 60 & other_contribution < 80 ~ '60-100',
+                                         other_contribution >= 60 & other_contribution <= 100 ~ '80-100'))
+```
+
+Do a sanity check with means:
+
+```{r}
+inter_df %>% 
+  group_by(other_bin) %>% 
+  summarize(M = mean(other_contribution))
+```
+
+Makers sense!
+
+Next, we can compute the IOS average for abstract and concrete concepts by bind:
+
+```{r}
+bin_avgs <- inter_df %>% 
+  group_by(other_bin, category) %>% 
+  summarize(IOS_M = mean(IOS),
+            IOS_SD = sd(IOS))
+
+# Append counts so that we can compute simple standard errors of the mean:
+
+bin_counts <- inter_df %>% 
+  count(other_bin, category)
+
+# Join together:
+
+bin_avgs <- left_join(bin_avgs, bin_counts)
+
+# Compute standard errors:
+
+bin_avgs <- mutate(bin_avgs, 
+                   SE = IOS_SD / sqrt(n),
+                   lower = IOS_M - SE,
+                   upper = IOS_M + SE)
+```
+
+Let's make a plot of this:
+
+```{r bin_p}
+# Plot core:
+
+bin_p <- bin_avgs %>% 
+  ggplot(aes(x = other_bin, y = IOS_M,
+             color = category, group = category)) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 15, size = 2) +
+  geom_errorbar(aes(ymin = lower, ymax = upper),
+                width = 0)
+
+# Scales and axes:
+
+bin_p <- bin_p +
+  scale_color_manual(values = c('goldenrod3', 'steelblue')) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(1, 4),
+                     breaks = seq(1, 4, 0.5)) +
+  ylab('IOS mean') +
+  xlab('Other contribution (binned)') +
+  annotate(geom = 'text',
+           label = 'concrete concepts',
+           color = 'goldenrod3',
+           x = 1.9, y = 3.7,
+           hjust = 1, size = 3) +
+  annotate(geom = 'text',
+           label = 'abstract concepts',
+           color = 'steelblue',
+           x = 1.3, y = 2.1,
+           hjust = 0, size = 3)
+
+# Cosmetic tweaking:
+
+bin_p <- bin_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+bin_p
+ggsave(plot = bin_p,
+       filename = '../figures_E1/IOS_bin_plot.pdf',
+       width = 4.5, height = 3.4)
+ggsave(plot = bin_p,
+       filename = '../figures_E1/IOS_bin_plot.png',
+       width = 4.5, height = 3.4)
+```
+
+The issue with this plot is that the other contribution covariate is heavily skewed towards positive values (check `hist(df$other_contribution))`, which means there's much less values for lower values. That also explains why the standard errors are so much wider towards the left of the plot. Perhaps a more informative view is to split things into four equal sized groups.
+
+```{r}
+inter_df <- mutate(inter_df,
+                   other_bin2 = cut_number(other_contribution, 4))
+
+# Redo the averages:
+
+bin_avgs <- inter_df %>% 
+  group_by(other_bin2, category) %>% 
+  summarize(IOS_M = mean(IOS),
+            IOS_SD = sd(IOS))
+
+# Append counts so that we can compute simple standard errors of the mean:
+
+bin_counts <- inter_df %>% 
+  count(other_bin2, category)
+
+# Join together:
+
+bin_avgs <- left_join(bin_avgs, bin_counts)
+
+# Compute standard errors:
+
+bin_avgs <- mutate(bin_avgs, 
+                   SE = IOS_SD / sqrt(n),
+                   lower = IOS_M - SE,
+                   upper = IOS_M + SE,
+                   lower_CI = IOS_M - 1.96 * SE,
+                   upper_CI = IOS_M + 1.96 * SE)
+```
+
+Let's do that new bin plot:
+
+```{r bin2_p}
+# Plot core:
+
+bin_p <- bin_avgs %>% 
+  ggplot(aes(x = other_bin2, y = IOS_M,
+             color = category, group = category)) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 15, size = 2,
+             position = position_dodge(width = 0.1)) +
+  geom_errorbar(aes(ymin = lower_CI, ymax = upper_CI),
+                width = 0,
+                position = position_dodge(width = 0.1))
+
+# Scales and axes:
+
+bin_p <- bin_p +
+  scale_color_manual(values = c('goldenrod3', 'steelblue')) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(2, 4.5),
+                     breaks = seq(2, 4.5, 0.5)) +
+  ylab('IOS mean') +
+  xlab('Other contribution (binned)') +
+  annotate(geom = 'text',
+           label = 'concrete concepts',
+           color = 'goldenrod3',
+           x = 1.05, y = 3.9,
+           hjust = 0, size = 3) +
+  annotate(geom = 'text',
+           label = 'abstract concepts',
+           color = 'steelblue',
+           x = 1.05, y = 2.7,
+           hjust = 0, size = 3)
+
+# Cosmetic tweaking:
+
+bin_p <- bin_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+bin_p
+ggsave(plot = bin_p,
+       filename = '../figures_E1/IOS_equal_bin_plot.pdf',
+       width = 4.5, height = 3.4)
+ggsave(plot = bin_p,
+       filename = '../figures_E1/IOS_equal_bin_plot.png',
+       width = 4.5, height = 3.4)
+```
+
+Looks better, and more interpretable.
+
+# Data visualization: covariates and IOS
+
+Scatter plot matrix for covariates:
+
+```{r scatterplot_matrix_p}
+# Setings for diagonal:
+
+diag_wrap <- wrap("densityDiag", alpha = 0.5,
+                  fill = 'steelblue')
+
+# Plot core:
+
+scatter_p <- ggpairs(covs,
+                     aes(alpha = 0.5),
+                     diag = list(continuous = diag_wrap))
+
+# Cosmetics:
+
+scatter_p <- scatter_p +
+  theme_minimal()
+
+# Show in markdown and save in folder:
+
+scatter_p
+ggsave(plot = scatter_p,
+       filename = '../figures_E1/covariate_matrix.pdf',
+       width = 8, height = 8)
+ggsave(plot = scatter_p,
+       filename = '../figures_E1/covariate_matrix.png',
+       width = 8, height = 8)
+```
+
+Pleasantness and IOS:
+
+```{r pleasant_joy_p}
+# Plot core:
+
+pleasant_joy_p <- inter_df %>% 
+  ggplot(aes(x = pleasantness, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+pleasant_joy_p <- pleasant_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+pleasant_joy_p <- pleasant_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+pleasant_joy_p
+ggsave(plot = pleasant_joy_p,
+       filename = '../figures_E1/pleasantness_joy.pdf',
+       width = 5, height = 3.5)
+ggsave(plot = pleasant_joy_p,
+       filename = '../figures_E1/pleasantness_joy.png',
+       width = 5, height = 3.5)
+```
+
+Commitment and IOS:
+
+```{r commit_joy_p}
+# Plot core:
+
+commit_joy_p <- inter_df %>% 
+  ggplot(aes(x = commitment, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+commit_joy_p <- commit_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Commitment') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+commit_joy_p <- commit_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+commit_joy_p
+ggsave(plot = commit_joy_p,
+       filename = '../figures_E1/commitment_joy.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = commit_joy_p,
+       filename = '../figures_E1/commitment_joy.png',
+       width = 4.5, height = 4)
+```
+
+Intimacy and IOS:
+
+```{r intimate_joy_p}
+# Plot core:
+
+intimate_joy_p <- inter_df %>% 
+  ggplot(aes(x = intimacy, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+intimate_joy_p <- intimate_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Intimacy') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+intimate_joy_p <- intimate_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+intimate_joy_p
+ggsave(plot = intimate_joy_p,
+       filename = '../figures_E1/intimacy_joy.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = intimate_joy_p,
+       filename = '../figures_E1/intimacy_joy.png',
+       width = 4.5, height = 4)
+```
+
+Difficulty and IOS:
+
+```{r difficult_joy_p}
+# Plot core:
+
+difficult_joy_p <- inter_df %>% 
+  ggplot(aes(x = difficulty, y = factor(IOS)))+
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+difficult_joy_p <- difficult_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Difficulty') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+difficult_joy_p <- difficult_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+difficult_joy_p
+ggsave(plot = difficult_joy_p,
+       filename = '../figures_E1/difficulty_joy.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = difficult_joy_p,
+       filename = '../figures_E1/difficulty_joy.png',
+       width = 4.5, height = 4)
+```
+
+Self contribution and IOS:
+
+```{r self_joy_p}
+# Plot core:
+
+self_joy_p <- inter_df %>% 
+  ggplot(aes(x = self_contribution, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+self_joy_p <- self_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Self-contribution') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+self_joy_p <- self_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+self_joy_p
+ggsave(plot = self_joy_p,
+       filename = '../figures_E1/self_joy.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = self_joy_p,
+       filename = '../figures_E1/self_joy.png',
+       width = 4.5, height = 4)
+```
+
+Other contribution and IOS:
+
+```{r other_joy_p}
+# Plot core:
+
+other_joy_p <- inter_df %>% 
+  ggplot(aes(x = other_contribution, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+other_joy_p <- other_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Other-contribution') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+other_joy_p <- other_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+other_joy_p
+ggsave(plot = other_joy_p,
+       filename = '../figures_E1/other_joy.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = other_joy_p,
+       filename = '../figures_E1/other_joy.png',
+       width = 4.5, height = 4)
+```
+
+Make a plot matrix out of all of these. We only need y-axes for pleasantness and difficulty, which occur on the left-hand side, so we'll have to switch off the axes for intimacy, difficulty, self-contribution and other-contribution.
+
+```{r grid_arrange_multi_joy_p, warning = FALSE, message = FALSE}
+# Define layout matrix:
+
+my_layout <- matrix(c(1, 2, 3,
+                      4, 5, 6),
+                    byrow = TRUE, ncol = 3)
+
+# Change titles:
+
+commit_joy_p <- commit_joy_p +
+  ylab(NULL)
+intimate_joy_p <- intimate_joy_p +
+  ylab(NULL)
+self_joy_p <- self_joy_p +
+  ylab(NULL)
+other_joy_p <- other_joy_p +
+  ylab(NULL)
+
+# Show:
+
+grid.arrange(pleasant_joy_p, commit_joy_p, intimate_joy_p,
+             difficult_joy_p, self_joy_p, other_joy_p,
+             layout_matrix = my_layout)
+
+# Save:
+
+all_joy <- arrangeGrob(pleasant_joy_p, commit_joy_p, intimate_joy_p,
+                       difficult_joy_p, self_joy_p, other_joy_p,
+                       layout_matrix = my_layout)
+
+ggsave(all_joy, file = '../figures_E1/all_covariate_joy.pdf',
+       width = 12, height = 6)
+ggsave(all_joy, file = '../figures_E1/all_covariate_joy.png',
+       width = 12, height = 6)
+```
+
+# Data visualization: covariates and closeness
+
+Scatterplot matrix of all variables. First, let's start with pleasantness:
+
+```{r}
+pleasant_scatter <- inter_df |> 
+  ggplot(aes(x = pleasantness, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+pleasant_scatter <- pleasant_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+pleasant_scatter <- pleasant_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+pleasant_scatter
+ggsave(filename = '../figures_E1/E1_pleasant_scatter.pdf', plot = pleasant_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E1/E1_pleasant_scatter.png', plot = pleasant_scatter,
+       width = 4.5, height = 4)
+```
+
+Second, commitment:
+
+```{r}
+commitment_scatter <- inter_df |> 
+  ggplot(aes(x = commitment, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+commitment_scatter <- commitment_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+commitment_scatter <- commitment_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+commitment_scatter
+ggsave(filename = '../figures_E1/E1_commitment_scatter.pdf',
+       plot = commitment_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E1/E1_commitment_scatter.png',
+       plot = commitment_scatter,
+       width = 4.5, height = 4)
+```
+
+Third, intimacy:
+
+```{r}
+intimacy_scatter <- inter_df |> 
+  ggplot(aes(x = intimacy, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+intimacy_scatter <- intimacy_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+intimacy_scatter <- intimacy_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+intimacy_scatter
+ggsave(filename = '../figures_E1/E1_intimacy_scatter.pdf',
+       plot = intimacy_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E1/E1_intimacy_scatter.png',
+       plot = intimacy_scatter,
+       width = 4.5, height = 4)
+```
+
+Fourth, difficulty:
+
+```{r}
+difficulty_scatter <- inter_df |> 
+  ggplot(aes(x = difficulty, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+difficulty_scatter <- difficulty_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+difficulty_scatter <- difficulty_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+difficulty_scatter
+ggsave(filename = '../figures_E1/E1_difficulty_scatter.pdf',
+       plot = difficulty_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E1/E1_difficulty_scatter.png',
+       plot = difficulty_scatter,
+       width = 4.5, height = 4)
+```
+
+Fifth, self-contribution:
+
+```{r}
+self_contribution_scatter <- inter_df |> 
+  ggplot(aes(x = self_contribution, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+self_contribution_scatter <- self_contribution_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+self_contribution_scatter <- self_contribution_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+self_contribution_scatter
+ggsave(filename = '../figures_E1/E1_self_contribution_scatter.pdf',
+       plot = self_contribution_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E1/E1_self_contribution_scatter.png',
+       plot = self_contribution_scatter,
+       width = 4.5, height = 4)
+```
+
+Sixth, other-contribution:
+
+```{r}
+other_contribution_scatter <- inter_df |> 
+  ggplot(aes(x = other_contribution, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+other_contribution_scatter <- other_contribution_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+other_contribution_scatter <- other_contribution_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+other_contribution_scatter
+ggsave(filename = '../figures_E1/E1_other_contribution_scatter.pdf',
+       plot = other_contribution_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E1/E1_other_contribution_scatter.png',
+       plot = other_contribution_scatter,
+       width = 4.5, height = 4)
+```
+
+Put everything together into a big plot matrix:
+
+```{r grid_arrange_multi_scatter, warning = FALSE, message = FALSE}
+# Define layout matrix:
+
+my_layout <- matrix(c(1, 2, 3,
+                      4, 5, 6),
+                    byrow = TRUE, ncol = 3)
+
+# Change titles:
+
+commitment_scatter <- commitment_scatter +
+  ylab(NULL)
+intimacy_scatter <- intimacy_scatter +
+  ylab(NULL)
+self_contribution_scatter <- self_contribution_scatter +
+  ylab(NULL)
+other_contribution_scatter <- other_contribution_scatter +
+  ylab(NULL)
+
+# Show:
+
+grid.arrange(pleasant_scatter, commitment_scatter, intimacy_scatter,
+             difficulty_scatter, self_contribution_scatter, other_contribution_scatter,
+             layout_matrix = my_layout)
+
+# Save:
+
+all_joy <- arrangeGrob(pleasant_scatter, commitment_scatter, intimacy_scatter,
+                       difficulty_scatter, self_contribution_scatter, other_contribution_scatter,
+                       layout_matrix = my_layout)
+
+ggsave(all_joy, file = '../figures_E1/all_covariate_closeness.pdf',
+       width = 12, height = 6)
+ggsave(all_joy, file = '../figures_E1/all_covariate_closeness.png',
+       width = 12, height = 6)
+```
+
+
+# Statistical models
+
+Let's model `IOS` score as a function of interactive/non-interactive condition. We'll use a cumulative mixed model here because 1) our response is ordinal, and 2) we need random effects for participants and items.
+
+```{r condition_IOS_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+condition_IOS_mdl <- brm(IOS ~ 
+                           
+                           # Fixed effects:
+                           
+                           1 + condition  +
+                           
+                           # Random effects:
+                           
+                           (1 + condition|participant) +
+                           (1 + condition|word),
+           
+                         data = df,
+                         family = cumulative,
+           
+                         # MCMC settings:
+           
+                         seed = 42,
+                         cores = 4,
+                         iter = 6000,
+                         warmup = 3000,
+                         control = list(adapt_delta = 0.9))
+
+# Save model:
+
+save(condition_IOS_mdl, file = '../models_E1/condition_IOS_mdl.RData')
+```
+
+Load model:
+
+```{r load_condition_IOS_mdl}
+load('../models_E1/condition_IOS_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(condition_IOS_mdl)
+```
+
+Perform posterior predictive checks of the ordinal model with ECDF overlay because it's categorical.
+
+```{r pp_check_condition_IOS_mdl}
+pp_check(condition_IOS_mdl, ndraws = 100, type = 'ecdf_overlay')
+```
+
+Check this model:
+
+```{r condition_IOS_mdl_summary}
+condition_IOS_mdl
+```
+
+Visualize the posterior distribution of the main condition effect:
+
+```{r condition_IOS_mdl_posts}
+# Extract posterior values:
+
+posts <- posterior_samples(condition_IOS_mdl) %>% 
+  select(b_conditioninteractive)
+
+# Plot this:
+
+posts %>% 
+  ggplot(aes(x = b_conditioninteractive)) +
+  geom_density(fill = 'steelblue', alpha = 0.8) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_classic()
+```
+
+Perform hypothesis test on the `condition` fixed effects coefficient:
+
+```{r IOS_condition_hypothesis}
+hypothesis(condition_IOS_mdl, 'conditioninteractive > 0')
+```
+
+Now `closeness` as a function of `condition`. We'll use the same random effects structure. We parametrize the beta according to mean/phi.
+
+```{r condition_dist_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+condition_dist_mdl <- brm(bf(closeness_01 ~ 
+                               
+                               # Fixed effects:
+                               
+                               1 + condition  +
+                               
+                               # Random effects:
+                               
+                               (1 + condition|participant) +
+                               (1 + condition|word),
+                             
+                             # Family-specific parameter (shape):
+                             
+                             phi ~ 1 + condition),
+                          
+                          # General stuff:
+           
+                          data = dist_df, # averaged distance df
+                          family = Beta,
+           
+                          # MCMC settings:
+           
+                          seed = 42,
+                          cores = 4,
+                          iter = 6000,
+                          warmup = 3000,
+                          control = list(adapt_delta = 0.95))
+
+# Save model:
+
+save(condition_dist_mdl, file = '../models_E1/condition_dist_mdl.RData')
+```
+
+Load model:
+
+```{r load_condition_dist_mdl}
+load('../models_E1/condition_dist_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(condition_dist_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_condition_dist_mdl}
+pp_check(condition_dist_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r condition_dist_mdl_summary}
+condition_dist_mdl
+```
+
+Perform hypothesis test on the `condition` fixed effects coefficient:
+
+```{r dist_condition_hypothesis}
+hypothesis(condition_dist_mdl, 'conditioninteractive > 0')
+```
+
+Make a model of all covariates on `IOS`. For this model, we will not include the random slope intercept correlations, as this would be **many**(!!) and lead to a super hefty random effects structure... plus, we're not really interested in these correlations, and I cannot see immediately how they would be motivated. We have by-participant random slopes for all fixed effects, but will not do the same for `word` as this would again lead to a crazy complex model.
+
+```{r covariates_IOS_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+covariates_IOS_mdl <- brm(IOS ~ 
+                            
+                            # Fixed effects:
+                            
+                            1 +
+                            pleasantness +
+                            commitment +
+                            intimacy +
+                            difficulty + 
+                            self_contribution +
+                            other_contribution +
+                            
+                            # Random effects:
+                            
+                            (1|participant) +
+                            (0 + pleasantness|participant) +
+                            (0 + commitment|participant) +
+                            (0 + intimacy|participant) +
+                            (0 + difficulty|participant) +
+                            (0 + self_contribution|participant) +
+                            (0 + other_contribution|participant) +
+                            (1|word),
+                          
+                          # General stuff:
+           
+                          data = inter_df,
+                          family = cumulative,
+           
+                          # MCMC settings:
+           
+                          seed = 42,
+                          cores = 4,
+                          iter = 6000,
+                          warmup = 3000,
+                          control = list(adapt_delta = 0.9))
+
+# Save model:
+
+save(covariates_IOS_mdl,
+     file = '../models_E1/covariates_IOS_mdl.RData')
+```
+
+Load model:
+
+```{r load_covariates_IOS_mdl}
+load('../models_E1/covariates_IOS_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(covariates_IOS_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_covariates_IOS_mdl}
+pp_check(covariates_IOS_mdl, ndraws = 100, type = 'ecdf_overlay')
+```
+
+Check this model:
+
+```{r covariates_IOS_mdl_summary}
+covariates_IOS_mdl
+```
+
+Test all hypotheses from the covariate model:
+
+```{r covariate_hypothesis}
+hypothesis(covariates_IOS_mdl, 'pleasantness > 0')
+hypothesis(covariates_IOS_mdl, 'commitment > 0')
+hypothesis(covariates_IOS_mdl, 'intimacy > 0')
+hypothesis(covariates_IOS_mdl, 'difficulty < 0')
+hypothesis(covariates_IOS_mdl, 'self_contribution > 0')
+hypothesis(covariates_IOS_mdl, 'other_contribution > 0')
+```
+
+Now `closeness` as a function of all covariates:
+
+```{r covariates_dist_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+covariates_dist_mdl <- brm(bf(closeness_01 ~ 
+                             
+                                # Fixed effects:
+                             
+                                1 +
+                                pleasantness +
+                                commitment +
+                                intimacy +
+                                difficulty +
+                                self_contribution +
+                                other_contribution +
+                             
+                                # Random effects:
+                               
+                                (1|participant) +
+                                (0 + pleasantness|participant) +
+                                (0 + commitment|participant) +
+                                (0 + intimacy|participant) +
+                                (0 + difficulty|participant) +
+                                (0 + self_contribution|participant) +
+                                (0 + other_contribution|participant) +
+                                (1|word),
+                              
+                              # Family-specific parameter (shape):
+                              
+                              phi ~ 1),
+                           
+                           # General stuff:
+
+                           data = inter_df,
+                           family = Beta,
+
+                           # MCMC settings:
+
+                           init = 0, # doesn't converge otherwise
+                           seed = 42,
+                           cores = 4,
+                           iter = 6000,
+                           warmup = 3000,
+                           control = list(adapt_delta = 0.90))
+
+# Save model:
+
+save(covariates_dist_mdl, file = '../models_E1/covariates_dist_mdl.RData')
+```
+
+Load model:
+
+```{r load_covariates_dist_mdl}
+load('../models_E1/covariates_dist_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(covariates_dist_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_covariates_dist_mdl}
+pp_check(covariates_dist_mdl,
+         ndraws = 100, type = 'ecdf_overlay')
+```
+
+Check this model:
+
+```{r covariates_dist_mdl_summary}
+covariates_dist_mdl
+```
+
+Test all hypotheses from the covariate model:
+
+```{r covariate_hypothesis_closeness}
+hypothesis(covariates_dist_mdl, 'pleasantness > 0')
+hypothesis(covariates_dist_mdl, 'commitment > 0')
+hypothesis(covariates_dist_mdl, 'intimacy > 0')
+hypothesis(covariates_dist_mdl, 'difficulty < 0')
+hypothesis(covariates_dist_mdl, 'self_contribution > 0')
+hypothesis(covariates_dist_mdl, 'other_contribution > 0')
+```
+
+# Main model: interaction
+
+Fit the category on IOS model:
+
+```{r main_IOS_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+main_IOS_mdl <- brm(IOS ~ 
+                      
+                      # Fixed effects:
+                      
+                      1 +
+                      category +
+                      other_contribution_c +
+                      category:other_contribution_c +
+                      
+                      # Random effects:
+                      
+                      (1 +
+                         category +
+                         other_contribution_c +
+                         category:other_contribution_c|participant) +
+                      (1 + other_contribution_c|word),
+           
+                    data = inter_df,
+                    family = cumulative,
+           
+                    # MCMC settings:
+           
+                    seed = 42,
+                    cores = 4,
+                    iter = 6000,
+                    warmup = 3000,
+                    control = list(adapt_delta = 0.9))
+
+# Save model:
+
+save(main_IOS_mdl, file = '../models_E1/main_IOS_mdl.RData')
+```
+
+Load model:
+
+```{r load_main_IOS_mdl}
+load('../models_E1/main_IOS_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(main_IOS_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_main_IOS_mdl}
+pp_check(main_IOS_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r main_IOS_mdl_summary}
+main_IOS_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficients:
+
+```{r IOS_category_test}
+hypothesis(main_IOS_mdl, 'categoryabstract < 0')
+hypothesis(main_IOS_mdl, 'other_contribution_c  > 0')
+hypothesis(main_IOS_mdl, 'categoryabstract:other_contribution_c  > 0')
+```
+
+Plot these posteriors. For this we first need to extract the posteriors and then make them into long format:
+
+```{r extract_main_posts}
+# Extract:
+
+posts <- posterior_samples(main_IOS_mdl) %>% 
+  select(b_categoryabstract:`b_categoryabstract:other_contribution_c`)
+
+# Rename:
+
+colnames(posts) <- c('abstractness', 'other contribution', 'interaction')
+
+# Pivot into long format and clean:
+
+posts <- posts %>% 
+  pivot_longer(cols = abstractness:interaction,
+               values_to = 'posterior_sample',
+               names_to = 'coefficient') %>% 
+  mutate(coefficient = factor(coefficient,
+                              levels = c('abstractness',
+                                         'other contribution',
+                                         'interaction')))
+
+# Show:
+
+posts
+```
+
+Now plot this:
+
+```{r main_posts_p}
+main_posts_p <- posts %>% 
+  ggplot(aes(x = posterior_sample, y = coefficient)) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  stat_halfeye(fill = 'steelblue') +
+  scale_x_continuous(limits = c(-1.5, 1.5)) +
+  ylab(NULL) +
+  theme_classic()
+
+# Show and save:
+
+main_posts_p
+ggsave(main_posts_p, filename = '../figures_E1/main_posteriors.pdf',
+       width = 5, height = 2)
+```
+
+Now a model of `closeness`, but first need to converte to [0, 1] variable for beta regression:
+
+```{r dist_inter_to_closeness01}
+dist_inter_df <- mutate(dist_inter_df,
+                        closeness_01 = closeness / 100)
+```
+
+Fit the model of closeness as a function of `category`, interacting with `other_contribution_c`:
+
+```{r message = FALSE, warning = FALSE, eval = FALSE}
+category_dist_mdl <- brm(bf(closeness_01 ~ 
+                              
+                              # Fixed effects:
+                              
+                              1 +
+                              category +
+                              other_contribution_c +
+                              difficulty_c +
+                              category:other_contribution_c +
+                              
+                              # Random effects:
+                              
+                              (1 +
+                                 category +
+                                 other_contribution_c +
+                                 category:other_contribution_c|participant) +
+                              (1 + other_contribution_c|word),
+                           
+                           # Family-specific parameter (shape):
+                           
+                           phi ~ 1 + category),
+           
+                         data = dist_inter_df, # interactive only
+                         family = Beta,
+           
+                         # MCMC settings:
+           
+                         seed = 42,
+                         init = 0,
+                         cores = 4,
+                         iter = 6000,
+                         warmup = 3000,
+                         control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(category_dist_mdl, file = '../models_E1/category_dist_mdl.RData')
+```
+
+Load model:
+
+```{r load_category_dist_mdl}
+load('../models_E1/category_dist_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(category_dist_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r}
+pp_check(category_dist_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r}
+category_dist_mdl
+```
+
+Perform hypothesis tests for fixed effects coefficients:
+
+```{r}
+hypothesis(category_dist_mdl, 'categoryabstract > 0')
+hypothesis(category_dist_mdl, 'other_contribution_c > 0')
+hypothesis(category_dist_mdl, 'categoryabstract:other_contribution_c > 0')
+```
+
+# Main model with difficulty covariate
+
+Calculate descriptive average of `difficulty` as a function of `category` (`abstract` v `concrete`):
+
+```{r abstract_more_difficult}
+inter_df %>% 
+  filter(type_D == 'active') %>% 
+  group_by(category) %>% 
+  summarize(M = mean(difficulty))
+```
+
+Make a graph of this.
+
+```{r difficulty_concept_p}
+# Plot core:
+
+category_difficulty_p <- inter_df %>% 
+  filter(type_D == 'active') %>% 
+  ggplot(aes(x = difficulty, fill = category)) +
+  geom_density(alpha = 0.55) +
+  annotate(geom = 'text',
+           label = 'concrete concepts',
+           color = 'goldenrod3',
+           x = 39, y = 0.011,
+           hjust = 0, size = 4) +
+  annotate(geom = 'text',
+           label = 'abstract concepts',
+           color = 'steelblue',
+           x = 68, y = 0.0075,
+           hjust = 0, size = 4)
+
+# Scales and axes:
+
+category_difficulty_p <- category_difficulty_p +
+  scale_x_continuous(expand = c(0, 0),
+                     breaks = seq(0, 100, 25)) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 0.02)) +
+  scale_fill_manual(values = c('goldenrod3', 'steelblue')) +
+  xlab('Difficulty') +
+  ylab('Density')
+
+# Cosmetics:
+
+category_difficulty_p <- category_difficulty_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show:
+
+category_difficulty_p
+ggsave('../figures_E1/category_difficulty.pdf',
+       plot = category_difficulty_p,
+       width = 5, height = 3.5)
+```
+
+Since `difficulty` is now the dependent measure, convert it into [0, 1] for beta regression:
+
+```{r difficulty_01}
+inter_df <- mutate(inter_df,
+                   difficulty_01 = difficulty / 100)
+```
+
+Model `difficulty` as a function of `category` with a beta regression model then:
+
+```{r difficulty_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+difficulty_mdl <- brm(bf(difficulty_01 ~ 
+                           
+                           # Fixed effects:
+                           
+                           1 +
+                           category +
+                           
+                           # Random effects:
+                           
+                           (1 + category|participant) +
+                           (1|word),
+                        
+                         # Family-specific parameter (shape):
+                        
+                         phi ~ 1 + category),
+           
+                      data = inter_df, # interactive only
+                      family = Beta,
+           
+                      # MCMC settings:
+           
+                      seed = 42,
+                      init = 0,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(difficulty_mdl, file = '../models_E1/difficulty_mdl.RData')
+```
+
+Load model:
+
+```{r load_difficulty_mdl}
+load('../models_E1/difficulty_mdl.RData')
+```
+
+Show priors:
+
+```{r}
+prior_summary(difficulty_mdl)
+```
+
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_difficulty_mdl}
+pp_check(difficulty_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r difficulty_mdl_summary}
+difficulty_mdl
+```
+
+Perform hypothesis test on the `category` fixed effects coefficient:
+
+```{r difficulty_mdl_category_test}
+hypothesis(difficulty_mdl, 'categoryabstract > 0')
+```
+
+Do the main analysis of `IOS` with `difficulty` as a covariate predictor, to control for this.
+
+```{r main_IOS_difficulty_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+main_IOS_difficulty_mdl <- brm(IOS ~ 
+                                 
+                                 # Fixed effects:
+                                 
+                                 1 +
+                                 category +
+                                 other_contribution_c +
+                                 difficulty_c + # new
+                                 category:other_contribution_c +
+                                 
+                                 # Random effects:
+                                 
+                                 (1 +
+                                    category +
+                                    other_contribution_c +
+                                    category:other_contribution_c|participant) +
+                                 (1 + other_contribution_c|word),
+           
+                               data = inter_df,
+                               family = cumulative,
+           
+                               # MCMC settings:
+                               
+                               seed = 42,
+                               cores = 4,
+                               iter = 6000,
+                               warmup = 3000,
+                               save_pars = save_pars(all = TRUE), # for bayes factors
+                               control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(main_IOS_difficulty_mdl,
+     file = '../models_E1/main_IOS_difficulty_mdl.RData')
+```
+
+Corresponding null model:
+
+```{r main_IOS_difficulty_null, message = FALSE, warning = FALSE, eval = FALSE}
+main_IOS_difficulty_null <- brm(IOS ~ 
+                                 
+                                 # Fixed effects:
+                                 
+                                 1 +
+                                 category +
+                                 other_contribution_c +
+                                 difficulty_c + # new
+                                 
+                                 # Random effects:
+                                 
+                                 (1 +
+                                    category +
+                                    other_contribution_c +
+                                    category:other_contribution_c|participant) +
+                                 (1 + other_contribution_c|word),
+           
+                               data = inter_df,
+                               family = cumulative,
+           
+                               # MCMC settings:
+                               
+                               seed = 42,
+                               cores = 4,
+                               iter = 6000,
+                               warmup = 3000,
+                               save_pars = save_pars(all = TRUE), # for bayes factors
+                               control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(main_IOS_difficulty_null,
+     file = '../models_E1/main_IOS_difficulty_null.RData')
+```
+
+Load model:
+
+```{r load_main_IOS_difficulty_mdl}
+load('../models_E1/main_IOS_difficulty_mdl.RData')
+load('../models_E1/main_IOS_difficulty_null.RData')
+```
+
+Show priors:
+
+```{r summarize_main_IOS_priors}
+prior_summary(main_IOS_difficulty_mdl)
+prior_summary(main_IOS_difficulty_null)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_main, eval = FALSE}
+# Compute:
+
+IOS_bf <- bayes_factor(main_IOS_difficulty_mdl, main_IOS_difficulty_null)
+
+# Save:
+
+save(IOS_bf,
+     file = '../models_E1/IOS_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r show_bayes_factors_main}
+# Load:
+
+load('../models_E1/IOS_bf.RData')
+
+# Show:
+
+IOS_bf
+```
+
+A Bayes factor larger than 3 is taken as strong evidence of model A over B (in this case, the full model over the null model). Conversely, a Bayes factor smaller than 1/3 is taken as strong evidence of B over A. This one is ~0.5, which is slightly leaning towards the null, but inconclusive. So, despite the posterior values being reliably non-zero, when we look at the full model and assess the hypothesis that the interaction coefficient matters, there is weak, but inconclusive, evidence against the interaction already in Experiment 1. So yes, the coefficient is non-zero, but it's not really needed: the null model is already slightly better at explaining the data for E1.
+
+Compute R-squared:
+
+```{r}
+bayes_R2(main_IOS_difficulty_mdl)
+bayes_R2(main_IOS_difficulty_null)
+
+# Check:
+
+0.7650374 - 0.7527548
+```
+
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_main_IOS_difficulty_mdl}
+pp_check(main_IOS_difficulty_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r main_IOS_difficulty_mdl_summary}
+main_IOS_difficulty_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r main_IOS_difficulty_mdl_category_test}
+hypothesis(main_IOS_difficulty_mdl,
+           'categoryabstract < 0')
+hypothesis(main_IOS_difficulty_mdl,
+           'other_contribution_c > 0')
+hypothesis(main_IOS_difficulty_mdl,
+           'categoryabstract:other_contribution_c  > 0')
+```
+
+Re-do the other main model, the one with `closeness_01` as dependent variable, this time also with a `difficulty_c` control covariate:
+
+```{r category_dist_difficulty_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+category_dist_difficulty_mdl <- brm(bf(closeness_01 ~ 
+                                      
+                                      # Fixed effects:
+                                      
+                                      1 +
+                                      category +
+                                      other_contribution_c +
+                                      difficulty_c + # new
+                                      category:other_contribution_c +
+                                      
+                                      # Random effects:
+                                      
+                                      (1 +
+                                         category +
+                                         other_contribution_c +
+                                         category:other_contribution_c|participant) +
+                                      (1 + other_contribution_c|word),
+                                      phi ~ 1 + category),
+           
+                                    data = dist_inter_df, # interactive only
+                                    family = Beta,
+           
+                                    # MCMC settings:
+           
+                                    seed = 42,
+                                    init = 0,
+                                    cores = 4,
+                                    iter = 6000,
+                                    warmup = 3000,
+                                    save_pars = save_pars(all = TRUE), # for bayes factors
+                                    control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(category_dist_difficulty_mdl,
+     file = '../models_E1/category_dist_difficulty_mdl.RData')
+```
+
+Corresponding null model:
+
+```{r category_dist_difficulty_null, message = FALSE, warning = FALSE, eval = FALSE}
+category_dist_difficulty_null <- brm(bf(closeness_01 ~ 
+                                      
+                                      # Fixed effects:
+                                      
+                                      1 +
+                                      category +
+                                      other_contribution_c +
+                                      difficulty_c + # new
+                                      
+                                      # Random effects:
+                                      
+                                      (1 +
+                                         category +
+                                         other_contribution_c +
+                                         category:other_contribution_c|participant) +
+                                      (1 + other_contribution_c|word),
+                                      phi ~ 1 + category),
+           
+                                    data = dist_inter_df, # interactive only
+                                    family = Beta,
+           
+                                    # MCMC settings:
+           
+                                    seed = 42,
+                                    init = 0,
+                                    cores = 4,
+                                    iter = 6000,
+                                    warmup = 3000,
+                                    save_pars = save_pars(all = TRUE), # for bayes factors
+                                    control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(category_dist_difficulty_null,
+     file = '../models_E1/category_dist_difficulty_null.RData')
+```
+
+Load model:
+
+```{r load_category_dist_difficulty_mdl}
+load('../models_E1/category_dist_difficulty_mdl.RData')
+load('../models_E1/category_dist_difficulty_null.RData')
+```
+
+Show priors:
+
+```{r prior_summary_dist}
+prior_summary(category_dist_difficulty_mdl)
+prior_summary(category_dist_difficulty_null)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_dist, eval = FALSE}
+# Compute:
+
+dist_bf <- bayes_factor(category_dist_difficulty_mdl, category_dist_difficulty_null)
+
+# Save:
+
+save(dist_bf,
+     file = '../models_E1/dist_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r show_bayes_factors_dist}
+# Load:
+
+load('../models_E1/dist_bf.RData')
+
+# Show:
+
+dist_bf
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_category_dist_difficulty_mdl}
+pp_check(category_dist_difficulty_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r category_dist_difficulty_mdl_summary}
+category_dist_difficulty_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r category_dist_difficulty_mdl_category_test}
+hypothesis(category_dist_difficulty_mdl,
+           'categoryabstract > 0')
+hypothesis(category_dist_difficulty_mdl,
+           'difficulty_c < 0')
+hypothesis(category_dist_difficulty_mdl,
+           'other_contribution_c > 0')
+hypothesis(category_dist_difficulty_mdl,
+           'categoryabstract:other_contribution_c > 0')
+```
+
+# Main model with self-orientation
+
+This was not originally planned for E1, but since we decided to use it for E2, we will run self-orientation here as well.
+
+Do the main analysis of `IOS` with `difficulty` as a covariate predictor, to control for this.
+
+```{r main_IOS_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+main_IOS_self_mdl <- brm(IOS ~ 
+                                 
+                                 # Fixed effects:
+                                 
+                                 1 +
+                                 category +
+                                 self_contribution_c +
+                                 difficulty_c + # new
+                                 category:self_contribution_c +
+                                 
+                                 # Random effects:
+                                 
+                                 (1 +
+                                    category +
+                                    self_contribution_c +
+                                    category:self_contribution_c|participant) +
+                                 (1 + self_contribution_c|word),
+           
+                               data = inter_df,
+                               family = cumulative,
+           
+                               # MCMC settings:
+                               
+                               seed = 42,
+                               cores = 4,
+                               iter = 6000,
+                               warmup = 3000,
+                               control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(main_IOS_self_mdl,
+     file = '../models_E1/main_IOS_self_mdl.RData')
+```
+
+Load model:
+
+```{r load_main_IOS_self_mdl}
+load('../models_E1/main_IOS_self_mdl.RData')
+```
+
+Show priors:
+
+```{r main_IOS_self_mdl_priors}
+prior_summary(main_IOS_self_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_main_IOS_self_mdl}
+pp_check(main_IOS_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r main_IOS_self_mdl_summary}
+main_IOS_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r main_IOS_self_mdl_testing}
+hypothesis(main_IOS_self_mdl,
+           'categoryabstract < 0')
+hypothesis(main_IOS_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(main_IOS_self_mdl,
+           'categoryabstract:self_contribution_c  > 0')
+```
+
+Re-do the other main model, the one with `closeness_01` as dependent variable, this time also with a `difficulty_c` control covariate:
+
+```{r dist_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+dist_self_mdl <- brm(bf(closeness_01 ~ 
+                                      
+                                      # Fixed effects:
+                                      
+                                      1 +
+                                      category +
+                                      self_contribution_c +
+                                      difficulty_c + # new
+                                      category:self_contribution_c +
+                                      
+                                      # Random effects:
+                                      
+                                      (1 +
+                                         category +
+                                         self_contribution_c +
+                                         category:self_contribution_c|participant) +
+                                      (1 + self_contribution_c|word),
+                                      phi ~ 1 + category),
+           
+                                    data = dist_inter_df, # interactive only
+                                    family = Beta,
+           
+                                    # MCMC settings:
+           
+                                    seed = 42,
+                                    init = 0,
+                                    cores = 4,
+                                    iter = 6000,
+                                    warmup = 3000,
+                                    control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_self_mdl,
+     file = '../models_E1/dist_self_mdl.RData')
+```
+
+Load model:
+
+```{r load_dist_self_mdl}
+load('../models_E1/dist_self_mdl.RData')
+```
+
+Show priors:
+
+```{r dist_self_mdl_priors}
+prior_summary(dist_self_mdl)
+```
+
+Perform posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_dist_self_mdl}
+pp_check(dist_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r dist_self_mdlsummary}
+dist_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r dist_self_mdltest}
+hypothesis(dist_self_mdl,
+           'categoryabstract > 0')
+hypothesis(dist_self_mdl,
+           'difficulty_c < 0')
+hypothesis(dist_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(dist_self_mdl,
+           'categoryabstract:self_contribution_c > 0')
+```
+
+This completes this script.
+

@@ -1,0 +1,3113 @@
+---
+title: "Abstract Concepts & Conversation: Analysis, Experiment 2"
+author: "Bodo Winter"
+date: "2/6/2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This script is structured as follows:
+
+- **setup**: loading packages and data
+- **overview**: displaying values such as N of participants, items, etc.
+- **preprocessing**: data wrangling steps
+- **descriptive statistics**: summary stats for said patterns
+- **data visualization**: visualizing the main data patterns we want to report
+- **data visualization: covariates**: plots for each covariate in relationship with IOS
+
+Main bits necessary to understand the following analysis:
+
+- the column `category` differentiates `abstract` versus `concrete`
+- the column `subcluster` differentiates different types of abstract and concrete concepts
+- the two main dependent variables are `closeness` and `IOS` (self-other inclusion)
+
+The following baseline analyses will be performed:
+
+- assess correlations between covariates
+- assess the effect of all covariates on `IOS`
+- assess the effect of all covariates on `closeness`
+
+The following main analyses will be performed:
+
+- assess the interaction of `category` and `other_inclusion` on `IOS`
+- assess the interaction of `category` and `other_inclusion` on `closeness`
+- assess the interaction of `category` and `self_inclusion` on `IOS`
+- assess the interaction of `category` and `self_inclusion` on `closeness`
+- repeat all those models for `subcluster` to zoom into the more detailed category structure of abstract concepts
+
+We will look additionally also at `difficulty`:
+
+- assess the effect of `category` on `difficulty`, and in a separate model of `subcluster`
+- perform both main analyses again, this time controlling for `difficulty`
+
+For all `brms` model fits, corresponding code chunks are set to `eval = FALSE` in the final file with pre-compiled models saved in `models` folder that are loaded into this script to save the user time.
+
+# Setup
+
+Load packages:
+
+```{r load_packages, warning = FALSE, message = FALSE}
+library(tidyverse) # for data processing
+library(brms) # for Bayesian mixed models
+library(tidybayes) # for half-eye plots of posteriors
+library(ggridges) # for joy plots
+library(patchwork) # for multiplot arrays
+library(gridExtra) # for multiplot arrays when patchwork fails us
+library(plotly) # for scatterplot matrix
+library(GGally) # for scatterplot matrix
+```
+
+Load data:
+
+```{r load_data, warning = FALSE, message = FALSE}
+# Load data:
+
+df <- read_csv('../data/abstract_concepts_conversations_all_E2.csv')
+
+# Show some random rows:
+
+sample_n(df, 5)
+```
+
+# Data cleaning and processing
+
+For the main model later, we want to look at how category influences IOS when interacting with `other_contribution`. For this we need to center `other_contribution` first. We'll do this here already so that subsets of this data also contain the centered covariate `other_contribution_c`. We'll later also use `difficulty` as a control covariate, so let's center that as well just in case.
+
+```{r center_continuous_preds}
+df <- mutate(df,
+             other_contribution_c = other_contribution - mean(other_contribution,
+                                                              na.rm = TRUE),
+             self_contribution_c = self_contribution - mean(self_contribution,
+                                                            na.rm = TRUE),
+             difficulty_c = difficulty - mean(difficulty,
+                                              na.rm = TRUE))
+```
+
+Also change the content of the `category` column so that the labels say `abstract` and `concrete`, and make the latter come first, which is more intuitive:
+
+```{r clean_category_column}
+df <- mutate(df,
+             category = str_to_lower(category),
+             category = factor(category,
+                               levels = c('concrete', 'abstract')))
+```
+
+Check the content of the `subcluster` column, which contains more detailed breakdowns of different kinds of concepts.
+
+```{r}
+df %>% 
+  count(subcluster)
+
+# Compare:
+
+df %>% 
+  count(category)
+```
+
+Slightly uneven distribution for the different subclusters, with relatively fewer `SS` concepts (= self-sociality), and slightly more `EM` concepts (= emotional).
+
+Let's give them more transparent labels, which is also useful for plotting later. We'll call the new column `spellout`, because it "spells out" the abbreviations.
+
+```{r}
+df <- mutate(df,
+             spellout = case_when(
+               subcluster == 'Conc_an'~ 'concrete animate or organic',
+               subcluster == 'Conc_in'~ 'concrete inanimate or inorganic',
+               subcluster == 'EM'~ 'abstract emotional',
+               subcluster == 'PSTQ'~ 'abstract quantitative-temporal-spatial',
+               subcluster == 'PS'~ 'abstract philosophical-spiritual',
+               subcluster == 'SS'~ 'abstract self-sociality'
+             ))
+```
+
+Check the correlation between active and passive closeness:
+
+```{r closeness_correlation}
+with(df, cor.test(active_closeness, passive_closeness))
+```
+
+r = 0.94, very highly correlated. Let's average them for the main analysis. The new variable will be called `closeness`, and the average of `active_closeness` and `passive_closeness`.
+
+```{r closeness_mean}
+df <- mutate(df,
+             closeness = (active_closeness + passive_closeness) / 2)
+```
+
+The `closeness` dependent measure is a VAS scale between 0 and 100. This needs to be scaled to [0, 1] for the beta distribution. We will call the new variable that is scaled this way `closeness_01`.
+
+```{r df_closeness_01}
+df <- mutate(df, closeness_01 = closeness / 100)
+```
+
+# Overview, preprocessing, and exclusions
+
+Check participants prior to exclusion:
+
+```{r count_participants}
+# Count rows per participants:
+
+df %>% 
+  count(participant)
+
+# Count rows of this table to print number of participants into console:
+
+df %>% 
+  count(participant) %>% 
+  nrow()
+```
+
+136 participants.
+
+Let's exclude the participants that are meant to be excluded. This information comes directly from Chiara, and specifically, I am supposed to exclude participants 72, 8, 74, 129, 111, 55, and 53. We've checked these and they do indeed look odd, seemingly responding like straightliners.
+
+```{r}
+# Define exclusion vector:
+
+bad_ones <- c(72, 8, 74, 129, 111, 55, 53)
+
+# Exclude:
+
+df <- filter(df,
+             !(participant %in% bad_ones))
+
+# Check:
+
+df %>% 
+  count(participant) %>% 
+  nrow()
+```
+
+Seven participants less, which is correct.
+
+Now let's do the same for words (= items):
+
+```{r count_items}
+# Count rows per participants:
+
+df %>% 
+  count(word)
+
+# Count rows of this table to print number of participants into console:
+
+df %>% 
+  count(word) %>% 
+  nrow()
+```
+
+32 items.
+
+What are these words?
+
+```{r which_words}
+distinct(df, subcluster, word) %>% 
+  sample_n(20)
+```
+
+For presentation purposes only, dichotomize the `other_contribution` variable, and order it in such a way that `low other` comes before `high other`. This will be used in the `median_split_p` code chunk below as well.
+
+```{r median_split}
+# Calculate median:
+
+md <- median(df$other_contribution)
+
+# Create median split variable:
+
+df <- mutate(df,
+             other_cat = ifelse(other_contribution > md,
+                                'high other contribution',
+                                'low other contribution'),
+             other_cat = factor(other_cat,
+                                levels = c('low other contribution',
+                                           'high other contribution')))
+```
+
+Let's look at the average IOS for abstract and concrete as a function of the median split:
+
+```{r median_split_avg}
+df %>% 
+  group_by(other_cat, category) %>% 
+  summarize(M_IOS = mean(IOS),
+            M_dist = mean(closeness))
+```
+
+Although it only comes up later, we'll set the reference levels for `subcluster` here now:
+
+```{r set_subcluster_ref_levels}
+df <- mutate(df,
+             subcluster = factor(subcluster),
+             subcluster = relevel(subcluster, ref = 'PSTQ'))
+
+# Check:
+
+levels(df$subcluster)
+```
+
+# Descriptive statistics
+
+Calculate `closeness` as a function of `category` and `subcluster`:
+
+```{r avg_closeness_by_category}
+# Category (abstract versus concrete):
+
+df %>% 
+  group_by(category) %>% 
+  summarize(M = mean(closeness))
+
+# Subcluster:
+
+df %>% 
+  group_by(spellout) %>% 
+  summarize(M = mean(closeness)) %>% 
+  arrange(desc(M))
+```
+
+Check `self_contribution` and `other_contribution` for the different subclusters. Chiara says that self-sociality and emotional abstract concepts should be more interacting with self-contribution, and philosophical more with other-contribution.
+
+```{r}
+# Self contribution:
+
+df %>% 
+  group_by(spellout) %>% 
+  summarize(self = mean(self_contribution)) %>% 
+  arrange(desc(self))
+
+# Other contribution:
+
+df %>% 
+  group_by(spellout) %>% 
+  summarize(other = mean(other_contribution)) %>% 
+  arrange(desc(other))
+```
+
+"Philosophical-spiritual" is actually *least* high on other contribution. "Self-sociality" is high on self contribution, but emotional not so much. Overall, the average differences between these categories are relatively small.
+
+Calculate `IOS` as a function of `category` and `spellout`:
+
+```{r avg_ios_by_category}
+# Abstract versus concrete:
+
+df %>% 
+  group_by(category) %>% 
+  summarize(M = mean(IOS))
+
+# Different sub groups:
+
+df %>% 
+  group_by(subcluster) %>% 
+  summarize(M = mean(IOS)) %>% 
+  arrange(desc(M))
+```
+
+Raw descriptive correlation between covariates:
+
+```{r covariate_correlations}
+# Extract covariates into one object:
+
+covs <- df %>% 
+  select(pleasantness:other_contribution)
+
+# Perform pairwise correlations for all covariates:
+
+round(cor(covs), 2)
+```
+
+The highest correlations are between `self_contribution` and `commitment`, followed by `other_contribution` and `pleasantness`.
+
+For the description of IOS as a function of the different covariates, I think it would be most intuitive to talk about the means of the highest and lowest scale points, as well as perhaps report Spearman's rho. Let's do that for each covariate in turn.
+
+Pleasantness:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(pleasantness))
+
+with(df, cor(IOS, pleasantness, method = 'spearman'))
+```
+
+Commitment:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(commitment))
+
+with(df, cor(IOS, commitment, method = 'spearman'))
+```
+
+Intimacy:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(intimacy))
+
+with(df, cor(IOS, intimacy, method = 'spearman'))
+```
+
+Difficulty:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(difficulty, na.rm = TRUE))
+
+with(df, cor(IOS, difficulty,
+             method = 'spearman',
+             use = 'complete.obs'))
+```
+
+Self-contribution:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(self_contribution, na.rm = TRUE))
+
+with(df, cor(IOS, self_contribution,
+             method = 'spearman',
+             use = 'complete.obs'))
+```
+
+Other-contribution:
+
+```{r}
+df %>% 
+  group_by(IOS) %>% 
+  summarize(M = mean(other_contribution, na.rm = TRUE))
+
+with(df, cor(IOS, other_contribution,
+             method = 'spearman',
+             use = 'complete.obs'))
+```
+
+
+# Data visualization
+
+Make a plot of `IOS` as a function of `category` (= concept type, `abstract` v `concrete`).
+
+```{r category_ios_p}
+# Plot core:
+
+category_ios_p <- df %>% 
+  count(IOS, category) %>% 
+  ggplot(aes(x = IOS, y = n, fill = category)) +
+  geom_col(position = 'dodge', width = 0.7,
+           col = 'black', size = 0.3)
+
+# Scales and axes:
+
+category_ios_p <- category_ios_p +
+  scale_fill_manual(values = c('grey55', 'purple2')) +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 7),
+                     breaks = 1:6) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 160),
+                     breaks = seq(0, 160, 20)) +
+  ylab('Number of responses') +
+  xlab('IOS (self-other inclusion test)')
+
+# Cosmetic tweaking:
+
+category_ios_p <- category_ios_p +
+  theme_classic() +
+  theme(legend.position = 'top',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+category_ios_p
+ggsave(plot = category_ios_p,
+       filename = '../figures_E2/category_ios_E2.pdf',
+       width = 5, height = 3.5)
+ggsave(plot = category_ios_p,
+       filename = '../figures_E2/category_ios_E2.png',
+       width = 5, height = 3.5)
+```
+
+Make a plot of this with a facet wrap for the median split:
+
+```{r median_split_p}
+# Plot core:
+
+median_split_p <- df %>% 
+  count(IOS, other_cat, category) %>% 
+  ggplot(aes(x = IOS, y = n, fill = category)) +
+  geom_bar(position = 'fill', width = 0.7,
+           stat = 'identity',
+           col = 'black', size = 0.3) +
+  facet_wrap(~other_cat, ncol = 2)
+
+# Scales and axes:
+
+median_split_p <- median_split_p +
+  scale_fill_manual(values = c('goldenrod3', 'steelblue')) +
+  scale_y_continuous(expand = c(0, 0)) +
+  ylab('Proportion') +
+  xlab('IOS (self-other inclusion test)')
+
+# Cosmetic tweaking:
+
+median_split_p <- median_split_p +
+  theme_classic() +
+  theme(legend.position = 'top',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)),
+        plot.margin = margin(r = 100))
+
+# Show in markdown and save in folder:
+
+median_split_p
+ggsave(plot = median_split_p,
+       filename = '../figures_E2/median_split_E2_p.pdf',
+       width = 7, height = 3)
+ggsave(plot = median_split_p,
+       filename = '../figures_E2/median_split_E2_p.png',
+       width = 7, height = 3)
+```
+
+Copy and paste the code from Experiment 1 here to reproduce the bin plot:
+
+```{r}
+df <- mutate(df,
+             other_bin2 = cut_number(other_contribution, 4))
+
+# Redo the averages:
+
+bin_avgs <- df %>% 
+  group_by(other_bin2, category) %>% 
+  summarize(IOS_M = mean(IOS),
+            IOS_SD = sd(IOS))
+
+# Append counts so that we can compute simple standard errors of the mean:
+
+bin_counts <- df %>% 
+  count(other_bin2, category)
+
+# Join together:
+
+bin_avgs <- left_join(bin_avgs, bin_counts)
+
+# Compute standard errors:
+
+bin_avgs <- mutate(bin_avgs, 
+                   SE = IOS_SD / sqrt(n),
+                   lower = IOS_M - SE,
+                   upper = IOS_M + SE,
+                   lower_CI = IOS_M - 1.96 * SE,
+                   upper_CI = IOS_M + 1.96 * SE)
+```
+
+Let's do that new bin plot:
+
+```{r bin2_p}
+# Plot core:
+
+bin_p <- bin_avgs %>% 
+  ggplot(aes(x = other_bin2, y = IOS_M,
+             color = category, group = category)) +
+  geom_line(size = 0.8) +
+  geom_point(pch = 15, size = 2,
+             position = position_dodge(width = 0.1)) +
+  geom_errorbar(aes(ymin = lower_CI, ymax = upper_CI),
+                width = 0,
+                position = position_dodge(width = 0.1))
+
+# Scales and axes:
+
+bin_p <- bin_p +
+  scale_color_manual(values = c('goldenrod3', 'steelblue')) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(2, 4.5),
+                     breaks = seq(2, 4.5, 0.5)) +
+  ylab('IOS mean') +
+  xlab('Other contribution (binned)') +
+  annotate(geom = 'text',
+           label = 'concrete concepts',
+           color = 'goldenrod3',
+           x = 0.7, y = 3.25,
+           hjust = 0, size = 3) +
+  annotate(geom = 'text',
+           label = 'abstract concepts',
+           color = 'steelblue',
+           x = 0.7, y = 2.51,
+           hjust = 0, size = 3)
+
+# Cosmetic tweaking:
+
+bin_p <- bin_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+bin_p
+ggsave(plot = bin_p,
+       filename = '../figures_E2/IOS_equal_bin_plot.pdf',
+       width = 4.5, height = 3.4)
+ggsave(plot = bin_p,
+       filename = '../figures_E2/IOS_equal_bin_plot.png',
+       width = 4.5, height = 3.4)
+```
+
+
+# Data visualization: covariates, and covariates with IOS
+
+Scatter plot matrix for covariates:
+
+```{r scatterplot_matrix_p}
+# Setings for diagonal:
+
+diag_wrap <- wrap("densityDiag", alpha = 0.5,
+                  fill = 'steelblue')
+
+# Plot core:
+
+scatter_p <- ggpairs(covs,
+                     aes(alpha = 0.5),
+                     diag = list(continuous = diag_wrap))
+
+# Cosmetics:
+
+scatter_p <- scatter_p +
+  theme_minimal()
+
+# Show in markdown and save in folder:
+
+scatter_p
+ggsave(plot = scatter_p,
+       filename = '../figures_E2/covariate_matrix_E2.pdf',
+       width = 8, height = 8)
+ggsave(plot = scatter_p,
+       filename = '../figures_E2/covariate_matrix_E2.png',
+       width = 8, height = 8)
+```
+
+Pleasantness and IOS:
+
+```{r pleasant_joy_p}
+# Plot core:
+
+pleasant_joy_p <- df %>% 
+  ggplot(aes(x = pleasantness, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+pleasant_joy_p <- pleasant_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+pleasant_joy_p <- pleasant_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+pleasant_joy_p
+ggsave(plot = pleasant_joy_p,
+       filename = '../figures_E2/pleasantness_joy_E2.pdf',
+       width = 5, height = 3.5)
+ggsave(plot = pleasant_joy_p,
+       filename = '../figures_E2/pleasantness_joy_E2.png',
+       width = 5, height = 3.5)
+```
+
+Commitment and IOS:
+
+```{r commit_joy_p}
+# Plot core:
+
+commit_joy_p <- df %>% 
+  ggplot(aes(x = commitment, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+commit_joy_p <- commit_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Commitment') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+commit_joy_p <- commit_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+commit_joy_p
+ggsave(plot = commit_joy_p,
+       filename = '../figures_E2/commitment_joy_E2.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = commit_joy_p,
+       filename = '../figures_E2/commitment_joy_E2.png',
+       width = 4.5, height = 4)
+```
+
+Intimacy and IOS:
+
+```{r intimate_joy_p}
+# Plot core:
+
+intimate_joy_p <- df %>% 
+  ggplot(aes(x = intimacy, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+intimate_joy_p <- intimate_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Intimacy') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+intimate_joy_p <- intimate_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+intimate_joy_p
+ggsave(plot = intimate_joy_p,
+       filename = '../figures_E2/intimacy_joy_E2.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = intimate_joy_p,
+       filename = '../figures_E2/intimacy_joy_E2.png',
+       width = 4.5, height = 4)
+```
+
+Difficulty and IOS:
+
+```{r difficult_joy_p}
+# Plot core:
+
+difficult_joy_p <- df %>% 
+  ggplot(aes(x = difficulty, y = factor(IOS)))+
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+difficult_joy_p <- difficult_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Difficulty') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+difficult_joy_p <- difficult_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+difficult_joy_p
+ggsave(plot = difficult_joy_p,
+       filename = '../figures_E2/difficulty_joy_E2.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = difficult_joy_p,
+       filename = '../figures_E2/difficulty_joy_E2.png',
+       width = 4.5, height = 4)
+```
+
+Self contribution and IOS:
+
+```{r self_joy_p}
+# Plot core:
+
+self_joy_p <- df %>% 
+  ggplot(aes(x = self_contribution, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+self_joy_p <- self_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Self contribution') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+self_joy_p <- self_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+self_joy_p
+ggsave(plot = self_joy_p,
+       filename = '../figures_E2/self_joy_E2.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = self_joy_p,
+       filename = '../figures_E2/self_joy_E2.png',
+       width = 4.5, height = 4)
+```
+
+Other contribution and IOS:
+
+```{r other_joy_p}
+# Plot core:
+
+other_joy_p <- df %>% 
+  ggplot(aes(x = other_contribution, y = factor(IOS))) +
+  geom_density_ridges(fill = 'steelblue',
+                      jittered_points = TRUE,
+                      position = position_points_jitter(width = 0.05,
+                                                        height = 0),
+                      point_shape = '|', point_size = 2,
+                      point_alpha = 1, alpha = 0.7)
+
+# Scales and axes:
+
+other_joy_p <- other_joy_p +
+  ylab('IOS\n(inclusion of other scale)') +
+  xlab('Other contribution') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-20, +120))
+
+# Cosmetic tweaking:
+
+other_joy_p <- other_joy_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show in markdown and save in folder:
+
+other_joy_p
+ggsave(plot = other_joy_p,
+       filename = '../figures_E2/other_joy_E2.pdf',
+       width = 4.5, height = 4)
+ggsave(plot = other_joy_p,
+       filename = '../figures_E2/other_joy_E2.png',
+       width = 4.5, height = 4)
+```
+
+Make a plot matrix out of all of these:
+
+```{r grid_arrange_multi_joy_p, warning = FALSE, message = FALSE}
+# Define layout matrix:
+
+my_layout <- matrix(c(1, 2, 3,
+                      4, 5, 6),
+                    byrow = TRUE, ncol = 3)
+
+# Change titles:
+
+commit_joy_p <- commit_joy_p +
+  ylab(NULL)
+intimate_joy_p <- intimate_joy_p +
+  ylab(NULL)
+self_joy_p <- self_joy_p +
+  ylab(NULL)
+other_joy_p <- other_joy_p +
+  ylab(NULL)
+
+# Show:
+
+grid.arrange(pleasant_joy_p, commit_joy_p, intimate_joy_p,
+             difficult_joy_p, self_joy_p, other_joy_p,
+             layout_matrix = my_layout)
+
+# Save:
+
+all_joy <- arrangeGrob(pleasant_joy_p, commit_joy_p, intimate_joy_p,
+                       difficult_joy_p, self_joy_p, other_joy_p,
+                       layout_matrix = my_layout)
+
+# Save:
+
+all_joy <- arrangeGrob(pleasant_joy_p, commit_joy_p, intimate_joy_p,
+                       difficult_joy_p, self_joy_p, other_joy_p,
+                       layout_matrix = my_layout)
+
+ggsave(all_joy, file = '../figures_E2/all_covariate_joy_E2.pdf',
+       width = 12, height = 6)
+ggsave(all_joy, file = '../figures_E2/all_covariate_joy_E2.png',
+       width = 12, height = 6)
+```
+
+# Data visualization: scatterplots of covariates with closeness
+
+Scatterplot matrix of all variables. First, let's start with pleasantness:
+
+```{r}
+pleasant_scatter <- df |> 
+  ggplot(aes(x = pleasantness, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+pleasant_scatter <- pleasant_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+pleasant_scatter <- pleasant_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+pleasant_scatter
+ggsave(filename = '../figures_E2/E2_pleasant_scatter.pdf', plot = pleasant_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E2/E2_pleasant_scatter.png', plot = pleasant_scatter,
+       width = 4.5, height = 4)
+```
+
+Second, commitment:
+
+```{r}
+commitment_scatter <- df |> 
+  ggplot(aes(x = commitment, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+commitment_scatter <- commitment_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+commitment_scatter <- commitment_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+commitment_scatter
+ggsave(filename = '../figures_E2/E2_commitment_scatter.pdf',
+       plot = commitment_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E2/E2_commitment_scatter.png',
+       plot = commitment_scatter,
+       width = 4.5, height = 4)
+```
+
+Third, intimacy:
+
+```{r}
+intimacy_scatter <- df |> 
+  ggplot(aes(x = intimacy, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+intimacy_scatter <- intimacy_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+intimacy_scatter <- intimacy_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+intimacy_scatter
+ggsave(filename = '../figures_E2/E2_intimacy_scatter.pdf',
+       plot = intimacy_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E2/E2_intimacy_scatter.png',
+       plot = intimacy_scatter,
+       width = 4.5, height = 4)
+```
+
+Fourth, difficulty:
+
+```{r}
+difficulty_scatter <- df |> 
+  ggplot(aes(x = difficulty, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+difficulty_scatter <- difficulty_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+difficulty_scatter <- difficulty_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+difficulty_scatter
+ggsave(filename = '../figures_E2/E2_difficulty_scatter.pdf',
+       plot = difficulty_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E2/E2_difficulty_scatter.png',
+       plot = difficulty_scatter,
+       width = 4.5, height = 4)
+```
+
+Fifth, self-contribution:
+
+```{r}
+self_contribution_scatter <- df |> 
+  ggplot(aes(x = self_contribution, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+self_contribution_scatter <- self_contribution_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+self_contribution_scatter <- self_contribution_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+self_contribution_scatter
+ggsave(filename = '../figures_E2/E2_self_contribution_scatter.pdf',
+       plot = self_contribution_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E2/E2_self_contribution_scatter.png',
+       plot = self_contribution_scatter,
+       width = 4.5, height = 4)
+```
+
+Sixth, other-contribution:
+
+```{r}
+other_contribution_scatter <- df |> 
+  ggplot(aes(x = other_contribution, y = closeness)) +
+  geom_smooth(method = 'lm', col = 'purple',
+              se = FALSE, size = 1.5) +
+  geom_point()
+
+# Scales and axes:
+
+other_contribution_scatter <- other_contribution_scatter +
+  ylab('Closeness') +
+  xlab('Pleasantness') +
+  scale_x_continuous(breaks = seq(0, 100, 20),
+                     limits = c(-5, +105))
+
+# Cosmetic tweaking:
+
+other_contribution_scatter <- other_contribution_scatter +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show and save:
+
+other_contribution_scatter
+ggsave(filename = '../figures_E2/E2_other_contribution_scatter.pdf',
+       plot = other_contribution_scatter,
+       width = 4.5, height = 4)
+ggsave(filename = '../figures_E2/E2_other_contribution_scatter.png',
+       plot = other_contribution_scatter,
+       width = 4.5, height = 4)
+```
+
+Put everything together into a big plot matrix:
+
+```{r grid_arrange_multi_scatter_p, warning = FALSE, message = FALSE}
+# Define layout matrix:
+
+my_layout <- matrix(c(1, 2, 3,
+                      4, 5, 6),
+                    byrow = TRUE, ncol = 3)
+
+# Change titles:
+
+commitment_scatter <- commitment_scatter +
+  ylab(NULL)
+intimacy_scatter <- intimacy_scatter +
+  ylab(NULL)
+self_contribution_scatter <- self_contribution_scatter +
+  ylab(NULL)
+other_contribution_scatter <- other_contribution_scatter +
+  ylab(NULL)
+
+# Show:
+
+grid.arrange(pleasant_scatter, commitment_scatter, intimacy_scatter,
+             difficulty_scatter, self_contribution_scatter, other_contribution_scatter,
+             layout_matrix = my_layout)
+
+# Save:
+
+all_joy <- arrangeGrob(pleasant_scatter, commitment_scatter, intimacy_scatter,
+                       difficulty_scatter, self_contribution_scatter, other_contribution_scatter,
+                       layout_matrix = my_layout)
+
+ggsave(all_joy, file = '../figures_E2/all_covariate_closeness.pdf',
+       width = 12, height = 6)
+ggsave(all_joy, file = '../figures_E2/all_covariate_closeness.png',
+       width = 12, height = 6)
+```
+
+
+
+# Covariate models
+
+Make a model of all covariates on `IOS`:
+
+```{r covariates_IOS_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+covariates_IOS_mdl <- brm(IOS ~ 
+                            
+                            # Fixed effects:
+                            
+                            1 +
+                            pleasantness +
+                            commitment +
+                            intimacy +
+                            difficulty + 
+                            self_contribution +
+                            other_contribution +
+                            
+                            # Random effects:
+                            
+                            (1|participant) +
+                            (0 + pleasantness|participant) +
+                            (0 + commitment|participant) +
+                            (0 + intimacy|participant) +
+                            (0 + difficulty|participant) +
+                            (0 + self_contribution|participant) +
+                            (0 + other_contribution|participant) +
+                            (1|word),
+                          
+                          # General stuff:
+           
+                          data = df,
+                          family = cumulative,
+           
+                          # MCMC settings:
+           
+                          seed = 42,
+                          cores = 4,
+                          iter = 6000,
+                          warmup = 3000,
+                          control = list(adapt_delta = 0.9))
+
+# Save model:
+
+save(covariates_IOS_mdl, file = '../models_E2/covariates_IOS_mdl.Rdata')
+```
+
+Load:
+
+```{r load_covariates_IOS_mdl}
+load('../models_E2/covariates_IOS_mdl.Rdata')
+```
+
+Show priors:
+
+```{r}
+prior_summary(covariates_IOS_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_covariates_IOS_mdl}
+pp_check(covariates_IOS_mdl, ndraws = 100, type = 'ecdf_overlay')
+```
+
+Check this model:
+
+```{r covariates_IOS_mdl_summary}
+covariates_IOS_mdl
+```
+
+Test all hypotheses from the covariate model:
+
+```{r covariate_hypothesis}
+hypothesis(covariates_IOS_mdl, 'pleasantness > 0')
+hypothesis(covariates_IOS_mdl, 'commitment > 0')
+hypothesis(covariates_IOS_mdl, 'intimacy > 0')
+hypothesis(covariates_IOS_mdl, 'difficulty < 0')
+hypothesis(covariates_IOS_mdl, 'self_contribution > 0')
+hypothesis(covariates_IOS_mdl, 'other_contribution > 0')
+```
+
+Now `closeness` as a function of all covariates:
+
+```{r covariates_dist_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+covariates_dist_mdl <- brm(bf(closeness_01 ~ 
+                             
+                                # Fixed effects:
+                             
+                                1 +
+                                pleasantness +
+                                commitment +
+                                intimacy +
+                                difficulty +
+                                self_contribution +
+                                other_contribution +
+                             
+                                # Random effects:
+                               
+                                (1|participant) +
+                                (0 + pleasantness|participant) +
+                                (0 + commitment|participant) +
+                                (0 + intimacy|participant) +
+                                (0 + difficulty|participant) +
+                                (0 + self_contribution|participant) +
+                                (0 + other_contribution|participant) +
+                                (1|word),
+                              
+                              # Family-specific parameter (shape):
+                              
+                              phi ~ 1),
+                           
+                           # General stuff:
+
+                           data = df,
+                           family = Beta,
+
+                           # MCMC settings:
+
+                           init = 0, # doesn't converge otherwise
+                           seed = 42,
+                           cores = 4,
+                           iter = 6000,
+                           warmup = 3000,
+                           control = list(adapt_delta = 0.90))
+
+# Save model:
+
+save(covariates_dist_mdl, file = '../models_E2/covariates_dist_mdl.Rdata')
+```
+
+Load:
+
+```{r load_covariates_dist_mdl}
+load('../models_E2/covariates_dist_mdl.Rdata')
+```
+
+Show priors:
+
+```{r}
+prior_summary(covariates_dist_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_covariates_dist_mdl}
+pp_check(covariates_dist_mdl,
+         ndraws = 100, type = 'ecdf_overlay')
+```
+
+Check this model:
+
+```{r covariates_dist_mdl_summary}
+covariates_dist_mdl
+```
+
+Test all hypotheses from the covariate model:
+
+```{r covariate_hypothesis_closeness}
+hypothesis(covariates_dist_mdl, 'pleasantness > 0')
+hypothesis(covariates_dist_mdl, 'commitment > 0')
+hypothesis(covariates_dist_mdl, 'intimacy > 0')
+hypothesis(covariates_dist_mdl, 'difficulty < 0')
+hypothesis(covariates_dist_mdl, 'self_contribution > 0')
+hypothesis(covariates_dist_mdl, 'other_contribution > 0')
+```
+
+# Difficulty analysis
+
+As we are learning from the first experiment, this analysis already directly includes difficulty as a covariate. We'll test the effect of `difficulty` on `category` anyway, and also on subclusters!
+
+Make a graph of this.
+
+```{r difficulty_concept_p}
+# Plot core:
+
+category_difficulty_p <- df %>% 
+  ggplot(aes(x = difficulty, fill = category)) +
+  geom_density(alpha = 0.55) +
+  annotate(geom = 'text',
+           label = 'concrete concepts',
+           color = 'goldenrod3',
+           x = 39, y = 0.011,
+           hjust = 0, size = 4) +
+  annotate(geom = 'text',
+           label = 'abstract concepts',
+           color = 'steelblue',
+           x = 68, y = 0.0075,
+           hjust = 0, size = 4)
+
+# Scales and axes:
+
+category_difficulty_p <- category_difficulty_p +
+  scale_x_continuous(expand = c(0, 0),
+                     limits = c(0, 100),
+                     breaks = seq(0, 100, 25)) +
+  scale_y_continuous(expand = c(0, 0),
+                     limits = c(0, 0.02)) +
+  scale_fill_manual(values = c('goldenrod3', 'steelblue')) +
+  xlab('Difficulty') +
+  ylab('Density')
+
+# Cosmetics:
+
+category_difficulty_p <- category_difficulty_p +
+  theme_classic() +
+  theme(legend.position = 'none',
+        legend.title = element_blank(),
+        axis.title = element_text(face = 'bold',
+                                  size = 12.5),
+        axis.title.x = element_text(margin = margin(t = 6.5)),
+        axis.title.y = element_text(margin = margin(r = 10)))
+
+# Show:
+
+category_difficulty_p
+ggsave('../figures_E2/category_difficulty_E2.pdf', plot = category_difficulty_p,
+       width = 5, height = 3.5)
+ggsave('../figures_E2/category_difficulty_E2.png', plot = category_difficulty_p,
+       width = 5, height = 3.5)
+```
+
+Since `difficulty` is now the dependent measure, convert it into [0, 1] for beta regression. We're adding `0.001` to the zero cases here because otherwise we can't run teh beta regression.
+
+```{r difficulty_01}
+df <- mutate(df,
+             difficulty_01 = difficulty / 100,
+             difficulty_01 = ifelse(difficulty_01 == 0, 0.001, difficulty_01))
+```
+
+Model `difficulty` as a function of `category` with a beta regression model then:
+
+```{r difficulty_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+difficulty_mdl <- brm(bf(difficulty_01 ~ 
+                           
+                           # Fixed effects:
+                           
+                           1 +
+                           category +
+                           
+                           # Random effects:
+                           
+                           (1 + category|participant) +
+                           (1|word),
+                        
+                         # Family-specific parameter (shape):
+                        
+                         phi ~ 1 + category),
+           
+                      data = df, # interactive only
+                      family = Beta,
+           
+                      # MCMC settings:
+           
+                      seed = 42,
+                      init = 0,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(difficulty_mdl, file = '../models_E2/difficulty_mdl.Rdata')
+```
+
+Load model:
+
+```{r load_difficulty_mdl}
+load('../models_E2/difficulty_mdl.Rdata')
+```
+
+Show priors:
+
+```{r}
+prior_summary(difficulty_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_difficulty_mdl}
+pp_check(difficulty_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r difficulty_mdl_summary}
+difficulty_mdl
+```
+
+Perform hypothesis test on the `category` fixed effects coefficient:
+
+```{r difficulty_mdl_category_test}
+hypothesis(difficulty_mdl, 'categoryabstract > 0')
+```
+
+Model `difficulty` as a function of `subcluster` with a beta regression model then:
+
+```{r difficulty_subcluster_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+diff_subcluster_mdl <- brm(bf(difficulty_01 ~ 
+                                
+                                # Fixed effects:
+                                
+                                1 +
+                                subcluster +
+                           
+                                # Random effects:
+                           
+                                (1 + subcluster|participant) +
+                                (1|word),
+                        
+                              # Family-specific parameter (shape):
+                        
+                              phi ~ 1),
+           
+                           data = df, # interactive only
+                           family = Beta,
+           
+                           # MCMC settings:
+           
+                           seed = 42,
+                           init = 0,
+                           cores = 4,
+                           iter = 6000,
+                           warmup = 3000,
+                           control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(diff_subcluster_mdl,
+     file = '../models_E2/difficulty_subcluster_mdl.Rdata')
+```
+
+Load model:
+
+```{r load_difficulty_subcluster_mdl}
+load('../models_E2/difficulty_subcluster_mdl.Rdata')
+```
+
+Show priors:
+
+```{r prior_subcluster_summary}
+prior_summary(diff_subcluster_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_difficulty_subcluster_mdl}
+pp_check(diff_subcluster_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r difficulty_subcluster_mdl_summary}
+diff_subcluster_mdl
+```
+
+Perform hypothesis test on the `subcluster` fixed effects coefficient:
+
+```{r difficulty_mdl_subcluster_test}
+# ...
+```
+
+# Category analysis: other-contribution
+
+Do the main analysis of `IOS` with `difficulty` as a covariate predictor, to control for this.
+
+```{r IOS_category_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_category_mdl <- brm(IOS ~ 
+                          
+                          # Fixed effects:
+                                 
+                          1 +
+                          category +
+                          other_contribution_c +
+                          difficulty_c +
+                          category:other_contribution_c +
+                          
+                          # Random effects:
+                                 
+                          (1 +
+                             category +
+                             other_contribution_c +
+                             category:other_contribution_c|participant) +
+                          (1 + other_contribution_c|word),
+           
+                        data = df,
+                        family = cumulative,
+           
+                        # MCMC settings:
+                               
+                        seed = 42,
+                        cores = 4,
+                        iter = 6000,
+                        warmup = 3000,
+                        save_pars = save_pars(all = TRUE), # for bayes factors
+                        control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_category_mdl,
+     file = '../models_E2/IOS_category_mdl.Rdata')
+```
+
+Corresponding null model:
+
+```{r IOS_category_null, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_category_null <- brm(IOS ~ 
+                                 
+                           # Fixed effects:
+                           
+                           1 +
+                           category +
+                           other_contribution_c +
+                           difficulty_c +
+                                 
+                           # Random effects:
+                                 
+                           (1 +
+                              category +
+                              other_contribution_c +
+                              category:other_contribution_c|participant) +
+                           (1 + other_contribution_c|word),
+           
+                         data = df,
+                         family = cumulative,
+           
+                         # MCMC settings:
+                               
+                         seed = 42,
+                         cores = 4,
+                         iter = 6000,
+                         warmup = 3000,
+                         save_pars = save_pars(all = TRUE), # for bayes factor
+                         control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_category_null,
+     file = '../models_E2/IOS_category_null.Rdata')
+```
+
+Load model:
+
+```{r load_main_IOS_difficulty_mdl}
+load('../models_E2/IOS_category_mdl.Rdata')
+load('../models_E2/IOS_category_null.Rdata')
+```
+
+Show priors:
+
+```{r main_model_priors}
+prior_summary(IOS_category_mdl)
+prior_summary(IOS_category_null)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_main, eval = FALSE}
+# Compute:
+
+IOS_bf <- bayes_factor(IOS_category_mdl, IOS_category_null)
+
+# Save:
+
+save(IOS_bf,
+     file = '../models_E2/IOS_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r show_bayes_factors_main}
+# Load:
+
+load('../models_E2/IOS_bf.RData')
+
+# Show:
+
+IOS_bf
+```
+
+Compute R-squared:
+
+```{r}
+bayes_R2(IOS_category_mdl)
+bayes_R2(IOS_category_null)
+
+# Check:
+
+0.7081655 - 0.7086503
+```
+
+The model with the interaction is nearly equivalent in R-squared to the model without the interaction.
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_IOS_category_mdl}
+pp_check(IOS_category_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r summarize_IOS_category_mdl}
+IOS_category_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r test_IOS_category_mdl}
+hypothesis(IOS_category_mdl,
+           'categoryabstract < 0')
+hypothesis(IOS_category_mdl,
+           'difficulty_c < 0')
+hypothesis(IOS_category_mdl,
+           'other_contribution_c > 0')
+hypothesis(IOS_category_mdl,
+           'categoryabstract:other_contribution_c  > 0')
+```
+
+Re-do the other main model, the one with `closeness_01` as dependent variable, this time also with a `difficulty_c` control covariate:
+
+```{r dist_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+dist_mdl <- brm(bf(closeness_01 ~ 
+                     
+                     # Fixed effects:
+                                      
+                     1 +
+                     category +
+                     other_contribution_c +
+                     difficulty_c +
+                     category:other_contribution_c +
+                                      
+                     # Random effects:
+                                      
+                     (1 +
+                        category +
+                        other_contribution_c +
+                        category:other_contribution_c|participant) +
+                     (1 + other_contribution_c|word),
+                   phi ~ 1 + category),
+           
+                data = df, # interactive only
+                family = Beta,
+           
+                # MCMC settings:
+           
+                seed = 42,
+                init = 0,
+                cores = 4,
+                iter = 7500,
+                warmup = 3500,
+                save_pars = save_pars(all = TRUE), # for bayes factor
+                control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_mdl,
+     file = '../models_E2/dist_mdl.Rdata')
+```
+
+Corresponding null model:
+
+```{r dist_null_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+dist_null_mdl <- brm(bf(closeness_01 ~ 
+                                      
+                          # Fixed effects:
+                                      
+                          1 +
+                          category +
+                          other_contribution_c +
+                          difficulty_c +
+                                      
+                          # Random effects:
+                                      
+                          (1 +
+                             category +
+                             other_contribution_c +
+                             category:other_contribution_c|participant) +
+                          (1 + other_contribution_c|word),
+                        phi ~ 1 + category),
+           
+                     data = df, # interactive only
+                     family = Beta,
+           
+                     # MCMC settings:
+           
+                     seed = 42,
+                     init = 0,
+                     cores = 4,
+                     iter = 7500,
+                     warmup = 3500,
+                     save_pars = save_pars(all = TRUE), # for bayes factor
+                     control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_null_mdl,
+     file = '../models_E2/dist_null_mdl.Rdata')
+```
+
+Load model:
+
+```{r load_category_dist_difficulty_mdl}
+load('../models_E2/dist_mdl.Rdata')
+load('../models_E2/dist_null_mdl.Rdata')
+```
+
+Show priors:
+
+```{r show_priors_dist_mdl}
+prior_summary(dist_mdl)
+prior_summary(dist_null_mdl)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_dist, eval = FALSE}
+# Compute:
+
+dist_bf <- bayes_factor(dist_mdl, dist_null_mdl)
+
+# Save:
+
+save(dist_bf,
+     file = '../models_E2/dist_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r show_bayes_factors_dist}
+# Load:
+
+load('../models_E2/dist_bf.RData')
+
+# Show:
+
+dist_bf
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_category_dist_difficulty_mdl}
+pp_check(dist_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r category_dist_difficulty_mdl_summary}
+dist_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r category_dist_difficulty_mdl_category_test}
+hypothesis(dist_mdl,
+           'categoryabstract > 0')
+hypothesis(dist_mdl,
+           'difficulty_c < 0')
+hypothesis(dist_mdl,
+           'other_contribution_c > 0')
+hypothesis(dist_mdl,
+           'categoryabstract:other_contribution_c > 0')
+```
+
+# Category analysis: self-contribution
+
+A repeat of the main analysis, but this time testing the interaction with `other_contribution` rather than `self_contribution`.
+
+```{r IOS_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_self_mdl <- brm(IOS ~ 
+                      
+                      # Fixed effects:
+                           
+                      1 +
+                      category +
+                      self_contribution_c +
+                      difficulty_c +
+                      category:self_contribution_c +
+                                 
+                      # Random effects:
+                                 
+                      (1 +
+                         category +
+                         self_contribution_c +
+                         category:self_contribution_c|participant) +
+                      (1 + self_contribution_c|word),
+           
+                    data = df,
+                    family = cumulative,
+           
+                    # MCMC settings:
+                               
+                    seed = 42,
+                    cores = 4,
+                    iter = 6000,
+                    warmup = 3000,
+                    save_pars = save_pars(all = TRUE), # for bayes factors
+                    control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_self_mdl,
+     file = '../models_E2/IOS_self_mdl.Rdata')
+```
+
+Fit the corresponding null model:
+
+```{r IOS_self_null, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_self_null <- brm(IOS ~ 
+                      
+                      # Fixed effects:
+                           
+                      1 +
+                      category +
+                      self_contribution_c +
+                      difficulty_c +
+                                 
+                      # Random effects:
+                                 
+                      (1 +
+                         category +
+                         self_contribution_c +
+                         category:self_contribution_c|participant) +
+                      (1 + self_contribution_c|word),
+           
+                    data = df,
+                    family = cumulative,
+           
+                    # MCMC settings:
+                               
+                    seed = 42,
+                    cores = 4,
+                    iter = 6000,
+                    warmup = 3000,
+                    save_pars = save_pars(all = TRUE), # for bayes factors
+                    control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_null_mdl,
+     file = '../models_E2/IOS_self_null.Rdata')
+```
+
+Load model:
+
+```{r load_IOS_self_mdl}
+load('../models_E2/IOS_self_mdl.RData')
+load('../models_E2/IOS_self_null.RData')
+```
+
+Show priors:
+
+```{r priors_IOS_self_mdl}
+prior_summary(IOS_self_mdl)
+prior_summary(IOS_self_null)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_self, eval = FALSE}
+# Compute:
+
+IOS_self_bf <- bayes_factor(IOS_self_mdl, IOS_self_null)
+
+# Save:
+
+save(IOS_self_bf,
+     file = '../models_E2/IOS_self_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r sow_bayes_factors_self}
+# Load:
+
+load('../models_E2/IOS_self_bf.RData')
+
+# Show:
+
+dist_bf
+```
+
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_IOS_self_mdl}
+pp_check(IOS_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r summarize_IOS_self_mdl}
+IOS_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r test_IOS_self_mdl}
+hypothesis(IOS_self_mdl,
+           'categoryabstract < 0')
+hypothesis(IOS_self_mdl,
+           'difficulty_c < 0')
+hypothesis(IOS_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(IOS_self_mdl,
+           'categoryabstract:self_contribution_c  > 0')
+```
+
+Re-do the other main model, the one with `closeness_01` as dependent variable, this time also with a `difficulty_c` control covariate:
+
+```{r dist_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+dist_self_mdl <- brm(bf(closeness_01 ~ 
+                       
+                       # Fixed effects:
+                       
+                       1 +
+                       category +
+                       self_contribution_c +
+                       difficulty_c +
+                       category:self_contribution_c +
+                                      
+                       # Random effects:
+                                      
+                       (1 +
+                          category +
+                          self_contribution_c +
+                          category:self_contribution_c|participant) +
+                       (1 + self_contribution_c|word),
+                       phi ~ 1 + category),
+           
+                     data = df,
+                     family = Beta,
+           
+                     # MCMC settings:
+           
+                     seed = 42,
+                     init = 0,
+                     cores = 4,
+                     iter = 6000,
+                     warmup = 3000,
+                     save_pars = save_pars(all = TRUE), # for bayes factors
+                     control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_self_mdl,
+     file = '../models_E2/dist_self_mdl.Rdata')
+```
+
+The corresponding null model:
+
+```{r dist_self_null, message = FALSE, warning = FALSE, eval = FALSE}
+dist_self_null <- brm(bf(closeness_01 ~ 
+                       
+                       # Fixed effects:
+                       
+                       1 +
+                       category +
+                       self_contribution_c +
+                       difficulty_c +
+                                      
+                       # Random effects:
+                                      
+                       (1 +
+                          category +
+                          self_contribution_c +
+                          category:self_contribution_c|participant) +
+                       (1 + self_contribution_c|word),
+                       phi ~ 1 + category),
+           
+                     data = df,
+                     family = Beta,
+           
+                     # MCMC settings:
+           
+                     seed = 42,
+                     init = 0,
+                     cores = 4,
+                     iter = 6000,
+                     warmup = 3000,
+                     save_pars = save_pars(all = TRUE), # for bayes factors
+                     control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_self_null,
+     file = '../models_E2/dist_self_null.Rdata')
+```
+
+Load model:
+
+```{r load_dist_self_mdl}
+load('../models_E2/dist_self_mdl.Rdata')
+load('../models_E2/dist_self_null.Rdata')
+```
+
+Show priors:
+
+```{r dist_self_prior_summary}
+prior_summary(dist_self_mdl)
+prior_summary(dist_self_null)
+```
+
+Bayes factors for both:
+
+```{r bf_dist_self, eval = FALSE}
+# Compute:
+
+dist_self_bf <- bayes_factor(dist_self_mdl, dist_self_null)
+
+# Save:
+
+save(dist_self_bf,
+     file = '../models_E2/dist_self_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r dist_self_bf_show}
+# Load:
+
+load('../models_E2/dist_self_bf.RData')
+
+# Show:
+
+dist_self_bf
+```
+
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_dist_self_mdl}
+pp_check(dist_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r dist_self_mdl_summary}
+dist_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r dist_self_mdl_testing}
+hypothesis(dist_self_mdl,
+           'categoryabstract > 0')
+hypothesis(dist_self_mdl,
+           'difficulty_c < 0')
+hypothesis(dist_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(dist_self_mdl,
+           'categoryabstract:self_contribution_c > 0')
+```
+
+# Subcluster models: other-contribution
+
+Do the main analysis of `IOS` with `difficulty` as a covariate predictor, to control for this.
+
+```{r subcluster_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+subcluster_mdl <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        other_contribution_c +
+                        difficulty_c +
+                        subcluster:other_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           other_contribution_c +
+                           subcluster:other_contribution_c|participant) +
+                        (1 + other_contribution_c|word),
+           
+                      data = df,
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(subcluster_mdl,
+     file = '../models_E2/subcluster_mdl.Rdata')
+```
+
+The corresponding null model:
+
+```{r subcluster_null, message = FALSE, warning = FALSE, eval = FALSE}
+subcluster_null <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        other_contribution_c +
+                        difficulty_c +
+                        subcluster:other_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           other_contribution_c +
+                           subcluster:other_contribution_c|participant) +
+                        (1 + other_contribution_c|word),
+           
+                      data = df,
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(subcluster_null,
+     file = '../models_E2/subcluster_null.Rdata')
+```
+
+Load model:
+
+```{r load_subcluster_mdl}
+load('../models_E2/subcluster_mdl.Rdata')
+```
+
+Show priors:
+
+```{r subcluster_mdl_priors}
+prior_summary(subcluster_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_subcluster_mdl}
+pp_check(subcluster_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r subcluster_mdl_summary}
+subcluster_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r subcluster_mdl_testing}
+hypothesis(subcluster_mdl,
+           'other_contribution_c > 0')
+hypothesis(subcluster_mdl,
+           'difficulty_c < 0')
+hypothesis(subcluster_mdl,
+           'subclusterConc_an:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_mdl,
+           'subclusterConc_in:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_mdl,
+           'subclusterEM:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_mdl,
+           'subclusterPS:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_mdl,
+           'subclusterSS:other_contribution_c < 0') # PSTQ is reference
+```
+
+Re-do the other main model, the one with `closeness_01` as dependent variable, this time also with a `difficulty_c` control covariate:
+
+```{r subcluster_dist_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+subcluster_dist_mdl <- brm(bf(closeness_01 ~ 
+                                      
+                             # Fixed effects:
+                                      
+                             1 +
+                             subcluster +
+                             other_contribution_c +
+                             difficulty_c +
+                             subcluster:other_contribution_c +
+                                      
+                             # Random effects:
+                                      
+                             (1 +
+                                subcluster +
+                                other_contribution_c +
+                                         subcluster:other_contribution_c|participant) +
+                             (1 + other_contribution_c|word),
+                             phi ~ 1),
+           
+                           data = df,
+                           family = Beta,
+           
+                           # MCMC settings:
+           
+                           seed = 42,
+                           init = 0,
+                           cores = 4,
+                           iter = 6000,
+                           warmup = 3000,
+                           control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(subcluster_dist_mdl,
+     file = '../models_E2/subcluster_dist_mdl.RData')
+```
+
+Load model:
+
+```{r load_subcluster_dist_mdl}
+load('../models_E2/subcluster_dist_mdl.Rdata')
+```
+
+Show priors:
+
+```{r}
+prior_summary(subcluster_dist_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_subcluster_dist_mdl}
+pp_check(subcluster_dist_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r subcluster_dist_mdl_summary}
+subcluster_dist_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r subcluster_dist_mdl_testing}
+hypothesis(subcluster_dist_mdl,
+           'difficulty_c < 0')
+hypothesis(subcluster_dist_mdl,
+           'other_contribution_c > 0')
+hypothesis(subcluster_dist_mdl,
+           'subclusterConc_an:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_mdl,
+           'subclusterConc_in:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_mdl,
+           'subclusterEM:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_mdl,
+           'subclusterPS:other_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_mdl,
+           'subclusterSS:other_contribution_c < 0') # PSTQ is reference
+```
+
+# Subcluster models: self-contribution
+
+Do the main analysis of `IOS` with `difficulty` as a covariate predictor, to control for this.
+
+```{r subcluster_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+subcluster_self_mdl <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        self_contribution_c +
+                        difficulty_c +
+                        subcluster:self_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           self_contribution_c +
+                           subcluster:self_contribution_c|participant) +
+                        (1 + self_contribution_c|word),
+           
+                      data = df,
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(subcluster_self_mdl,
+     file = '../models_E2/subcluster_self_mdl.Rdata')
+```
+
+Load model:
+
+```{r load_subcluster_self_mdl}
+load('../models_E2/subcluster_self_mdl.RData')
+```
+
+Show priors:
+
+```{r subcluster_self_mdl_priors}
+prior_summary(subcluster_self_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_subcluster_self_mdl}
+pp_check(subcluster_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r subcluster_self_mdl_summary}
+subcluster_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r subcluster_self_mdl_testing}
+hypothesis(subcluster_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(subcluster_self_mdl,
+           'difficulty_c < 0')
+hypothesis(subcluster_self_mdl,
+           'subclusterConc_an:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_self_mdl,
+           'subclusterConc_in:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_self_mdl,
+           'subclusterEM:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_self_mdl,
+           'subclusterPS:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_self_mdl,
+           'subclusterSS:self_contribution_c < 0') # PSTQ is reference
+```
+
+Re-do the self main model, the one with `closeness_01` as dependent variable, this time also with a `difficulty_c` control covariate:
+
+```{r subcluster_dist_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+subcluster_dist_self_mdl <- brm(bf(closeness_01 ~ 
+                                      
+                             # Fixed effects:
+                                      
+                             1 +
+                             subcluster +
+                             self_contribution_c +
+                             difficulty_c +
+                             subcluster:self_contribution_c +
+                                      
+                             # Random effects:
+                                      
+                             (1 +
+                                subcluster +
+                                self_contribution_c +
+                                         subcluster:self_contribution_c|participant) +
+                             (1 + self_contribution_c|word),
+                             phi ~ 1 + subcluster),
+           
+                           data = df,
+                           family = Beta,
+           
+                           # MCMC settings:
+           
+                           seed = 42,
+                           init = 0,
+                           cores = 4,
+                           iter = 6000,
+                           warmup = 3000,
+                           control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(subcluster_dist_self_mdl,
+     file = '../models_E2/subcluster_dist_self_mdl.RData')
+```
+
+Load model:
+
+```{r load_subcluster_dist_self_mdl}
+load('../models_E2/subcluster_dist_self_mdl.Rdata')
+```
+
+Show priors:
+
+```{r subcluster_dist_self_priors}
+prior_summary(subcluster_dist_self_mdl)
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_subcluster_dist_self_mdl}
+pp_check(subcluster_dist_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r subcluster_dist_self_mdlsummary}
+subcluster_dist_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r subcluster_dist_self_mdl_testing}
+hypothesis(subcluster_dist_self_mdl,
+           'difficulty_c < 0')
+hypothesis(subcluster_dist_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(subcluster_dist_self_mdl,
+           'subclusterConc_an:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_self_mdl,
+           'subclusterConc_in:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_self_mdl,
+           'subclusterEM:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_self_mdl,
+           'subclusterPS:self_contribution_c < 0') # PSTQ is reference
+hypothesis(subcluster_dist_self_mdl,
+           'subclusterSS:self_contribution_c < 0') # PSTQ is reference
+```
+
+# Subcluster analysis of abstract concepts only
+
+Let's perform models just focusing on the abstract concepts only, since the hypothesis about the different subclusters is really only about abstract concepts.
+
+```{r IOS_subset_other_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_subset_other_mdl <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        other_contribution_c +
+                        difficulty_c +
+                        subcluster:other_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           other_contribution_c +
+                           subcluster:other_contribution_c|participant) +
+                        (1 + other_contribution_c|word),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_subset_other_mdl,
+     file = '../models_E2/IOS_subset_other_mdl.Rdata')
+```
+
+Corresponding null model:
+
+```{r IOS_subset_null_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_subset_null_mdl <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        other_contribution_c +
+                        difficulty_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           other_contribution_c +
+                           subcluster:other_contribution_c|participant) +
+                        (1 + other_contribution_c|word),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_subset_null_mdl,
+     file = '../models_E2/IOS_subset_null_mdl.Rdata')
+```
+
+Load model:
+
+```{r load_IOS_subset_other_mdl}
+load('../models_E2/IOS_subset_other_mdl.Rdata')
+load('../models_E2/IOS_subset_null_mdl.Rdata')
+```
+
+Show priors:
+
+```{r IOS_subset_other_mdl_priors}
+prior_summary(IOS_subset_other_mdl)
+prior_summary(IOS_subset_null_mdl)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_subset, eval = FALSE}
+# Compute Bayes factor:
+
+IOS_subset_bf <- bayes_factor(IOS_subset_other_mdl, IOS_subset_null_mdl)
+
+# Save:
+
+save(IOS_subset_bf,
+     file = '../models_E2/IOS_subset_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r bayes_factor_IOS_subset}
+# Load:
+
+load('../models_E2/IOS_subset_bf.RData')
+
+# Show:
+
+IOS_subset_bf
+```
+
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_IOS_subset_other_mdl}
+pp_check(IOS_subset_other_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r IOS_subset_other_mdl_summary}
+IOS_subset_other_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r IOS_subset_other_mdltesting}
+hypothesis(IOS_subset_other_mdl,
+           'difficulty_c < 0')
+hypothesis(IOS_subset_other_mdl,
+           'other_contribution_c > 0')
+hypothesis(IOS_subset_other_mdl,
+           'subclusterEM:other_contribution_c < 0') # PSTQ is reference
+hypothesis(IOS_subset_other_mdl,
+           'subclusterPS:other_contribution_c < 0') # PSTQ is reference
+hypothesis(IOS_subset_other_mdl,
+           'subclusterSS:other_contribution_c < 0') # PSTQ is reference
+```
+
+Next, the model with IOS on self contribution:
+
+```{r IOS_subset_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_subset_self_mdl <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        self_contribution_c +
+                        difficulty_c +
+                        subcluster:self_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           self_contribution_c +
+                           subcluster:self_contribution_c|participant) +
+                        (1 + self_contribution_c|word),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_subset_self_mdl,
+     file = '../models_E2/IOS_subset_self_mdl.Rdata')
+```
+
+Corresponding null model:
+
+```{r IOS_subset_self_null, message = FALSE, warning = FALSE, eval = FALSE}
+IOS_subset_self_null <- brm(IOS ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        self_contribution_c +
+                        difficulty_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           self_contribution_c +
+                           subcluster:self_contribution_c|participant) +
+                        (1 + self_contribution_c|word),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = cumulative,
+           
+                      # MCMC settings:
+                               
+                      seed = 42,
+                      cores = 4,
+                      iter = 6000,
+                      warmup = 3000,
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(IOS_subset_self_null,
+     file = '../models_E2/IOS_subset_self_null.RData')
+```
+
+Load model:
+
+```{r load_IOS_subset_self_mdl}
+load('../models_E2/IOS_subset_self_mdl.Rdata')
+load('../models_E2/IOS_subset_self_null.RData')
+```
+
+Show priors:
+
+```{r IOS_subset_self_mdl_priors}
+prior_summary(IOS_subset_self_mdl)
+prior_summary(IOS_subset_self_null)
+```
+
+Bayes factors for both:
+
+```{r bayes_factors_subset_self, eval = FALSE}
+# Compute Bayes factor:
+
+IOS_subset_self_bf <- bayes_factor(IOS_subset_self_mdl, IOS_subset_self_null)
+
+# Save:
+
+save(IOS_subset_self_bf,
+     file = '../models_E2/IOS_subset_self_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r bayes_factor_IOS_subset_self}
+# Load:
+
+load('../models_E2/IOS_subset_self_bf.RData')
+
+# Show:
+
+IOS_subset_self_bf
+```
+
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_IOS_subset_self_mdl}
+pp_check(IOS_subset_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r IOS_subset_self_mdl_summary}
+IOS_subset_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r IOS_subset_self_mdl_testing}
+hypothesis(IOS_subset_self_mdl,
+           'difficulty_c < 0')
+hypothesis(IOS_subset_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(IOS_subset_self_mdl,
+           'subclusterEM:self_contribution_c < 0') # PSTQ is reference
+hypothesis(IOS_subset_self_mdl,
+           'subclusterPS:self_contribution_c < 0') # PSTQ is reference
+hypothesis(IOS_subset_self_mdl,
+           'subclusterSS:self_contribution_c < 0') # PSTQ is reference
+```
+
+Next, the distance on other model for only the abstract concepts.
+
+```{r dist_subset_other_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+dist_subset_other_mdl <- brm(bf(closeness_01 ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        other_contribution_c +
+                        difficulty_c +
+                        subcluster:other_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           other_contribution_c +
+                           subcluster:other_contribution_c|participant) +
+                        (1 + other_contribution_c|word),
+                        phi ~ 1),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = Beta,
+           
+                      # MCMC settings:
+                               
+                      init = 0,
+                      seed = 42,
+                      cores = 4,
+                      iter = 7500,
+                      warmup = 3500,
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_subset_other_mdl,
+     file = '../models_E2/dist_subset_other_mdl.Rdata')
+```
+
+Corresponding null model:
+
+```{r dist_subset_other_null, message = FALSE, warning = FALSE, eval = FALSE}
+dist_subset_other_null <- brm(bf(closeness_01 ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        other_contribution_c +
+                        difficulty_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           other_contribution_c +
+                           subcluster:other_contribution_c|participant) +
+                        (1 + other_contribution_c|word),
+                        phi ~ 1),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = Beta,
+           
+                      # MCMC settings:
+                               
+                      init = 0,
+                      seed = 42,
+                      cores = 4,
+                      iter = 7500,
+                      warmup = 3500,
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_subset_other_null,
+     file = '../models_E2/dist_subset_other_null.Rdata')
+```
+
+Load model:
+
+```{r load_dist_subset_other_mdl}
+load('../models_E2/dist_subset_other_mdl.Rdata')
+load('../models_E2/dist_subset_other_null.Rdata')
+```
+
+Show priors:
+
+```{r dist_subset_other_mdl_priors}
+prior_summary(dist_subset_other_mdl)
+prior_summary(dist_subset_other_null)
+```
+
+Compute Bayes factor:
+
+```{r dist_subset_bf, eval = FALSE}
+# Compute bayes factor:
+
+dist_subset_bf <- bayes_factor(dist_subset_other_mdl, dist_subset_other_null)
+
+# Save:
+
+save(dist_subset_bf,
+     file = '../models_E2/dist_subset_bf.RData')
+```
+
+Show Bayes factor:
+
+```{r dist_subset_bf_load}
+# # Load:
+# 
+# load('../models_E2/IOS_subset_bf.RData')
+# 
+# # Show:
+# 
+# dist_subset_bf
+```
+
+Having some implementational issues here. Need to check the following warning message:
+
+<<<
+*
+Error in dyn.load(libLFile) : 
+  unable to load shared object '/var/folders/mn/d8pyxq412154r5dt7qg7s7rm0000gn/T//RtmpqOZ9uZ/file10301753938d.so':
+  dlopen(/var/folders/mn/d8pyxq412154r5dt7qg7s7rm0000gn/T//RtmpqOZ9uZ/file10301753938d.so, 6): Library not loaded: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libR.dylib
+  Referenced from: /private/var/folders/mn/d8pyxq412154r5dt7qg7s7rm0000gn/T/RtmpqOZ9uZ/file10301753938d.so
+  Reason: Incompatible library version: file10301753938d.so requires version 4.2.0 or later, but libR.dylib provides version 4.1.0
+*
+<<<
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_dist_subset_other_mdl}
+pp_check(dist_subset_other_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r dist_subset_other_mdl_summary}
+dist_subset_other_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r dist_subset_other_mdl_testing}
+hypothesis(dist_subset_other_mdl,
+           'difficulty_c < 0')
+hypothesis(dist_subset_other_mdl,
+           'other_contribution_c > 0')
+hypothesis(dist_subset_other_mdl,
+           'subclusterEM:other_contribution_c < 0') # PSTQ is reference
+hypothesis(dist_subset_other_mdl,
+           'subclusterPS:other_contribution_c < 0') # PSTQ is reference
+hypothesis(dist_subset_other_mdl,
+           'subclusterSS:other_contribution_c < 0') # PSTQ is reference
+```
+
+Finally, the distance model with self contribution as covariate, again for only the abstract concepts.
+
+```{r dist_subset_self_mdl, message = FALSE, warning = FALSE, eval = FALSE}
+dist_subset_self_mdl <- brm(bf(closeness_01 ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        self_contribution_c +
+                        difficulty_c +
+                        subcluster:self_contribution_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           self_contribution_c +
+                           subcluster:self_contribution_c|participant) +
+                        (1 + self_contribution_c|word),
+                        phi ~ 1),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = Beta,
+           
+                      # MCMC settings:
+                               
+                      init = 0,
+                      seed = 42,
+                      cores = 4,
+                      iter = 7500,
+                      warmup = 3500, # higher because ESS low warning
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_subset_self_mdl,
+     file = '../models_E2/dist_subset_self_mdl.Rdata')
+```
+
+The corresponding null model:
+
+```{r dist_subset_self_null, message = FALSE, warning = FALSE, eval = FALSE}
+dist_subset_self_null <- brm(bf(closeness_01 ~ 
+                                 
+                        # Fixed effects:
+                                 
+                        1 +
+                        subcluster +
+                        self_contribution_c +
+                        difficulty_c +
+                                 
+                        # Random effects:
+                                 
+                        (1 +
+                           subcluster +
+                           self_contribution_c +
+                           subcluster:self_contribution_c|participant) +
+                        (1 + self_contribution_c|word),
+                        phi ~ 1),
+           
+                      data = filter(df, category == 'abstract'),
+                      family = Beta,
+           
+                      # MCMC settings:
+                               
+                      init = 0,
+                      seed = 42,
+                      cores = 4,
+                      iter = 7500,
+                      warmup = 3500, # higher because ESS low warning
+                      save_pars = save_pars(all = TRUE), # for bayes factors
+                      control = list(adapt_delta = 0.99))
+
+# Save model:
+
+save(dist_subset_self_null,
+     file = '../models_E2/dist_subset_self_null.Rdata')
+```
+
+Load model:
+
+```{r load_dist_subset_self_mdl}
+load('../models_E2/dist_subset_self_mdl.Rdata')
+load('../models_E2/dist_subset_self_null.Rdata')
+```
+
+Show priors:
+
+```{r dist_subset_self_mdl_priors}
+prior_summary(dist_subset_self_mdl)
+prior_summary(dist_subset_self_null)
+```
+
+Compute Bayes factor:
+
+```{r dist_subset_self_bf, eval = FALSE}
+# Compute bayes factor:
+
+dist_subset_self_bf <- bayes_factor(dist_subset_self_mdl.Rdata,
+                                    dist_subset_self_null)
+
+# Save:
+
+save(dist_self_bf,
+     file = '../models_E2/dist_subset_self_bf.RData')
+```
+
+Same as above with the error...
+
+Show Bayes factor:
+
+```{r dist_subset_self_bf_load}
+# # Load:
+# 
+# load('../models_E2/dist_subset_self_bf.RData')
+# 
+# # Show:
+# 
+# dist_subset_self_bf
+```
+
+Check posterior predictive checks of the mixed beta regression:
+
+```{r pp_check_dist_subset_self_mdl}
+pp_check(dist_subset_self_mdl, ndraws = 100)
+```
+
+Check this model:
+
+```{r dist_subset_self_mdl_summary}
+dist_subset_self_mdl
+```
+
+Perform hypothesis tests on the fixed effects coefficient:
+
+```{r dist_subset_self_mdl_testing}
+hypothesis(dist_subset_self_mdl,
+           'difficulty_c < 0')
+hypothesis(dist_subset_self_mdl,
+           'self_contribution_c > 0')
+hypothesis(dist_subset_self_mdl,
+           'subclusterEM:self_contribution_c < 0') # PSTQ is reference
+hypothesis(dist_subset_self_mdl,
+           'subclusterPS:self_contribution_c < 0') # PSTQ is reference
+hypothesis(dist_subset_self_mdl,
+           'subclusterSS:self_contribution_c < 0') # PSTQ is reference
+```
+
+This completes this analysis.
+
