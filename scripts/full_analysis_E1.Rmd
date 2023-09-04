@@ -947,8 +947,8 @@ pleasant_joy_p <- inter_df %>%
   geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
-                      point_shape = '|', point_size = 2,
-                      point_alpha = 1, alpha = 0.7)
+                      point_shape = '|', point_size = 1.5,
+                      point_alpha = 1, alpha = 0.9)
 
 # Scales and axes:
 
@@ -993,8 +993,8 @@ commit_joy_p <- inter_df %>%
   geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
-                      point_shape = '|', point_size = 2,
-                      point_alpha = 1, alpha = 0.7)
+                      point_shape = '|', point_size = 1.5,
+                      point_alpha = 0.9, alpha = 0.9)
 
 # Scales and axes:
 
@@ -1039,8 +1039,8 @@ intimate_joy_p <- inter_df %>%
   geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
-                      point_shape = '|', point_size = 2,
-                      point_alpha = 1, alpha = 0.7)
+                      point_shape = '|', point_size = 1.5,
+                      point_alpha = 0.9, alpha = 0.9)
 
 # Scales and axes:
 
@@ -1085,8 +1085,8 @@ difficult_joy_p <- inter_df %>%
   geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
-                      point_shape = '|', point_size = 2,
-                      point_alpha = 1, alpha = 0.7)
+                      point_shape = '|', point_size = 1.5,
+                      point_alpha = 0.9, alpha = 0.9)
 
 # Scales and axes:
 
@@ -1131,8 +1131,8 @@ self_joy_p <- inter_df %>%
   geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
-                      point_shape = '|', point_size = 2,
-                      point_alpha = 1, alpha = 0.7)
+                      point_shape = '|', point_size = 1.5,
+                      point_alpha = 0.9, alpha = 0.9)
 
 # Scales and axes:
 
@@ -1177,8 +1177,8 @@ other_joy_p <- inter_df %>%
   geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
-                      point_shape = '|', point_size = 2,
-                      point_alpha = 1, alpha = 0.7)
+                      point_shape = '|', point_size = 1.5,
+                      point_alpha = 0.9, alpha = 0.9)
 
 # Scales and axes:
 
@@ -2089,6 +2089,9 @@ category_difficulty_p <- category_difficulty_p +
 
 category_difficulty_p
 ggsave('../figures_E1/category_difficulty.pdf',
+       plot = category_difficulty_p,
+       width = 5, height = 3.5)
+ggsave('../figures_E1/category_difficulty.png',
        plot = category_difficulty_p,
        width = 5, height = 3.5)
 ```
