@@ -1,0 +1,1089 @@
+﻿participant,word,condition,category,closeness,type_D,pleasantness,commitment,intimacy,difficulty,self_contribution,other_contribution,IOS,data_exclusion
+1,Diamante ,Interactive,Concrete,78,passive,89.64,94.55,94,23.27,95.45,98.64,4,no
+1,Diamante ,Interactive,Concrete,71.27,active,89.64,94.55,94,23.27,95.45,98.64,4,no
+1,Libertà ,Interactive,Abstract ,83.73,passive,98.27,98.36,51,8,99.73,99.64,5,no
+1,Libertà ,Interactive,Abstract ,78.82,active,98.27,98.36,51,8,99.73,99.64,5,no
+1,Logica,Interactive ,Abstract ,94.82,passive,98.55,97.91,98.27,2.82,97.45,99.55,6,no
+1,Logica,Interactive ,Abstract ,92.91,active,98.55,97.91,98.27,2.82,97.45,99.55,6,no
+1,Sveglia ,Interactive ,Concrete ,97.18,passive,98.73,99.36,98.64,0.82,99,98.09,6,no
+1,Sveglia ,Interactive ,Concrete ,96.55,active,98.73,99.36,98.64,0.82,99,98.09,6,no
+1,Corona,No_interactive ,Concrete,70.86,passive,99.5,99.41,99.68,,,,3,no
+1,Corona,No_interactive ,Concrete,68.5,active,99.5,99.41,99.68,,,,3,no
+1,Mistero,No_interactive ,Abstract ,95.41,passive,99.68,99.59,97.59,,,,6,no
+1,Mistero,No_interactive ,Abstract ,94.86,active,99.68,99.59,97.59,,,,6,no
+1,Sfida,No_interactive ,Abstract ,97.77,passive,98.14,99.32,99.68,,,,6,no
+1,Sfida,No_interactive ,Abstract ,98.77,active,98.14,99.32,99.68,,,,6,no
+1,Stazione,No_interactive ,Concrete,91.23,passive,99.77,99.14,99.77,,,,5,no
+1,Stazione,No_interactive ,Concrete,91.59,active,99.77,99.14,99.77,,,,5,no
+2,Diamante ,Interactive,Concrete,81.64,passive,98.91,99.73,96.64,1,51.91,50.82,5,no
+2,Diamante ,Interactive,Concrete,82.18,active,98.91,99.73,96.64,1,51.91,50.82,5,no
+2,Libertà ,Interactive,Abstract,79.27,passive,98.91,98.36,95.91,4.36,92.55,95.73,4,no
+2,Libertà ,Interactive,Abstract,79.18,active,98.91,98.36,95.91,4.36,92.55,95.73,4,no
+2,Logica,Interactive,Abstract,80.45,passive,99.36,99,95.36,0.18,51.09,60.18,5,no
+2,Logica,Interactive,Abstract,86,active,99.36,99,95.36,0.18,51.09,60.18,5,no
+2,Sveglia ,Interactive,Concrete,88.18,passive,99.36,98.82,94.64,0.27,50.18,50.45,6,no
+2,Sveglia ,Interactive,Concrete,88.82,active,99.36,98.82,94.64,0.27,50.18,50.45,6,no
+2,Corona,No_interactive ,Concrete,72.45,passive,99.18,97.45,99.36,,,,2,no
+2,Corona,No_interactive ,Concrete,73.64,active,99.18,97.45,99.36,,,,2,no
+2,Mistero,No_interactive ,Abstract ,72.55,passive,98.82,98.73,99.55,,,,2,no
+2,Mistero,No_interactive ,Abstract ,80.55,active,98.82,98.73,99.55,,,,2,no
+2,Sfida,No_interactive ,Abstract ,76.09,passive,96.91,98.91,99.73,,,,2,no
+2,Sfida,No_interactive ,Abstract ,73,active,96.91,98.91,99.73,,,,2,no
+2,Stazione,No_interactive ,Concrete,73.64,passive,96.82,98.36,91.82,,,,2,no
+2,Stazione,No_interactive ,Concrete,73.55,active,96.82,98.36,91.82,,,,2,no
+3,Diamante ,Interactive,Concrete,91.18,passive,65.36,75.09,51.55,58.73,75.18,96.64,3,no
+3,Diamante ,Interactive,Concrete,86,active,65.36,75.09,51.55,58.73,75.18,96.64,3,no
+3,Libertà ,Interactive,Abstract,91.91,passive,96.55,94.73,91.73,13.09,95.73,86.73,5,no
+3,Libertà ,Interactive,Abstract,91.27,active,96.55,94.73,91.73,13.09,95.73,86.73,5,no
+3,Logica,Interactive,Abstract,91.45,passive,69.09,82,82.27,20.27,56.55,92.73,3,no
+3,Logica,Interactive,Abstract,85.82,active,69.09,82,82.27,20.27,56.55,92.73,3,no
+3,Sveglia ,Interactive,Concrete,94.36,passive,93.45,93.55,91.82,15.09,97.09,96.45,5,no
+3,Sveglia ,Interactive,Concrete,91.64,active,93.45,93.55,91.82,15.09,97.09,96.45,5,no
+3,Corona,No_interactive ,Concrete,77.91,passive,17.73,60.82,40,,,,2,no
+3,Corona,No_interactive ,Concrete,71.45,active,17.73,60.82,40,,,,2,no
+3,Mistero,No_interactive ,Abstract ,75.91,passive,2.45,56.64,19.45,,,,1,no
+3,Mistero,No_interactive ,Abstract ,75,active,2.45,56.64,19.45,,,,1,no
+3,Sfida,No_interactive ,Abstract ,81.18,passive,0.45,59.45,13.82,,,,1,no
+3,Sfida,No_interactive ,Abstract ,75.64,active,0.45,59.45,13.82,,,,1,no
+3,Stazione,No_interactive ,Concrete,77.64,passive,60.82,70.64,78.64,,,,2,no
+3,Stazione,No_interactive ,Concrete,76.55,active,60.82,70.64,78.64,,,,2,no
+4,Diamante ,Interactive,Concrete,70.09,passive,89.27,93.64,7.09,47.27,87.36,90.64,3,no
+4,Diamante ,Interactive,Concrete,80.36,active,89.27,93.64,7.09,47.27,87.36,90.64,3,no
+4,Libertà ,Interactive,Abstract,55,passive,16.82,98.73,86.55,47.73,82.27,85.27,3,no
+4,Libertà ,Interactive,Abstract,76.55,active,16.82,98.73,86.55,47.73,82.27,85.27,3,no
+4,Logica,Interactive,Abstract,43.55,passive,7.18,78.18,39.36,86,76.82,77.64,1,no
+4,Logica,Interactive,Abstract,30,active,7.18,78.18,39.36,86,76.82,77.64,1,no
+4,Sveglia ,Interactive,Concrete,80.18,passive,98.91,84.45,97.18,7.91,84.82,84.55,4,no
+4,Sveglia ,Interactive,Concrete,82.82,active,98.91,84.45,97.18,7.91,84.82,84.55,4,no
+4,Corona,No_interactive ,Concrete,0.55,passive,93.27,92.91,94.36,,,,1,yes
+4,Corona,No_interactive ,Concrete,0.27,active,93.27,92.91,94.36,,,,1,yes
+4,Mistero,No_interactive ,Abstract ,0.09,passive,65.45,88.64,11.18,,,,1,yes
+4,Mistero,No_interactive ,Abstract ,0.18,active,65.45,88.64,11.18,,,,1,yes
+4,Sfida,No_interactive ,Abstract ,0.36,passive,95.64,95.09,96.55,,,,1,yes
+4,Sfida,No_interactive ,Abstract ,0.09,active,95.64,95.09,96.55,,,,1,yes
+4,Stazione,No_interactive ,Concrete,0.36,passive,88.82,90.27,96,,,,1,yes
+4,Stazione,No_interactive ,Concrete,0.36,active,88.82,90.27,96,,,,1,yes
+5,Diamante ,Interactive,Concrete,89.91,passive,51.82,72.64,56.27,60.18,80.09,48.91,4,no
+5,Diamante ,Interactive,Concrete,90.91,active,51.82,72.64,56.27,60.18,80.09,48.91,4,no
+5,Libertà ,Interactive,Abstract,89.55,passive,78.45,77.73,72.64,30.73,74.18,77.36,5,no
+5,Libertà ,Interactive,Abstract,89.73,active,78.45,77.73,72.64,30.73,74.18,77.36,5,no
+5,Logica ,Interactive,Abstract,90.27,passive,78.36,74.09,67.18,90.18,69.73,82,4,no
+5,Logica ,Interactive,Abstract,88.45,active,78.36,74.09,67.18,90.18,69.73,82,4,no
+5,Sveglia ,Interactive,Concrete,88.91,passive,51.55,66.09,67.45,42.73,66.64,67.64,4,no
+5,Sveglia ,Interactive,Concrete,89.45,active,51.55,66.09,67.45,42.73,66.64,67.64,4,no
+5,Corona ,No_interactive,Concrete,88.45,passive,66.09,74.55,66,,,,3,no
+5,Corona ,No_interactive,Concrete,87,active,66.09,74.55,66,,,,3,no
+5,Mistero ,No_interactive,Abstract,90.18,passive,76.45,76.18,74,,,,3,no
+5,Mistero ,No_interactive,Abstract,88.27,active,76.45,76.18,74,,,,3,no
+5,Sfida,No_interactive,Abstract,87.91,passive,80.09,78.36,88.18,,,,3,no
+5,Sfida,No_interactive,Abstract,90.36,active,80.09,78.36,88.18,,,,3,no
+5,Stazione ,No_interactive,Concrete,88.45,passive,73.73,76.64,84.73,,,,3,no
+5,Stazione ,No_interactive,Concrete,88.36,active,73.73,76.64,84.73,,,,3,no
+6,Diamante ,Interactive,Concrete,75.45,passive,88.82,87.91,59.45,23.09,71.09,73.64,3,no
+6,Diamante ,Interactive,Concrete,72,active,88.82,87.91,59.45,23.09,71.09,73.64,3,no
+6,Libertà ,Interactive,Abstract,74.73,passive,64.45,63.91,69.09,22,72,85.91,3,no
+6,Libertà ,Interactive,Abstract,71.09,active,64.45,63.91,69.09,22,72,85.91,3,no
+6,Logica ,Interactive,Abstract,78.18,passive,94.55,88,82.09,16.73,79.64,83.36,3,no
+6,Logica ,Interactive,Abstract,78.18,active,94.55,88,82.09,16.73,79.64,83.36,3,no
+6,Sveglia ,Interactive,Concrete,75.09,passive,93.18,95.36,89.09,5.91,89.45,91.55,4,no
+6,Sveglia ,Interactive,Concrete,80.73,active,93.18,95.36,89.09,5.91,89.45,91.55,4,no
+6,Corona ,No_interactive,Concrete,63.82,passive,94.64,97.36,74.18,,,,1,no
+6,Corona ,No_interactive,Concrete,61.64,active,94.64,97.36,74.18,,,,1,no
+6,Mistero ,No_interactive,Abstract,65.36,passive,45.64,54.55,56.91,,,,1,no
+6,Mistero ,No_interactive,Abstract,59,active,45.64,54.55,56.91,,,,1,no
+6,Sfida,No_interactive,Abstract,65.18,passive,93,88.82,71.18,,,,1,no
+6,Sfida,No_interactive,Abstract,67.45,active,93,88.82,71.18,,,,1,no
+6,Stazione ,No_interactive,Concrete,68.18,passive,89,86.45,99.27,,,,1,no
+6,Stazione ,No_interactive,Concrete,65.64,active,89,86.45,99.27,,,,1,no
+7,Diamante ,Interactive,Concrete,30.82,passive,29.36,57.27,3.09,77.09,36.91,71.27,2,yes
+7,Diamante ,Interactive,Concrete,3.82,active,29.36,57.27,3.09,77.09,36.91,71.27,2,yes
+7,Libertà ,Interactive,Abstract,41.09,passive,70.18,71.45,72,40.09,72.36,73.27,3,yes
+7,Libertà ,Interactive,Abstract,30.82,active,70.18,71.45,72,40.09,72.36,73.27,3,yes
+7,Logica ,Interactive,Abstract,38.55,passive,88.36,76.73,70.36,1.55,81,81.82,3,yes
+7,Logica ,Interactive,Abstract,29.45,active,88.36,76.73,70.36,1.55,81,81.82,3,yes
+7,Sveglia ,Interactive,Concrete,33.91,passive,77.09,72.73,37.91,43.27,67.82,66.91,2,yes
+7,Sveglia ,Interactive,Concrete,22.73,active,77.09,72.73,37.91,43.27,67.82,66.91,2,yes
+7,Corona ,No_interactive,Concrete,0.18,passive,60.27,64.82,71,,,,1,yes
+7,Corona ,No_interactive,Concrete,0,active,60.27,64.82,71,,,,1,yes
+7,Mistero ,No_interactive,Abstract,0.18,passive,32.55,28.55,40.82,,,,1,yes
+7,Mistero ,No_interactive,Abstract,0.09,active,32.55,28.55,40.82,,,,1,yes
+7,Sfida,No_interactive,Abstract,99.91,passive,69.73,72,71.73,,,,1,yes
+7,Sfida,No_interactive,Abstract,0.09,active,69.73,72,71.73,,,,1,yes
+7,Stazione ,No_interactive,Concrete,0.36,passive,86.09,94.36,86.27,,,,1,yes
+7,Stazione ,No_interactive,Concrete,0,active,86.09,94.36,86.27,,,,1,yes
+8,Diamante ,Interactive,Concrete,81.45,passive,70.18,84.64,22.18,16.27,88,54.36,2,no
+8,Diamante ,Interactive,Concrete,77.18,active,70.18,84.64,22.18,16.27,88,54.36,2,no
+8,Libertà ,Interactive,Abstract,69.73,passive,28.18,73.64,16.18,77.91,76.82,74.73,2,no
+8,Libertà ,Interactive,Abstract,67.18,active,28.18,73.64,16.18,77.91,76.82,74.73,2,no
+8,Logica ,Interactive,Abstract,43.55,passive,12.91,80.73,49,78.09,80.55,61.64,1,no
+8,Logica ,Interactive,Abstract,51.18,active,12.91,80.73,49,78.09,80.55,61.64,1,no
+8,Sveglia ,Interactive,Concrete,88.09,passive,84.64,83.82,76.55,5,70.18,63.82,3,no
+8,Sveglia ,Interactive,Concrete,86.91,active,84.64,83.82,76.55,5,70.18,63.82,3,no
+8,Corona ,No_interactive,Concrete,78.36,passive,69.64,82.55,27.18,,,,2,no
+8,Corona ,No_interactive,Concrete,79.64,active,69.64,82.55,27.18,,,,2,no
+8,Mistero ,No_interactive,Abstract,71.27,passive,78.36,81.82,39.64,,,,2,no
+8,Mistero ,No_interactive,Abstract,65.64,active,78.36,81.82,39.64,,,,2,no
+8,Sfida,No_interactive,Abstract,72.82,passive,70,88.91,87.18,,,,2,no
+8,Sfida,No_interactive,Abstract,77.55,active,70,88.91,87.18,,,,2,no
+8,Stazione ,No_interactive,Concrete,80.18,passive,58.27,71.27,85.73,,,,2,no
+8,Stazione ,No_interactive,Concrete,73.73,active,58.27,71.27,85.73,,,,2,no
+9,Mistero,Interactive,Abstract,77.64,passive,77,84.55,58.55,43.09,63.73,81.45,3,no
+9,Mistero,Interactive,Abstract,75.91,active,77,84.55,58.55,43.09,63.73,81.45,3,no
+9,Stazione,Interactive,Concrete,71.55,passive,74,86.18,85.91,75.82,88.91,87.91,4,no
+9,Stazione,Interactive,Concrete,71,active,74,86.18,85.91,75.82,88.91,87.91,4,no
+9,Corona,Interactive ,Concrete,76.36,passive,91.91,89.64,81.27,25.91,68.45,74.27,5,no
+9,Corona,Interactive ,Concrete,78.55,active,91.91,89.64,81.27,25.91,68.45,74.27,5,no
+9,Sfida,Interactive ,Abstract,54.73,passive,72.82,75.73,58.82,53.18,76.36,75.36,3,no
+9,Sfida,Interactive ,Abstract,69.27,active,72.82,75.73,58.82,53.18,76.36,75.36,3,no
+9,Diamante ,No_interactive ,Concrete,48.55,passive,78.91,81.18,82.18,,,,1,no
+9,Diamante ,No_interactive ,Concrete,51.09,active,78.91,81.18,82.18,,,,1,no
+9,Libertà,No_interactive ,Abstract,39.82,passive,58.82,72.27,64.18,,,,1,no
+9,Libertà,No_interactive ,Abstract,52.36,active,58.82,72.27,64.18,,,,1,no
+9,Logica,No_interactive ,Abstract,49,passive,74.09,71.82,74.45,,,,1,no
+9,Logica,No_interactive ,Abstract,52.64,active,74.09,71.82,74.45,,,,1,no
+9,Sveglia,No_interactive ,Concrete,50.73,passive,70.09,77.36,85.09,,,,1,no
+9,Sveglia,No_interactive ,Concrete,49.55,active,70.09,77.36,85.09,,,,1,no
+10,Corona,Interactive,Concrete,91.27,passive,83.18,19.82,69,8.36,49.64,49.91,5,no
+10,Corona,Interactive,Concrete,87.73,active,83.18,19.82,69,8.36,49.64,49.91,5,no
+10,Mistero,Interactive,Abstract,81.27,passive,70,55.73,70.09,18.91,53.64,52.82,3,no
+10,Mistero,Interactive,Abstract,83.91,active,70,55.73,70.09,18.91,53.64,52.82,3,no
+10,Sfida,Interactive,Abstract,90.64,passive,69.27,60.18,53.55,20.55,50.91,58.55,4,no
+10,Sfida,Interactive,Abstract,90.73,active,69.27,60.18,53.55,20.55,50.91,58.55,4,no
+10,Stazione,Interactive,Concrete,91.36,passive,85.91,39.45,77.73,11.18,52.64,52.09,5,no
+10,Stazione,Interactive,Concrete,85.27,active,85.91,39.45,77.73,11.18,52.64,52.09,5,no
+10,Diamante ,No_interactive ,Concrete,62.64,passive,35.64,32.45,66,,,,3,no
+10,Diamante ,No_interactive ,Concrete,65.18,active,35.64,32.45,66,,,,3,no
+10,Libertà,No_interactive ,Abstract,61,passive,42.27,36.55,73.73,,,,3,no
+10,Libertà,No_interactive ,Abstract,53.91,active,42.27,36.55,73.73,,,,3,no
+10,Logica,No_interactive ,Abstract,71.36,passive,40.91,33.45,66.36,,,,3,no
+10,Logica,No_interactive ,Abstract,59.82,active,40.91,33.45,66.36,,,,3,no
+10,Sveglia,No_interactive ,Concrete,57.27,passive,54,37,68.82,,,,3,no
+10,Sveglia,No_interactive ,Concrete,70.55,active,54,37,68.82,,,,3,no
+11,Corona,Interactive,Concrete,84.91,passive,47.82,9.27,2.55,79.36,30.91,50.09,2,no
+11,Corona,Interactive,Concrete,82.91,active,47.82,9.27,2.55,79.36,30.91,50.09,2,no
+11,Mistero,Interactive,Abstract,85.73,passive,48.91,99.27,92.55,91.73,95,68.45,2,no
+11,Mistero,Interactive,Abstract,58.91,active,48.91,99.27,92.55,91.73,95,68.45,2,no
+11,Sfida,Interactive,Abstract,90,passive,99.64,99.82,97.82,7,99.45,99.55,3,no
+11,Sfida,Interactive,Abstract,87.55,active,99.64,99.82,97.82,7,99.45,99.55,3,no
+11,Stazione,Interactive,Concrete,83.36,passive,79.36,99.82,98.64,24.45,99.73,17.55,3,no
+11,Stazione,Interactive,Concrete,76.91,active,79.36,99.82,98.64,24.45,99.73,17.55,3,no
+11,Diamante ,No_interactive ,Concrete,0,passive,0.09,0.27,0.09,,,,1,yes
+11,Diamante ,No_interactive ,Concrete,0.09,active,0.09,0.27,0.09,,,,1,yes
+11,Libertà,No_interactive ,Abstract,0.18,passive,95.91,96.09,98.64,,,,1,yes
+11,Libertà,No_interactive ,Abstract,0,active,95.91,96.09,98.64,,,,1,yes
+11,Logica,No_interactive ,Abstract,0,passive,99.82,99.82,99.82,,,,1,yes
+11,Logica,No_interactive ,Abstract,0.18,active,99.82,99.82,99.82,,,,1,yes
+11,Sveglia,No_interactive ,Concrete,0.27,passive,4.64,94,98.36,,,,1,yes
+11,Sveglia,No_interactive ,Concrete,0.09,active,4.64,94,98.36,,,,1,yes
+12,Corona,Interactive,Concrete,70,passive,89.18,86.64,74,86,88,80.45,3,no
+12,Corona,Interactive,Concrete,63.36,active,89.18,86.64,74,86,88,80.45,3,no
+12,Mistero,Interactive,Abstract,48.55,passive,62.55,49.73,15.18,73.64,50.09,70.27,2,no
+12,Mistero,Interactive,Abstract,49.18,active,62.55,49.73,15.18,73.64,50.09,70.27,2,no
+12,Sfida,Interactive,Abstract,62.36,passive,85.18,65.91,50.91,77.45,74.82,86.36,3,no
+12,Sfida,Interactive,Abstract,54.55,active,85.18,65.91,50.91,77.45,74.82,86.36,3,no
+12,Stazione,Interactive,Concrete,49.36,passive,75.82,74.73,67.73,79.64,78.18,73.36,2,no
+12,Stazione,Interactive,Concrete,51.18,active,75.82,74.73,67.73,79.64,78.18,73.36,2,no
+12,Diamante ,No_interactive ,Concrete,82.55,passive,32.18,52.36,59.27,,,,1,no
+12,Diamante ,No_interactive ,Concrete,83.91,active,32.18,52.36,59.27,,,,1,no
+12,Libertà,No_interactive ,Abstract,49.82,passive,37.27,41.73,52.18,,,,1,no
+12,Libertà,No_interactive ,Abstract,51.18,active,37.27,41.73,52.18,,,,1,no
+12,Logica,No_interactive ,Abstract,53.36,passive,59.73,68.27,61.55,,,,1,no
+12,Logica,No_interactive ,Abstract,50.91,active,59.73,68.27,61.55,,,,1,no
+12,Sveglia,No_interactive ,Concrete,66.36,passive,60.73,72.09,59.18,,,,1,no
+12,Sveglia,No_interactive ,Concrete,51.45,active,60.73,72.09,59.18,,,,1,no
+13,Mistero,Interactive,Abstract,91.64,passive,89.18,89,99.82,99.91,86.55,98.82,2,no
+13,Mistero,Interactive,Abstract,87.18,active,89.18,89,99.82,99.91,86.55,98.82,2,no
+13,Stazione,Interactive,Concrete,85.73,passive,100,94.45,70.18,98.27,98.82,98.18,2,no
+13,Stazione,Interactive,Concrete,90.45,active,100,94.45,70.18,98.27,98.82,98.18,2,no
+13,Corona,Interactive ,Concrete,95.55,passive,99.64,87.55,92.82,99.45,98.73,99.45,3,no
+13,Corona,Interactive ,Concrete,94.82,active,99.64,87.55,92.82,99.45,98.73,99.45,3,no
+13,Sfida,Interactive ,Abstract,94.64,passive,99.73,93.73,99.55,99.91,89.27,99.36,4,no
+13,Sfida,Interactive ,Abstract,97.73,active,99.73,93.73,99.55,99.91,89.27,99.36,4,no
+13,Diamante ,No_interactive ,Concrete,57.91,passive,99.45,99.27,99.45,,,,2,no
+13,Diamante ,No_interactive ,Concrete,54.55,active,99.45,99.27,99.45,,,,2,no
+13,Libertà,No_interactive ,Abstract,54.73,passive,97.91,96.45,99.36,,,,2,no
+13,Libertà,No_interactive ,Abstract,59.27,active,97.91,96.45,99.36,,,,2,no
+13,Logica,No_interactive ,Abstract,36.18,passive,97,97.73,97.36,,,,2,no
+13,Logica,No_interactive ,Abstract,58.73,active,97,97.73,97.36,,,,2,no
+13,Sveglia,No_interactive ,Concrete,49.82,passive,82.27,82.27,82.55,,,,2,no
+13,Sveglia,No_interactive ,Concrete,49.18,active,82.27,82.27,82.55,,,,2,no
+14,Corona,Interactive,Concrete,84.27,passive,66,80.73,53.45,23.73,57,56.91,3,no
+14,Corona,Interactive,Concrete,82.36,active,66,80.73,53.45,23.73,57,56.91,3,no
+14,Mistero,Interactive,Abstract,74.18,passive,52.18,79.09,66.55,39.27,73.91,53.55,2,no
+14,Mistero,Interactive,Abstract,78.09,active,52.18,79.09,66.55,39.27,73.91,53.55,2,no
+14,Sfida,Interactive,Abstract,83.73,passive,60.91,79.09,70.91,37.27,72.55,67.09,3,no
+14,Sfida,Interactive,Abstract,79.64,active,60.91,79.09,70.91,37.27,72.55,67.09,3,no
+14,Stazione,Interactive,Concrete,75.18,passive,38.82,78.36,37.27,72.64,50.73,50.27,2,no
+14,Stazione,Interactive,Concrete,76.36,active,38.82,78.36,37.27,72.64,50.73,50.27,2,no
+14,Diamante ,No_interactive ,Concrete,58.55,passive,41.18,62.18,4.45,,,,1,no
+14,Diamante ,No_interactive ,Concrete,69.45,active,41.18,62.18,4.45,,,,1,no
+14,Libertà,No_interactive ,Abstract,66.09,passive,58.09,77.09,51.27,,,,1,no
+14,Libertà,No_interactive ,Abstract,70.45,active,58.09,77.09,51.27,,,,1,no
+14,Logica,No_interactive ,Abstract,66.64,passive,56.73,78.82,40.64,,,,1,no
+14,Logica,No_interactive ,Abstract,68.91,active,56.73,78.82,40.64,,,,1,no
+14,Sveglia,No_interactive ,Concrete,63.45,passive,51.82,69.45,30.91,,,,1,no
+14,Sveglia,No_interactive ,Concrete,68.18,active,51.82,69.45,30.91,,,,1,no
+15,Corona,Interactive,Concrete,72.82,passive,87.27,95.36,73.73,10.27,95.36,95.18,2,no
+15,Corona,Interactive,Concrete,73,active,87.27,95.36,73.73,10.27,95.36,95.18,2,no
+15,Mistero,Interactive,Abstract,75.18,passive,94.36,97.27,70.64,13.45,96.27,96.82,2,no
+15,Mistero,Interactive,Abstract,77.27,active,94.36,97.27,70.64,13.45,96.27,96.82,2,no
+15,Sfida,Interactive,Abstract,76.82,passive,95.91,98.27,85.64,7.73,97,97.45,2,no
+15,Sfida,Interactive,Abstract,78.45,active,95.91,98.27,85.64,7.73,97,97.45,2,no
+15,Stazione,Interactive,Concrete,74,passive,71.18,96.82,99.91,12.64,98.73,97.09,2,no
+15,Stazione,Interactive,Concrete,63.91,active,71.18,96.82,99.91,12.64,98.73,97.09,2,no
+15,Diamante ,No_interactive ,Concrete,30.45,passive,72.55,95.09,59.36,,,,1,no
+15,Diamante ,No_interactive ,Concrete,38.82,active,72.55,95.09,59.36,,,,1,no
+15,Libertà,No_interactive ,Abstract,39.09,passive,88.73,97.27,86.36,,,,1,no
+15,Libertà,No_interactive ,Abstract,42.64,active,88.73,97.27,86.36,,,,1,no
+15,Logica,No_interactive ,Abstract,40.73,passive,79.27,96.55,72.45,,,,1,no
+15,Logica,No_interactive ,Abstract,37.73,active,79.27,96.55,72.45,,,,1,no
+15,Sveglia,No_interactive ,Concrete,35.55,passive,80.27,95.73,82.73,,,,1,no
+15,Sveglia,No_interactive ,Concrete,43.73,active,80.27,95.73,82.73,,,,1,no
+16,Corona,Interactive,Concrete,75.09,passive,51.27,49,44.27,43.91,54.36,56.27,4,no
+16,Corona,Interactive,Concrete,72.73,active,51.27,49,44.27,43.91,54.36,56.27,4,no
+16,Mistero,Interactive,Abstract,78.36,passive,71.64,75.36,57.73,65.27,60.09,72.36,5,no
+16,Mistero,Interactive,Abstract,79.09,active,71.64,75.36,57.73,65.27,60.09,72.36,5,no
+16,Sfida,Interactive,Abstract,81.45,passive,81.73,83.36,77.55,61.45,75.82,77,5,no
+16,Sfida,Interactive,Abstract,81.82,active,81.73,83.36,77.55,61.45,75.82,77,5,no
+16,Stazione,Interactive,Concrete,73.82,passive,67.18,82.27,77.91,23.18,80.36,62,4,no
+16,Stazione,Interactive,Concrete,68,active,67.18,82.27,77.91,23.18,80.36,62,4,no
+16,Diamante ,No_interactive ,Concrete,62.36,passive,48.64,70.45,48.64,,,,1,no
+16,Diamante ,No_interactive ,Concrete,57.82,active,48.64,70.45,48.64,,,,1,no
+16,Libertà,No_interactive ,Abstract,64.55,passive,67.18,48.82,67.45,,,,2,no
+16,Libertà,No_interactive ,Abstract,63.64,active,67.18,48.82,67.45,,,,2,no
+16,Logica,No_interactive ,Abstract,57.45,passive,49.45,28.64,47.45,,,,1,no
+16,Logica,No_interactive ,Abstract,52.91,active,49.45,28.64,47.45,,,,1,no
+16,Sveglia,No_interactive ,Concrete,60.36,passive,38.64,45.18,74.09,,,,1,no
+16,Sveglia,No_interactive ,Concrete,56.27,active,38.64,45.18,74.09,,,,1,no
+17,Diamante ,Interactive,Concrete,80,passive,68.27,71.91,48.45,27.82,48.82,47.55,4,no
+17,Diamante ,Interactive,Concrete,77.82,active,68.27,71.91,48.45,27.82,48.82,47.55,4,no
+17,Libertà ,Interactive,Abstract ,80.09,passive,69.09,76.27,64.55,22.55,51.36,49.82,4,no
+17,Libertà ,Interactive,Abstract ,77.64,active,69.09,76.27,64.55,22.55,51.36,49.82,4,no
+17,Logica,Interactive ,Abstract ,79.36,passive,78.55,75.27,62.82,8.82,48.73,48.45,4,no
+17,Logica,Interactive ,Abstract ,78.55,active,78.55,75.27,62.82,8.82,48.73,48.45,4,no
+17,Sveglia ,Interactive ,Concrete ,80.18,passive,70.64,68.45,71.36,13.18,48.82,48.18,4,no
+17,Sveglia ,Interactive ,Concrete ,74.55,active,70.64,68.45,71.36,13.18,48.82,48.18,4,no
+17,Corona,No_interactive ,Concrete,67.45,passive,35.55,73,25.27,,,,1,no
+17,Corona,No_interactive ,Concrete,64.36,active,35.55,73,25.27,,,,1,no
+17,Mistero,No_interactive ,Abstract ,67.09,passive,17.64,72.36,50.36,,,,1,no
+17,Mistero,No_interactive ,Abstract ,66.45,active,17.64,72.36,50.36,,,,1,no
+17,Sfida,No_interactive ,Abstract ,66.73,passive,35.73,73.64,82.36,,,,1,no
+17,Sfida,No_interactive ,Abstract ,62.91,active,35.73,73.64,82.36,,,,1,no
+17,Stazione,No_interactive ,Concrete,67.45,passive,30.09,69.55,63.45,,,,1,no
+17,Stazione,No_interactive ,Concrete,62.73,active,30.09,69.55,63.45,,,,1,no
+18,Diamante ,Interactive,Concrete,78.56,passive,84.35,66.53,26.16,1.07,75.8,39.44,4,no
+18,Diamante ,Interactive,Concrete,77.8,active,84.35,66.53,26.16,1.07,75.8,39.44,4,no
+18,Libertà ,Interactive,Abstract,81.76,passive,86.96,90.6,24.05,4.78,50.42,50.33,4,no
+18,Libertà ,Interactive,Abstract,83.78,active,86.96,90.6,24.05,4.78,50.42,50.33,4,no
+18,Logica,Interactive,Abstract,84.65,passive,96.98,98.71,73.35,2.07,57.07,47.25,5,no
+18,Logica,Interactive,Abstract,84.53,active,96.98,98.71,73.35,2.07,57.07,47.25,5,no
+18,Sveglia ,Interactive,Concrete,80.93,passive,85.25,50.71,14.16,0.35,46.65,53.07,4,no
+18,Sveglia ,Interactive,Concrete,81.44,active,85.25,50.71,14.16,0.35,46.65,53.07,4,no
+18,Corona,No_interactive ,Concrete,84.27,passive,88.18,58.36,22.64,,,,3,no
+18,Corona,No_interactive ,Concrete,82.45,active,88.18,58.36,22.64,,,,3,no
+18,Mistero,No_interactive ,Abstract ,79.82,passive,68.55,70.73,70.09,,,,3,no
+18,Mistero,No_interactive ,Abstract ,82,active,68.55,70.73,70.09,,,,3,no
+18,Sfida,No_interactive ,Abstract ,78.64,passive,34.73,85.09,77.09,,,,3,no
+18,Sfida,No_interactive ,Abstract ,79.45,active,34.73,85.09,77.09,,,,3,no
+18,Stazione,No_interactive ,Concrete,84.09,passive,64.45,69.27,87.64,,,,3,no
+18,Stazione,No_interactive ,Concrete,82.45,active,64.45,69.27,87.64,,,,3,no
+19,Diamante ,Interactive,Concrete,86.09,passive,91.18,83.91,81.64,77.64,71.45,75.82,4,no
+19,Diamante ,Interactive,Concrete,87.64,active,91.18,83.91,81.64,77.64,71.45,75.82,4,no
+19,Libertà ,Interactive,Abstract,82.73,passive,52.91,82.82,92.82,51.45,75.73,64.91,2,no
+19,Libertà ,Interactive,Abstract,85.09,active,52.91,82.82,92.82,51.45,75.73,64.91,2,no
+19,Logica,Interactive,Abstract,86.36,passive,85.91,80.91,85.45,45.64,77.36,83.55,3,no
+19,Logica,Interactive,Abstract,85.64,active,85.91,80.91,85.45,45.64,77.36,83.55,3,no
+19,Sveglia ,Interactive,Concrete,89.36,passive,91.18,83.91,81.64,77.64,71.45,75.82,4,no
+19,Sveglia ,Interactive,Concrete,87.64,active,91.18,83.91,81.64,77.64,71.45,75.82,4,no
+19,Corona,No_interactive ,Concrete,72.27,passive,2.27,48.45,20.91,,,,1,no
+19,Corona,No_interactive ,Concrete,71.64,active,2.27,48.45,20.91,,,,1,no
+19,Mistero,No_interactive ,Abstract ,80.64,passive,67.09,70,75.73,,,,2,no
+19,Mistero,No_interactive ,Abstract ,83.45,active,67.09,70,75.73,,,,2,no
+19,Sfida,No_interactive ,Abstract ,85.36,passive,77.18,84.09,86.82,,,,1,no
+19,Sfida,No_interactive ,Abstract ,80.91,active,77.18,84.09,86.82,,,,1,no
+19,Stazione,No_interactive ,Concrete,82.91,passive,71.45,79.82,84.18,,,,3,no
+19,Stazione,No_interactive ,Concrete,86.09,active,71.45,79.82,84.18,,,,3,no
+20,Diamante ,Interactive,Concrete,67.95,passive,57.32,60.23,60.05,33.23,65.68,82.14,3,no
+20,Diamante ,Interactive,Concrete,65.77,active,57.32,60.23,60.05,33.23,65.68,82.14,3,no
+20,Libertà ,Interactive,Abstract,82.14,passive,77.14,77.05,68.41,24.68,65.5,88.41,5,no
+20,Libertà ,Interactive,Abstract,71.05,active,77.14,77.05,68.41,24.68,65.5,88.41,5,no
+20,Logica,Interactive,Abstract,62.77,passive,66.86,74.14,70.32,15.14,78.23,66.5,4,no
+20,Logica,Interactive,Abstract,63.95,active,66.86,74.14,70.32,15.14,78.23,66.5,4,no
+20,Sveglia ,Interactive,Concrete,85.77,passive,80.5,50.41,89.5,5.95,82.77,62.68,6,no
+20,Sveglia ,Interactive,Concrete,83.14,active,80.5,50.41,89.5,5.95,82.77,62.68,6,no
+20,Corona,No_interactive ,Concrete,50.55,passive,32,50.27,10.55,,,,3,no
+20,Corona,No_interactive ,Concrete,51,active,32,50.27,10.55,,,,3,no
+20,Mistero,No_interactive ,Abstract ,50.55,passive,61.36,64.18,65.36,,,,2,no
+20,Mistero,No_interactive ,Abstract ,50.91,active,61.36,64.18,65.36,,,,2,no
+20,Sfida,No_interactive ,Abstract ,49.91,passive,57.27,64.73,80.82,,,,2,no
+20,Sfida,No_interactive ,Abstract ,47.73,active,57.27,64.73,80.82,,,,2,no
+20,Stazione,No_interactive ,Concrete,66.18,passive,63.91,75.91,92.64,,,,4,no
+20,Stazione,No_interactive ,Concrete,63.55,active,63.91,75.91,92.64,,,,4,no
+21,Diamante ,Interactive,Concrete,73.45,passive,61.09,98.18,95.82,36.27,96.55,41.64,4,no
+21,Diamante ,Interactive,Concrete,62,active,61.09,98.18,95.82,36.27,96.55,41.64,4,no
+21,Libertà,Interactive,Abstract,94.64,passive,99.91,99.36,99.73,0.73,98.82,99.09,6,no
+21,Libertà,Interactive,Abstract,89.91,active,99.91,99.36,99.73,0.73,98.82,99.09,6,no
+21,Logica,Interactive,Abstract,88.82,passive,98.18,98.09,99.55,2.82,97.27,98.09,6,no
+21,Logica,Interactive,Abstract,92.82,active,98.18,98.09,99.55,2.82,97.27,98.09,6,no
+21,Sveglia,Interactive,Concrete,82.27,passive,96.91,96.27,98.64,45.36,98.45,49.55,4,no
+21,Sveglia,Interactive,Concrete,79.27,active,96.91,96.27,98.64,45.36,98.45,49.55,4,no
+21,Corona,No_interactive,Concrete,12.18,passive,39,40.27,99.91,,,,1,no
+21,Corona,No_interactive,Concrete,5,active,39,40.27,99.91,,,,1,no
+21,Mistero,No_interactive,Abstract,76.18,passive,50.18,75.82,50.73,,,,3,no
+21,Mistero,No_interactive,Abstract,78.73,active,50.18,75.82,50.73,,,,3,no
+21,Sfida,No_interactive,Abstract,0.18,passive,83.09,89.55,100,,,,1,no
+21,Sfida,No_interactive,Abstract,0.27,active,83.09,89.55,100,,,,1,no
+21,Stazione,No_interactive,Concrete,3.91,passive,87,84.73,99.45,,,,1,no
+21,Stazione,No_interactive,Concrete,1.09,active,87,84.73,99.45,,,,1,no
+22,Diamante ,Interactive,Concrete,69,passive,89.27,90.73,83.45,3.36,94.45,71.91,4,no
+22,Diamante ,Interactive,Concrete,73,active,89.27,90.73,83.45,3.36,94.45,71.91,4,no
+22,Libertà,Interactive,Abstract,23.64,passive,51.27,76.82,89.91,59.82,50.91,67.45,2,no
+22,Libertà,Interactive,Abstract,1.73,active,51.27,76.82,89.91,59.82,50.91,67.45,2,no
+22,Logica,Interactive,Abstract,43.64,passive,75.64,85.18,98.27,13,82.27,81,3,no
+22,Logica,Interactive,Abstract,43,active,75.64,85.18,98.27,13,82.27,81,3,no
+22,Sveglia,Interactive,Concrete,84.45,passive,97.55,96.55,98.45,1.27,94.27,91.55,5,no
+22,Sveglia,Interactive,Concrete,86.73,active,97.55,96.55,98.45,1.27,94.27,91.55,5,no
+22,Corona,No_interactive,Concrete,50,passive,56.18,69.91,59.82,,,,3,no
+22,Corona,No_interactive,Concrete,72.18,active,56.18,69.91,59.82,,,,3,no
+22,Mistero,No_interactive,Abstract,50.27,passive,49.82,71.09,73.73,,,,3,no
+22,Mistero,No_interactive,Abstract,48.91,active,49.82,71.09,73.73,,,,3,no
+22,Sfida,No_interactive,Abstract,50.91,passive,93.36,95.64,99.73,,,,3,no
+22,Sfida,No_interactive,Abstract,52.55,active,93.36,95.64,99.73,,,,3,no
+22,Stazione,No_interactive,Concrete,52.18,passive,93.18,93.55,99.55,,,,3,no
+22,Stazione,No_interactive,Concrete,56.64,active,93.18,93.55,99.55,,,,3,no
+23,Diamante ,Interactive,Concrete,63.27,passive,23.45,79.73,96.18,64.36,77.18,35.45,2,no
+23,Diamante ,Interactive,Concrete,63.64,active,23.45,79.73,96.18,64.36,77.18,35.45,2,no
+23,Libertà,Interactive,Abstract,84.09,passive,80,91.64,85.64,8.64,98.09,60.45,4,no
+23,Libertà,Interactive,Abstract,85.82,active,80,91.64,85.64,8.64,98.09,60.45,4,no
+23,Logica,Interactive,Abstract,85.55,passive,58.91,76,41.91,15.82,83.91,84.55,5,no
+23,Logica,Interactive,Abstract,87.82,active,58.91,76,41.91,15.82,83.91,84.55,5,no
+23,Sveglia,Interactive,Concrete,70,passive,50.91,72.64,20.73,28.18,73.73,69.45,3,no
+23,Sveglia,Interactive,Concrete,66.73,active,50.91,72.64,20.73,28.18,73.73,69.45,3,no
+23,Corona,No_interactive,Concrete,78.82,passive,69.09,79.73,82.73,,,,4,no
+23,Corona,No_interactive,Concrete,76.64,active,69.09,79.73,82.73,,,,4,no
+23,Mistero,No_interactive,Abstract,76.27,passive,100,98.09,91.91,,,,3,no
+23,Mistero,No_interactive,Abstract,74.45,active,100,98.09,91.91,,,,3,no
+23,Sfida,No_interactive,Abstract,78,passive,96,89.45,85.18,,,,3,no
+23,Sfida,No_interactive,Abstract,76.91,active,96,89.45,85.18,,,,3,no
+23,Stazione,No_interactive,Concrete,82.64,passive,82,97.82,98.09,,,,4,no
+23,Stazione,No_interactive,Concrete,81.27,active,82,97.82,98.09,,,,4,no
+24,Diamante ,Interactive,Concrete,85,passive,88.73,88,70.09,0.73,87.55,87.82,2,no
+24,Diamante ,Interactive,Concrete,83.09,active,88.73,88,70.09,0.73,87.55,87.82,2,no
+24,Libertà,Interactive,Abstract,76.45,passive,80.73,83.91,69.64,0.18,86.27,85.36,2,no
+24,Libertà,Interactive,Abstract,87.18,active,80.73,83.91,69.64,0.18,86.27,85.36,2,no
+24,Logica,Interactive,Abstract,87.91,passive,91.18,92.91,90.82,0.45,89.09,88.09,2,no
+24,Logica,Interactive,Abstract,83.73,active,91.18,92.91,90.82,0.45,89.09,88.09,2,no
+24,Sveglia,Interactive,Concrete,86,passive,90,90.36,81.82,0.91,90.64,90.82,2,no
+24,Sveglia,Interactive,Concrete,82.27,active,90,90.36,81.82,0.91,90.64,90.82,2,no
+24,Corona,No_interactive,Concrete,75.64,passive,74.36,73.09,2.09,,,,2,no
+24,Corona,No_interactive,Concrete,80.82,active,74.36,73.09,2.09,,,,2,no
+24,Mistero,No_interactive,Abstract,78.55,passive,90.55,68,49.91,,,,2,no
+24,Mistero,No_interactive,Abstract,74.27,active,90.55,68,49.91,,,,2,no
+24,Sfida,No_interactive,Abstract,78.82,passive,89.09,80,86.36,,,,2,no
+24,Sfida,No_interactive,Abstract,78.64,active,89.09,80,86.36,,,,2,no
+24,Stazione,No_interactive,Concrete,78.64,passive,80,76.27,63.91,,,,2,no
+24,Stazione,No_interactive,Concrete,78.45,active,80,76.27,63.91,,,,2,no
+25,Diamante ,Interactive,Concrete,83.27,passive,18.09,72.64,41.45,84.36,74.64,67.45,2,no
+25,Diamante ,Interactive,Concrete,82.27,active,18.09,72.64,41.45,84.36,74.64,67.45,2,no
+25,Libertà,Interactive,Abstract,86.91,passive,72.91,98.82,72.64,8.55,74.18,77.36,4,no
+25,Libertà,Interactive,Abstract,89.18,active,72.91,98.82,72.64,8.55,74.18,77.36,4,no
+25,Logica,Interactive,Abstract,97.45,passive,94.27,90.36,75.82,35.73,77.27,79.36,3,no
+25,Logica,Interactive,Abstract,96.09,active,94.27,90.36,75.82,35.73,77.27,79.36,3,no
+25,Sveglia,Interactive,Concrete,86.91,passive,80.82,89,86.55,30,93.36,85.45,3,no
+25,Sveglia,Interactive,Concrete,87.36,active,80.82,89,86.55,30,93.36,85.45,3,no
+25,Corona,No_interactive,Concrete,81.91,passive,76,89.27,6.27,,,,1,no
+25,Corona,No_interactive,Concrete,83.36,active,76,89.27,6.27,,,,1,no
+25,Mistero,No_interactive,Abstract,85.18,passive,96.91,97.18,71.45,,,,2,no
+25,Mistero,No_interactive,Abstract,81.45,active,96.91,97.18,71.45,,,,2,no
+25,Sfida,No_interactive,Abstract,88.91,passive,99,99.36,99.73,,,,1,no
+25,Sfida,No_interactive,Abstract,92.45,active,99,99.36,99.73,,,,1,no
+25,Stazione,No_interactive,Concrete,75.73,passive,59.45,96.09,90.36,,,,2,no
+25,Stazione,No_interactive,Concrete,74.73,active,59.45,96.09,90.36,,,,2,no
+26,Diamante ,Interactive,Concrete,80.45,passive,78.27,89.09,99.91,79.82,88,77.91,2,no
+26,Diamante ,Interactive,Concrete,81.27,active,78.27,89.09,99.91,79.82,88,77.91,2,no
+26,Libertà,Interactive,Abstract,79.55,passive,99.91,98.64,100,54,99.18,87.45,3,no
+26,Libertà,Interactive,Abstract,78.36,active,99.91,98.64,100,54,99.18,87.45,3,no
+26,Logica,Interactive,Abstract,88.64,passive,99.18,99.27,99.45,99.18,99.18,99.09,4,no
+26,Logica,Interactive,Abstract,79.27,active,99.18,99.27,99.45,99.18,99.18,99.09,4,no
+26,Sveglia,Interactive,Concrete,79.91,passive,98,99.64,99.45,49.64,63.09,99.73,2,no
+26,Sveglia,Interactive,Concrete,81.55,active,98,99.64,99.45,49.64,63.09,99.73,2,no
+26,Corona,No_interactive,Concrete,50.91,passive,93.36,95.64,99.73,,,,1,no
+26,Corona,No_interactive,Concrete,52.55,active,93.36,95.64,99.73,,,,1,no
+26,Mistero,No_interactive,Abstract,52.18,passive,93.18,93.55,99.55,,,,1,no
+26,Mistero,No_interactive,Abstract,56.64,active,93.18,93.55,99.55,,,,1,no
+26,Sfida,No_interactive,Abstract,50,passive,56.18,69.91,59.82,,,,1,no
+26,Sfida,No_interactive,Abstract,72.18,active,56.18,69.91,59.82,,,,1,no
+26,Stazione,No_interactive,Concrete,50.27,passive,49.82,71.09,73.73,,,,1,no
+26,Stazione,No_interactive,Concrete,48.91,active,49.82,71.09,73.73,,,,1,no
+27,Diamante ,Interactive,Concrete,85.09,passive,96.27,95.64,82.55,0.64,74.64,64.36,2,no
+27,Diamante ,Interactive,Concrete,84.09,active,96.27,95.64,82.55,0.64,74.64,64.36,2,no
+27,Libertà,Interactive,Abstract,77.55,passive,93.64,97.27,96.27,2.91,98.09,95.09,2,no
+27,Libertà,Interactive,Abstract,80,active,93.64,97.27,96.27,2.91,98.09,95.09,2,no
+27,Logica,Interactive,Abstract,81.73,passive,90,95,92.73,1.91,94.82,96.55,2,no
+27,Logica,Interactive,Abstract,81.27,active,90,95,92.73,1.91,94.82,96.55,2,no
+27,Sveglia,Interactive,Concrete,88.27,passive,94.45,93,94.09,0.18,99.82,100,2,no
+27,Sveglia,Interactive,Concrete,85.36,active,94.45,93,94.09,0.18,99.82,100,2,no
+27,Corona,No_interactive,Concrete,82.73,passive,95.73,81.09,22,,,,2,no
+27,Corona,No_interactive,Concrete,81,active,95.73,81.09,22,,,,2,no
+27,Mistero,No_interactive,Abstract,78.82,passive,95.73,66.91,98.09,,,,1,no
+27,Mistero,No_interactive,Abstract,76.36,active,95.73,66.91,98.09,,,,1,no
+27,Sfida,No_interactive,Abstract,73.27,passive,75.55,76.73,81.27,,,,1,no
+27,Sfida,No_interactive,Abstract,71.73,active,75.55,76.73,81.27,,,,1,no
+27,Stazione,No_interactive,Concrete,83.36,passive,96.64,99.82,97.64,,,,1,no
+27,Stazione,No_interactive,Concrete,81.91,active,96.64,99.82,97.64,,,,1,no
+28,Diamante ,Interactive,Concrete,70.82,passive,98.82,99.18,94.91,12.09,85.09,95.27,2,no
+28,Diamante ,Interactive,Concrete,77.64,active,98.82,99.18,94.91,12.09,85.09,95.27,2,no
+28,Libertà,Interactive,Abstract,74.36,passive,85.82,96.64,99.91,8.09,97.36,95,2,no
+28,Libertà,Interactive,Abstract,72.73,active,85.82,96.64,99.91,8.09,97.36,95,2,no
+28,Logica,Interactive,Abstract,79.64,passive,98.36,97.18,98.27,2.73,55.55,97.27,2,no
+28,Logica,Interactive,Abstract,77.09,active,98.36,97.18,98.27,2.73,55.55,97.27,2,no
+28,Sveglia,Interactive,Concrete,71.45,passive,93.45,94.55,99.73,6.36,53.18,86.55,2,no
+28,Sveglia,Interactive,Concrete,74.09,active,93.45,94.55,99.73,6.36,53.18,86.55,2,no
+28,Corona,No_interactive,Concrete,82.55,passive,90,96.18,99.36,,,,2,no
+28,Corona,No_interactive,Concrete,73.27,active,90,96.18,99.36,,,,2,no
+28,Mistero,No_interactive,Abstract,83.09,passive,99.55,91.36,99.55,,,,2,no
+28,Mistero,No_interactive,Abstract,81.27,active,99.55,91.36,99.55,,,,2,no
+28,Sfida,No_interactive,Abstract,62.82,passive,78.55,80.18,91.64,,,,2,no
+28,Sfida,No_interactive,Abstract,71.36,active,78.55,80.18,91.64,,,,2,no
+28,Stazione,No_interactive,Concrete,82,passive,88.64,93,99.91,,,,1,no
+28,Stazione,No_interactive,Concrete,67.27,active,88.64,93,99.91,,,,1,no
+29,Corona,Interactive,Concrete,91.45,passive,98.09,3.45,70.18,5.45,26.18,84.82,5,no
+29,Corona,Interactive,Concrete,85.36,active,98.09,3.45,70.18,5.45,26.18,84.82,5,no
+29,Mistero,Interactive,Abstract,91.09,passive,54.09,66.73,84.36,6.55,80.36,81,4,no
+29,Mistero,Interactive,Abstract,86.18,active,54.09,66.73,84.36,6.55,80.36,81,4,no
+29,Sfida,Interactive,Abstract,81.55,passive,20.73,69.09,86.91,19.64,77.27,76.55,3,no
+29,Sfida,Interactive,Abstract,88.09,active,20.73,69.09,86.91,19.64,77.27,76.55,3,no
+29,Stazione ,Interactive,Concrete,36.45,passive,86.73,43.91,93.64,21.73,82.91,77.36,5,no
+29,Stazione ,Interactive,Concrete,90.45,active,86.73,43.91,93.64,21.73,82.91,77.36,5,no
+29,Diamante ,No_interactive,Concrete,93.82,passive,23.91,51.55,16.45,,,,3,no
+29,Diamante ,No_interactive,Concrete,94.27,active,23.91,51.55,16.45,,,,3,no
+29,Libertà ,No_interactive,Abstract,95.91,passive,98.36,82,96.18,,,,3,no
+29,Libertà ,No_interactive,Abstract,96,active,98.36,82,96.18,,,,3,no
+29,Logica,No_interactive,Abstract,95,passive,98.82,55.27,98.18,,,,3,no
+29,Logica,No_interactive,Abstract,96,active,98.82,55.27,98.18,,,,3,no
+29,Sveglia,No_interactive ,Concrete,95.73,passive,15.73,53.27,99.45,,,,3,no
+29,Sveglia,No_interactive ,Concrete,94.18,active,15.73,53.27,99.45,,,,3,no
+30,Corona,Interactive,Concrete,91.45,passive,87.82,77.27,69.27,10.55,79.45,98.45,5,no
+30,Corona,Interactive,Concrete,82.55,active,87.82,77.27,69.27,10.55,79.45,98.45,5,no
+30,Mistero,Interactive,Abstract,78.27,passive,70.82,95.27,11.55,59.55,86,87.73,4,no
+30,Mistero,Interactive,Abstract,83.36,active,70.82,95.27,11.55,59.55,86,87.73,4,no
+30,Sfida,Interactive,Abstract,57.18,passive,26.55,82.36,46,69.36,87.36,13.91,2,no
+30,Sfida,Interactive,Abstract,67.27,active,26.55,82.36,46,69.36,87.36,13.91,2,no
+30,Stazione ,Interactive,Concrete,87.82,passive,93.64,89,91.18,9.55,79,88.18,5,no
+30,Stazione ,Interactive,Concrete,79.55,active,93.64,89,91.18,9.55,79,88.18,5,no
+30,Diamante ,No_interactive,Concrete,69.18,passive,41.73,94.64,19.82,,,,2,no
+30,Diamante ,No_interactive,Concrete,73.36,active,41.73,94.64,19.82,,,,2,no
+30,Libertà ,No_interactive,Abstract,73,passive,82.64,90.55,78.45,,,,3,no
+30,Libertà ,No_interactive,Abstract,81.55,active,82.64,90.55,78.45,,,,3,no
+30,Logica,No_interactive,Abstract,74.45,passive,96.55,98.82,73.73,,,,3,no
+30,Logica,No_interactive,Abstract,80.36,active,96.55,98.82,73.73,,,,3,no
+30,Sveglia,No_interactive ,Concrete,52.64,passive,60.27,72,22.64,,,,1,no
+30,Sveglia,No_interactive ,Concrete,61.36,active,60.27,72,22.64,,,,1,no
+31,Corona,Interactive,Concrete,89.18,passive,95.82,94.36,58.55,17.64,95.91,95,2,no
+31,Corona,Interactive,Concrete,85.91,active,95.82,94.36,58.55,17.64,95.91,95,2,no
+31,Mistero,Interactive,Abstract,86.36,passive,73.27,89.91,85,81.09,88.73,96.73,2,no
+31,Mistero,Interactive,Abstract,82.27,active,73.27,89.91,85,81.09,88.73,96.73,2,no
+31,Sfida,Interactive,Abstract,82.73,passive,72.45,90.64,78.73,65.91,86.27,90.64,1,no
+31,Sfida,Interactive,Abstract,79.18,active,72.45,90.64,78.73,65.91,86.27,90.64,1,no
+31,Stazione ,Interactive,Concrete,86.27,passive,95.09,96.45,94.27,34.36,95.55,95,2,no
+31,Stazione ,Interactive,Concrete,84.09,active,95.09,96.45,94.27,34.36,95.55,95,2,no
+31,Diamante ,No_interactive,Concrete,84.45,passive,78,81.73,86,,,,2,no
+31,Diamante ,No_interactive,Concrete,86.36,active,78,81.73,86,,,,2,no
+31,Libertà ,No_interactive,Abstract,77.73,passive,45.18,82.55,33.73,,,,1,no
+31,Libertà ,No_interactive,Abstract,81.27,active,45.18,82.55,33.73,,,,1,no
+31,Logica,No_interactive,Abstract,82.45,passive,40.82,80.55,9.45,,,,1,no
+31,Logica,No_interactive,Abstract,83.64,active,40.82,80.55,9.45,,,,1,no
+31,Sveglia,No_interactive ,Concrete,88.09,passive,80.09,80.18,86.82,,,,2,no
+31,Sveglia,No_interactive ,Concrete,85.91,active,80.09,80.18,86.82,,,,2,no
+32,Corona,Interactive,Concrete,82.45,passive,54.55,87.36,80.82,53.45,89.55,82.27,3,no
+32,Corona,Interactive,Concrete,82.36,active,54.55,87.36,80.82,53.45,89.55,82.27,3,no
+32,Mistero,Interactive,Abstract,87.91,passive,92.82,93.09,79.27,38.45,94.82,62.64,3,no
+32,Mistero,Interactive,Abstract,89.64,active,92.82,93.09,79.27,38.45,94.82,62.64,3,no
+32,Sfida,Interactive,Abstract,91.09,passive,69,91,85.27,51.91,80.36,90.18,4,no
+32,Sfida,Interactive,Abstract,90.36,active,69,91,85.27,51.91,80.36,90.18,4,no
+32,Stazione ,Interactive,Concrete,86.36,passive,53,75.18,73.91,52.55,74.64,67,2,no
+32,Stazione ,Interactive,Concrete,84.73,active,53,75.18,73.91,52.55,74.64,67,2,no
+32,Diamante ,No_interactive,Concrete,82.55,passive,32.18,52.36,59.27,,,,1,no
+32,Diamante ,No_interactive,Concrete,83.91,active,32.18,52.36,59.27,,,,1,no
+32,Libertà ,No_interactive,Abstract,81,passive,86.55,88.18,53.82,,,,2,no
+32,Libertà ,No_interactive,Abstract,83.18,active,86.55,88.18,53.82,,,,2,no
+32,Logica,No_interactive,Abstract,84.36,passive,58.27,66.73,52.45,,,,2,no
+32,Logica,No_interactive,Abstract,85.45,active,58.27,66.73,52.45,,,,2,no
+32,Sveglia,No_interactive ,Concrete,87.55,passive,76,58.36,80.18,,,,2,no
+32,Sveglia,No_interactive ,Concrete,86.36,active,76,58.36,80.18,,,,2,no
+33,Corona ,Interactive,Concrete,82.27,passive,77.82,74.45,51.73,36.82,61.55,87,3,no
+33,Corona ,Interactive,Concrete,77.64,active,77.82,74.45,51.73,36.82,61.55,87,3,no
+33,Mistero ,Interactive,Abstract,83.55,passive,64.73,71.91,89,36.36,53.45,73,4,no
+33,Mistero ,Interactive,Abstract,83.36,active,64.73,71.91,89,36.36,53.45,73,4,no
+33,Sfida,Interactive,Abstract,87.27,passive,68.91,43.73,86.36,68.45,55,78.27,5,no
+33,Sfida,Interactive,Abstract,87.64,active,68.91,43.73,86.36,68.45,55,78.27,5,no
+33,Stazione ,Interactive,Concrete,84,passive,81,41.18,79.27,29.82,75.73,77.91,2,no
+33,Stazione ,Interactive,Concrete,81.45,active,81,41.18,79.27,29.82,75.73,77.91,2,no
+33,Diamante ,No_interactive,Concrete,72.55,passive,84.64,50.55,54.73,,,,3,no
+33,Diamante ,No_interactive,Concrete,77.18,active,84.64,50.55,54.73,,,,3,no
+33,Libertà ,No_interactive,Abstract,72.73,passive,78.45,55.91,99.73,,,,2,no
+33,Libertà ,No_interactive,Abstract,71.55,active,78.45,55.91,99.73,,,,2,no
+33,Logica ,No_interactive,Abstract,68.64,passive,54,81.64,36.82,,,,1,no
+33,Logica ,No_interactive,Abstract,79,active,54,81.64,36.82,,,,1,no
+33,Sveglia ,No_interactive,Concrete,76.64,passive,78.27,52.64,76.18,,,,2,no
+33,Sveglia ,No_interactive,Concrete,75.91,active,78.27,52.64,76.18,,,,2,no
+34,Corona ,Interactive,Concrete,81.55,passive,66.36,60.91,6.91,25.45,61.45,93.55,4,no
+34,Corona ,Interactive,Concrete,80.73,active,66.36,60.91,6.91,25.45,61.45,93.55,4,no
+34,Mistero ,Interactive,Abstract,87.45,passive,96.64,81.36,61.64,1.73,87.45,95.82,5,no
+34,Mistero ,Interactive,Abstract,87.18,active,96.64,81.36,61.64,1.73,87.45,95.82,5,no
+34,Sfida,Interactive,Abstract,88.09,passive,94.64,90,66.36,4,90.18,95.36,5,no
+34,Sfida,Interactive,Abstract,88.18,active,94.64,90,66.36,4,90.18,95.36,5,no
+34,Stazione ,Interactive,Concrete,87.55,passive,93.36,89.73,95.64,8.09,76.73,93.55,4,no
+34,Stazione ,Interactive,Concrete,87.55,active,93.36,89.73,95.64,8.09,76.73,93.55,4,no
+34,Diamante ,No_interactive,Concrete,77.27,passive,92.45,80.73,94.09,,,,1,no
+34,Diamante ,No_interactive,Concrete,78.82,active,92.45,80.73,94.09,,,,1,no
+34,Libertà ,No_interactive,Abstract,82.27,passive,78.27,80.73,88.09,,,,2,no
+34,Libertà ,No_interactive,Abstract,80.55,active,78.27,80.73,88.09,,,,2,no
+34,Logica ,No_interactive,Abstract,84,passive,94.82,73.82,56.36,,,,3,no
+34,Logica ,No_interactive,Abstract,86.27,active,94.82,73.82,56.36,,,,3,no
+34,Sveglia ,No_interactive,Concrete,72,passive,20.91,57.64,54.45,,,,1,no
+34,Sveglia ,No_interactive,Concrete,72.18,active,20.91,57.64,54.45,,,,1,no
+35,Corona ,Interactive,Concrete,90.27,passive,93.09,99.45,78.73,6.27,98.82,93.45,3,no
+35,Corona ,Interactive,Concrete,90.36,active,93.09,99.45,78.73,6.27,98.82,93.45,3,no
+35,Mistero ,Interactive,Abstract,89.64,passive,87.91,98.73,95.18,7.36,96.91,96,2,no
+35,Mistero ,Interactive,Abstract,88.91,active,87.91,98.73,95.18,7.36,96.91,96,2,no
+35,Sfida,Interactive,Abstract,93.27,passive,98.36,99.36,99,1.64,99.18,89.55,4,no
+35,Sfida,Interactive,Abstract,92.82,active,98.36,99.36,99,1.64,99.18,89.55,4,no
+35,Stazione ,Interactive,Concrete,85.36,passive,64.09,92.36,93.82,20.82,98.82,75.18,2,no
+35,Stazione ,Interactive,Concrete,86.18,active,64.09,92.36,93.82,20.82,98.82,75.18,2,no
+35,Diamante ,No_interactive,Concrete,80.18,passive,58.09,57.64,63,,,,1,no
+35,Diamante ,No_interactive,Concrete,82.55,active,58.09,57.64,63,,,,1,no
+35,Libertà ,No_interactive,Abstract,85.82,passive,69.55,79.45,59.82,,,,1,no
+35,Libertà ,No_interactive,Abstract,83.18,active,69.55,79.45,59.82,,,,1,no
+35,Logica ,No_interactive,Abstract,88.64,passive,79.18,79.45,63.82,,,,1,no
+35,Logica ,No_interactive,Abstract,85.27,active,79.18,79.45,63.82,,,,1,no
+35,Sveglia ,No_interactive,Concrete,83.36,passive,63.45,67.73,62,,,,1,no
+35,Sveglia ,No_interactive,Concrete,82.82,active,63.45,67.73,62,,,,1,no
+36,Corona ,Interactive,Concrete,77.45,passive,73,73.91,74,29.09,76.18,75.91,3,no
+36,Corona ,Interactive,Concrete,76.82,active,73,73.91,74,29.09,76.18,75.91,3,no
+36,Mistero ,Interactive,Abstract,78,passive,84.36,88.73,78,12.64,91.45,67,3,no
+36,Mistero ,Interactive,Abstract,76.55,active,84.36,88.73,78,12.64,91.45,67,3,no
+36,Sfida,Interactive,Abstract,80.09,passive,79.36,86.09,88.55,6.55,91.45,79.45,3,no
+36,Sfida,Interactive,Abstract,79.27,active,79.36,86.09,88.55,6.55,91.45,79.45,3,no
+36,Stazione ,Interactive,Concrete,74.91,passive,17.91,34.73,57.36,59,48.45,59.09,2,no
+36,Stazione ,Interactive,Concrete,65.36,active,17.91,34.73,57.36,59,48.45,59.09,2,no
+36,Diamante ,No_interactive,Concrete,79.09,passive,47.18,58.27,11.55,,,,2,no
+36,Diamante ,No_interactive,Concrete,78.45,active,47.18,58.27,11.55,,,,2,no
+36,Libertà ,No_interactive,Abstract,78.09,passive,66.64,77.18,72.91,,,,1,no
+36,Libertà ,No_interactive,Abstract,75.45,active,66.64,77.18,72.91,,,,1,no
+36,Logica ,No_interactive,Abstract,77.36,passive,90.64,77.82,99.27,,,,2,no
+36,Logica ,No_interactive,Abstract,75.82,active,90.64,77.82,99.27,,,,2,no
+36,Sveglia ,No_interactive,Concrete,77.73,passive,76.73,82.36,93.09,,,,1,no
+36,Sveglia ,No_interactive,Concrete,77.36,active,76.73,82.36,93.09,,,,1,no
+37,Canoa,Interactive,Concrete,69.55,passive,64.18,80.09,60.45,24.73,91.18,69.64,2,no
+37,Canoa,Interactive,Concrete,67.36,active,64.18,80.09,60.45,24.73,91.18,69.64,2,no
+37,Enigma,Interactive,Abstract,68,passive,89.82,98,62.64,21.18,98.18,97.45,4,no
+37,Enigma,Interactive,Abstract,67.36,active,89.82,98,62.64,21.18,98.18,97.45,4,no
+37,Cristallo,Interactive ,Concrete,69.64,passive,84.45,93.27,14.45,29.45,95.82,95.64,2,no
+37,Cristallo,Interactive ,Concrete,69.55,active,84.45,93.27,14.45,29.45,95.82,95.64,2,no
+37,Destino,Interactive ,Abstract,72.82,passive,95.45,95.64,85.36,11.36,97.73,98.45,4,no
+37,Destino,Interactive ,Abstract,75.45,active,95.45,95.64,85.36,11.36,97.73,98.45,4,no
+37,Futuro ,No_interactive ,Abstract,71.18,passive,95.45,98.55,98.91,,,,3,no
+37,Futuro ,No_interactive ,Abstract,73.82,active,95.45,98.55,98.91,,,,3,no
+37,Ideale,No_interactive ,Abstract,71.45,passive,10.45,98.64,98.45,,,,2,no
+37,Ideale,No_interactive ,Abstract,68.27,active,10.45,98.64,98.45,,,,2,no
+37,Libreria,No_interactive ,Concrete,74.45,passive,84.82,94,92.18,,,,2,no
+37,Libreria,No_interactive ,Concrete,78.73,active,84.82,94,92.18,,,,2,no
+37,Muscolo,No_interactive ,Concrete,74.91,passive,76.82,74.82,84.55,,,,2,no
+37,Muscolo,No_interactive ,Concrete,78.36,active,76.82,74.82,84.55,,,,2,no
+38,Canoa,Interactive,Concrete,89.64,passive,92.45,95.82,90,15.36,60.91,47.09,5,no
+38,Canoa,Interactive,Concrete,84.27,active,92.45,95.82,90,15.36,60.91,47.09,5,no
+38,Cristallo,Interactive,Concrete,77.64,passive,86.64,90.45,9.91,51.09,51.91,54.18,3,no
+38,Cristallo,Interactive,Concrete,76.55,active,86.64,90.45,9.91,51.09,51.91,54.18,3,no
+38,Destino,Interactive,Abstract,87.09,passive,90.82,95.18,93.18,11.73,52.27,51.64,3,no
+38,Destino,Interactive,Abstract,84.73,active,90.82,95.18,93.18,11.73,52.27,51.64,3,no
+38,Enigma,Interactive,Abstract,74.27,passive,90.36,87.09,74.55,7.64,88.82,89.18,4,no
+38,Enigma,Interactive,Abstract,75.18,active,90.36,87.09,74.55,7.64,88.82,89.18,4,no
+38,Futuro ,No_interactive ,Abstract,76.45,passive,63.91,89.91,86,,,,1,no
+38,Futuro ,No_interactive ,Abstract,71.55,active,63.91,89.91,86,,,,1,no
+38,Ideale,No_interactive ,Abstract,80.82,passive,79.45,93,94.27,,,,2,no
+38,Ideale,No_interactive ,Abstract,83.45,active,79.45,93,94.27,,,,2,no
+38,Libreria,No_interactive ,Concrete,86.82,passive,92.82,96.27,90.09,,,,2,no
+38,Libreria,No_interactive ,Concrete,84.64,active,92.82,96.27,90.09,,,,2,no
+38,Muscolo,No_interactive ,Concrete,62.82,passive,65.82,89.64,79,,,,2,no
+38,Muscolo,No_interactive ,Concrete,58.18,active,65.82,89.64,79,,,,2,no
+39,Canoa,Interactive,Concrete,79.91,passive,89.36,92.91,91.45,67.18,87.82,87.55,5,no
+39,Canoa,Interactive,Concrete,78.64,active,89.36,92.91,91.45,67.18,87.82,87.55,5,no
+39,Cristallo,Interactive,Concrete,83.55,passive,87.55,91.82,89.27,94.82,85.09,91.55,5,no
+39,Cristallo,Interactive,Concrete,84.64,active,87.55,91.82,89.27,94.82,85.09,91.55,5,no
+39,Destino,Interactive,Abstract,69.82,passive,67.36,90.09,56.36,75.18,94.82,94.64,4,no
+39,Destino,Interactive,Abstract,62.18,active,67.36,90.09,56.36,75.18,94.82,94.64,4,no
+39,Enigma,Interactive,Abstract,85,passive,91.73,98.82,87.27,81.45,96.09,93.64,5,no
+39,Enigma,Interactive,Abstract,85.27,active,91.73,98.82,87.27,81.45,96.09,93.64,5,no
+39,Futuro ,No_interactive ,Abstract,1.45,passive,3.64,86.64,92.73,,,,2,no
+39,Futuro ,No_interactive ,Abstract,2.82,active,3.64,86.64,92.73,,,,2,no
+39,Ideale,No_interactive ,Abstract,1,passive,15.27,62.55,76.36,,,,1,no
+39,Ideale,No_interactive ,Abstract,2.09,active,15.27,62.55,76.36,,,,1,no
+39,Libreria,No_interactive ,Concrete,62.82,passive,65.82,89.64,79,,,,1,no
+39,Libreria,No_interactive ,Concrete,58.18,active,65.82,89.64,79,,,,1,no
+39,Muscolo,No_interactive ,Concrete,3.64,passive,7.27,74.73,94.55,,,,1,no
+39,Muscolo,No_interactive ,Concrete,9.91,active,7.27,74.73,94.55,,,,1,no
+40,Canoa,Interactive,Concrete,80.27,passive,72.55,75.55,35.73,18.64,35.45,55,3,no
+40,Canoa,Interactive,Concrete,85.27,active,72.55,75.55,35.73,18.64,35.45,55,3,no
+40,Cristallo,Interactive,Concrete,81.45,passive,67.18,71.82,19.18,32.27,40.82,61.64,3,no
+40,Cristallo,Interactive,Concrete,75.18,active,67.18,71.82,19.18,32.27,40.82,61.64,3,no
+40,Destino,Interactive,Abstract,79.82,passive,49.27,71.64,23.55,32.45,51.45,45.09,2,no
+40,Destino,Interactive,Abstract,75.09,active,49.27,71.64,23.55,32.45,51.45,45.09,2,no
+40,Enigma,Interactive,Abstract,80.73,passive,67.82,74.36,37.09,25.91,46.36,55.09,3,no
+40,Enigma,Interactive,Abstract,79.82,active,67.82,74.36,37.09,25.91,46.36,55.09,3,no
+40,Futuro ,No_interactive ,Abstract,73.45,passive,59.91,71.82,65.82,,,,1,no
+40,Futuro ,No_interactive ,Abstract,65.82,active,59.91,71.82,65.82,,,,1,no
+40,Ideale,No_interactive ,Abstract,66.45,passive,71.91,71.09,61.64,,,,2,no
+40,Ideale,No_interactive ,Abstract,66.45,active,71.91,71.09,61.64,,,,2,no
+40,Libreria,No_interactive ,Concrete,57.45,passive,49.45,28.64,47.45,,,,2,no
+40,Libreria,No_interactive ,Concrete,52.91,active,49.45,28.64,47.45,,,,2,no
+40,Muscolo,No_interactive ,Concrete,67.09,passive,25.64,56.91,17.36,,,,1,no
+40,Muscolo,No_interactive ,Concrete,61.36,active,25.64,56.91,17.36,,,,1,no
+41,Canoa,Interactive,Concrete,83.73,passive,99.55,71.73,90,11,66.18,78,5,no
+41,Canoa,Interactive,Concrete,79.73,active,99.55,71.73,90,11,66.18,78,5,no
+41,Cristallo,Interactive,Concrete,72.73,passive,96.09,67.45,94.82,31.45,84,88.18,3,no
+41,Cristallo,Interactive,Concrete,64,active,96.09,67.45,94.82,31.45,84,88.18,3,no
+41,Destino,Interactive,Abstract,97.73,passive,98.82,96.45,94.45,2.45,99,86,6,no
+41,Destino,Interactive,Abstract,96.45,active,98.82,96.45,94.45,2.45,99,86,6,no
+41,Enigma,Interactive,Abstract,93.36,passive,95,27.27,29.36,16,64,70.09,6,no
+41,Enigma,Interactive,Abstract,89.55,active,95,27.27,29.36,16,64,70.09,6,no
+41,Futuro ,No_interactive ,Abstract,97,passive,99.73,95.45,99.91,,,,3,no
+41,Futuro ,No_interactive ,Abstract,97.09,active,99.73,95.45,99.91,,,,3,no
+41,Ideale,No_interactive ,Abstract,90.36,passive,97.91,93,99.18,,,,2,no
+41,Ideale,No_interactive ,Abstract,88,active,97.91,93,99.18,,,,2,no
+41,Libreria,No_interactive ,Concrete,82.45,passive,90.82,98.09,27.27,,,,2,no
+41,Libreria,No_interactive ,Concrete,87.36,active,90.82,98.09,27.27,,,,2,no
+41,Muscolo,No_interactive ,Concrete,95.36,passive,83.18,98.18,87.18,,,,3,no
+41,Muscolo,No_interactive ,Concrete,92.55,active,83.18,98.18,87.18,,,,3,no
+42,Canoa,Interactive,Concrete,33.45,passive,71.82,68,75.27,10.27,73.36,75.91,3,yes
+42,Canoa,Interactive,Concrete,32.55,active,71.82,68,75.27,10.27,73.36,75.91,3,yes
+42,Cristallo,Interactive,Concrete,23.18,passive,63.91,73,77.73,12.91,63.18,62.45,2,yes
+42,Cristallo,Interactive,Concrete,17.45,active,63.91,73,77.73,12.91,63.18,62.45,2,yes
+42,Destino,Interactive,Abstract,31.73,passive,60.45,71.91,60.09,39.55,58.82,70.18,3,yes
+42,Destino,Interactive,Abstract,29.36,active,60.45,71.91,60.09,39.55,58.82,70.18,3,yes
+42,Enigma,Interactive,Abstract,41.91,passive,65,75.18,53.82,26.27,82.82,54.64,3,yes
+42,Enigma,Interactive,Abstract,17.36,active,65,75.18,53.82,26.27,82.82,54.64,3,yes
+42,Futuro ,No_interactive ,Abstract,40.55,passive,70.45,80.82,64.09,,,,2,no
+42,Futuro ,No_interactive ,Abstract,15.36,active,70.45,80.82,64.09,,,,2,no
+42,Ideale,No_interactive ,Abstract,46.09,passive,67.45,76.64,56,,,,2,no
+42,Ideale,No_interactive ,Abstract,25.64,active,67.45,76.64,56,,,,2,no
+42,Libreria,No_interactive ,Concrete,26.36,passive,79.09,67.91,77.64,,,,2,no
+42,Libreria,No_interactive ,Concrete,16.82,active,79.09,67.91,77.64,,,,2,no
+42,Muscolo,No_interactive ,Concrete,37.64,passive,74.73,74.09,61.55,,,,2,no
+42,Muscolo,No_interactive ,Concrete,30.27,active,74.73,74.09,61.55,,,,2,no
+43,Canoa,Interactive,Concrete,92.27,passive,91.82,91.64,87.73,8.64,94.36,95.27,5,no
+43,Canoa,Interactive,Concrete,93.45,active,91.82,91.64,87.73,8.64,94.36,95.27,5,no
+43,Cristallo,Interactive,Concrete,93.45,passive,92.36,86.55,91.45,1.45,91.36,91,5,no
+43,Cristallo,Interactive,Concrete,94.91,active,92.36,86.55,91.45,1.45,91.36,91,5,no
+43,Destino,Interactive,Abstract,76.82,passive,88.45,90.18,76.82,24.82,89.18,86.55,4,no
+43,Destino,Interactive,Abstract,76.27,active,88.45,90.18,76.82,24.82,89.18,86.55,4,no
+43,Enigma,Interactive,Abstract,91.09,passive,87.91,91.73,91.36,14.82,89,89.55,5,no
+43,Enigma,Interactive,Abstract,87.45,active,87.91,91.73,91.36,14.82,89,89.55,5,no
+43,Futuro ,No_interactive ,Abstract,66.27,passive,85,74.18,80,,,,3,no
+43,Futuro ,No_interactive ,Abstract,67.73,active,85,74.18,80,,,,3,no
+43,Ideale,No_interactive ,Abstract,75.27,passive,83.91,79.45,82.45,,,,3,no
+43,Ideale,No_interactive ,Abstract,73.73,active,83.91,79.45,82.45,,,,3,no
+43,Libreria,No_interactive ,Concrete,26.82,passive,82.36,79.09,81.73,,,,3,no
+43,Libreria,No_interactive ,Concrete,76.09,active,82.36,79.09,81.73,,,,3,no
+43,Muscolo,No_interactive ,Concrete,73.18,passive,79.73,80,80.82,,,,3,no
+43,Muscolo,No_interactive ,Concrete,73.36,active,79.73,80,80.82,,,,3,no
+44,Canoa,Interactive,Concrete,72.18,passive,64.73,67.64,63.36,37.18,71.18,67.18,5,no
+44,Canoa,Interactive,Concrete,73.18,active,64.73,67.64,63.36,37.18,71.18,67.18,5,no
+44,Cristallo,Interactive,Concrete,72.45,passive,55.27,58.27,32.45,56.45,59.45,61.45,5,no
+44,Cristallo,Interactive,Concrete,69,active,55.27,58.27,32.45,56.45,59.45,61.45,5,no
+44,Destino,Interactive,Abstract,73.18,passive,56.64,55.18,31.36,54.45,63.36,63.73,5,no
+44,Destino,Interactive,Abstract,73.73,active,56.64,55.18,31.36,54.45,63.36,63.73,5,no
+44,Enigma,Interactive,Abstract,71.82,passive,45.82,57.91,30.73,61.73,74.18,65.64,5,no
+44,Enigma,Interactive,Abstract,72.82,active,45.82,57.91,30.73,61.73,74.18,65.64,5,no
+44,Futuro ,No_interactive ,Abstract,67.82,passive,45.18,63.73,10.73,,,,5,no
+44,Futuro ,No_interactive ,Abstract,70.64,active,45.18,63.73,10.73,,,,5,no
+44,Ideale,No_interactive ,Abstract,72.45,passive,65.09,67.36,29.64,,,,5,no
+44,Ideale,No_interactive ,Abstract,72,active,65.09,67.36,29.64,,,,5,no
+44,Libreria,No_interactive ,Concrete,70.91,passive,47.18,57.45,30.55,,,,5,no
+44,Libreria,No_interactive ,Concrete,71.09,active,47.18,57.45,30.55,,,,5,no
+44,Muscolo,No_interactive ,Concrete,74.73,passive,27.64,53,19.36,,,,5,no
+44,Muscolo,No_interactive ,Concrete,66.82,active,27.64,53,19.36,,,,5,no
+45,Canoa,Interactive ,Concrete,92.27,passive,99.82,90.09,63,65.73,74.27,91.91,3,no
+45,Canoa,Interactive ,Concrete,87.27,active,99.82,90.09,63,65.73,74.27,91.91,3,no
+45,Cristallo,Interactive ,Concrete,92.73,passive,96.64,94.18,96.64,70.18,95.36,86.82,4,no
+45,Cristallo,Interactive ,Concrete,90.45,active,96.64,94.18,96.64,70.18,95.36,86.82,4,no
+45,Destino,Interactive ,Abstract,91.45,passive,99.36,93.18,95.55,57,98.64,98.64,5,no
+45,Destino,Interactive ,Abstract,88.73,active,99.36,93.18,95.55,57,98.64,98.64,5,no
+45,Enigma,Interactive ,Abstract,84.55,passive,68.27,74,71.45,67.18,76.09,78.36,3,no
+45,Enigma,Interactive ,Abstract,84.09,active,68.27,74,71.45,67.18,76.09,78.36,3,no
+45,Futuro,No_interactive ,Abstract,78.55,passive,68.18,86.27,90,,,,2,no
+45,Futuro,No_interactive ,Abstract,76.09,active,68.18,86.27,90,,,,2,no
+45,Ideale,No_interactive ,Abstract,83,passive,73.36,86.91,77.91,,,,2,no
+45,Ideale,No_interactive ,Abstract,74.18,active,73.36,86.91,77.91,,,,2,no
+45,Libreria,No_interactive ,Concrete,85.36,passive,66.82,85.55,78.45,,,,2,no
+45,Libreria,No_interactive ,Concrete,72.55,active,66.82,85.55,78.45,,,,2,no
+45,Muscolo,No_interactive ,Concrete,77.73,passive,25.73,33.55,0.64,,,,2,no
+45,Muscolo,No_interactive ,Concrete,70.27,active,25.73,33.55,0.64,,,,2,no
+46,Canoa,Interactive ,Concrete,68.73,passive,64.18,98.82,98.64,1,99,99.09,4,no
+46,Canoa,Interactive ,Concrete,61.36,active,64.18,98.82,98.64,1,99,99.09,4,no
+46,Cristallo,Interactive ,Concrete,75.45,passive,84.36,98.27,98.82,92.64,98.55,99.18,5,no
+46,Cristallo,Interactive ,Concrete,62.64,active,84.36,98.27,98.82,92.64,98.55,99.18,5,no
+46,Destino,Interactive ,Abstract,76.45,passive,98.09,99.73,99.09,88.55,99,99.55,5,no
+46,Destino,Interactive ,Abstract,89.09,active,98.09,99.73,99.09,88.55,99,99.55,5,no
+46,Enigma,Interactive ,Abstract,87.64,passive,99.36,99.45,99.36,89.64,99.64,99.18,5,no
+46,Enigma,Interactive ,Abstract,82.91,active,99.36,99.45,99.36,89.64,99.64,99.18,5,no
+46,Futuro,No_interactive ,Abstract,45.64,passive,0.09,99,99.45,,,,1,no
+46,Futuro,No_interactive ,Abstract,43.09,active,0.09,99,99.45,,,,1,no
+46,Ideale,No_interactive ,Abstract,47,passive,0.09,97.64,61.55,,,,1,no
+46,Ideale,No_interactive ,Abstract,40.09,active,0.09,97.64,61.55,,,,1,no
+46,Libreria,No_interactive ,Concrete,56.09,passive,0.09,94.55,63.27,,,,1,no
+46,Libreria,No_interactive ,Concrete,55.91,active,0.09,94.55,63.27,,,,1,no
+46,Muscolo,No_interactive ,Concrete,56.55,passive,0.64,86.73,98.73,,,,1,no
+46,Muscolo,No_interactive ,Concrete,55.91,active,0.64,86.73,98.73,,,,1,no
+47,Canoa,Interactive ,Concrete,86.27,passive,89.55,76,76.27,45.55,70.55,75.45,2,no
+47,Canoa,Interactive ,Concrete,83.64,active,89.55,76,76.27,45.55,70.55,75.45,2,no
+47,Cristallo,Interactive ,Concrete,84.36,passive,83.91,91.73,84.82,18.09,67.55,67.18,2,no
+47,Cristallo,Interactive ,Concrete,84.91,active,83.91,91.73,84.82,18.09,67.55,67.18,2,no
+47,Destino,Interactive ,Abstract,88.64,passive,96.45,95.73,96.09,80.73,75.45,87.55,3,no
+47,Destino,Interactive ,Abstract,90.55,active,96.45,95.73,96.09,80.73,75.45,87.55,3,no
+47,Enigma,Interactive ,Abstract,85.09,passive,93.91,91,87.45,59.45,78.27,76.64,2,no
+47,Enigma,Interactive ,Abstract,86.27,active,93.91,91,87.45,59.45,78.27,76.64,2,no
+47,Futuro,No_interactive ,Abstract,77.36,passive,55.64,95,25.36,,,,3,no
+47,Futuro,No_interactive ,Abstract,76.64,active,55.64,95,25.36,,,,3,no
+47,Ideale,No_interactive ,Abstract,80.45,passive,71.18,87.45,31.82,,,,2,no
+47,Ideale,No_interactive ,Abstract,81.18,active,71.18,87.45,31.82,,,,2,no
+47,Libreria,No_interactive ,Concrete,78.91,passive,98.91,89.18,23.45,,,,1,no
+47,Libreria,No_interactive ,Concrete,79.45,active,98.91,89.18,23.45,,,,1,no
+47,Muscolo,No_interactive ,Concrete,85.27,passive,84.82,88.18,3.55,,,,2,no
+47,Muscolo,No_interactive ,Concrete,83.82,active,84.82,88.18,3.55,,,,2,no
+48,Canoa,Interactive ,Concrete,83.82,passive,84.36,80.45,89.82,27.45,86.27,74.91,2,no
+48,Canoa,Interactive ,Concrete,78.55,active,84.36,80.45,89.82,27.45,86.27,74.91,2,no
+48,Cristallo,Interactive ,Concrete,77.73,passive,79.73,70.27,78.55,31.27,68.45,76.73,3,no
+48,Cristallo,Interactive ,Concrete,75,active,79.73,70.27,78.55,31.27,68.45,76.73,3,no
+48,Destino,Interactive ,Abstract,80.64,passive,74,82.91,86,83.36,83.18,83.91,1,no
+48,Destino,Interactive ,Abstract,76.55,active,74,82.91,86,83.36,83.18,83.91,1,no
+48,Enigma,Interactive ,Abstract,80.27,passive,71.91,75.91,83.82,37.36,83.36,76.45,2,no
+48,Enigma,Interactive ,Abstract,78.73,active,71.91,75.91,83.82,37.36,83.36,76.45,2,no
+48,Futuro,No_interactive ,Abstract,70.27,passive,90.18,88.09,94,,,,2,no
+48,Futuro,No_interactive ,Abstract,56.09,active,90.18,88.09,94,,,,2,no
+48,Ideale,No_interactive ,Abstract,76.18,passive,76.09,80.64,90.09,,,,2,no
+48,Ideale,No_interactive ,Abstract,70.91,active,76.09,80.64,90.09,,,,2,no
+48,Libreria,No_interactive ,Concrete,60.45,passive,77.45,80.82,76.82,,,,2,no
+48,Libreria,No_interactive ,Concrete,54.82,active,77.45,80.82,76.82,,,,2,no
+48,Muscolo,No_interactive ,Concrete,58.64,passive,77.64,80.18,75.73,,,,4,no
+48,Muscolo,No_interactive ,Concrete,54.73,active,77.64,80.18,75.73,,,,4,no
+49,Futuro,Interactive ,Abstract,83,passive,78.09,85,99.27,0.27,89.45,88.91,2,no
+49,Futuro,Interactive ,Abstract,85.09,active,78.09,85,99.27,0.27,89.45,88.91,2,no
+49,Ideale,Interactive ,Abstract,89.36,passive,99.36,98.55,99.82,0.36,98.55,98.45,3,no
+49,Ideale,Interactive ,Abstract,90.55,active,99.36,98.55,99.82,0.36,98.55,98.45,3,no
+49,Libreria,Interactive ,Concrete,89.09,passive,79.36,87.73,87.36,0.18,91.18,89.45,2,no
+49,Libreria,Interactive ,Concrete,89.27,active,79.36,87.73,87.36,0.18,91.18,89.45,2,no
+49,Muscolo,Interactive ,Concrete,89.36,passive,72.91,87.82,89.64,82.36,83.18,85.09,2,no
+49,Muscolo,Interactive ,Concrete,86.09,active,72.91,87.82,89.64,82.36,83.18,85.09,2,no
+49,Canoa,No_interactive ,Concrete,82.73,passive,58.45,69.73,71.73,,,,2,no
+49,Canoa,No_interactive ,Concrete,79.73,active,58.45,69.73,71.73,,,,2,no
+49,Cristallo,No_interactive ,Concrete,81.55,passive,64.64,71.18,75.64,,,,2,no
+49,Cristallo,No_interactive ,Concrete,77,active,64.64,71.18,75.64,,,,2,no
+49,Destino,No_interactive ,Abstract,84.18,passive,47.91,82.09,99.55,,,,2,no
+49,Destino,No_interactive ,Abstract,78.45,active,47.91,82.09,99.55,,,,2,no
+49,Enigma,No_interactive ,Abstract,82.91,passive,67.64,90.91,99.27,,,,2,no
+49,Enigma,No_interactive ,Abstract,84,active,67.64,90.91,99.27,,,,2,no
+50,Futuro,Interactive ,Abstract,86,passive,89.91,95.82,47.36,45.45,98.82,98.45,3,no
+50,Futuro,Interactive ,Abstract,82.64,active,89.91,95.82,47.36,45.45,98.82,98.45,3,no
+50,Ideale,Interactive ,Abstract,88.18,passive,70.45,98,16.18,97.91,99,98.91,2,no
+50,Ideale,Interactive ,Abstract,86.27,active,70.45,98,16.18,97.91,99,98.91,2,no
+50,Libreria,Interactive ,Concrete,85.36,passive,99.55,99.36,50.73,99.91,99.55,99.55,3,no
+50,Libreria,Interactive ,Concrete,82.27,active,99.55,99.36,50.73,99.91,99.55,99.55,3,no
+50,Muscolo,Interactive ,Concrete,97.73,passive,99.82,99.82,99.55,18.91,99.82,99.73,5,no
+50,Muscolo,Interactive ,Concrete,97.91,active,99.82,99.82,99.55,18.91,99.82,99.73,5,no
+50,Canoa,No_interactive ,Concrete,0.82,passive,0.91,95.27,99.36,,,,1,no
+50,Canoa,No_interactive ,Concrete,53.82,active,0.91,95.27,99.36,,,,1,no
+50,Cristallo,No_interactive ,Concrete,0.91,passive,12.55,69.36,9.64,,,,2,no
+50,Cristallo,No_interactive ,Concrete,82.91,active,12.55,69.36,9.64,,,,2,no
+50,Destino,No_interactive ,Abstract,56.55,passive,7.73,82,98.36,,,,4,no
+50,Destino,No_interactive ,Abstract,11,active,7.73,82,98.36,,,,4,no
+50,Enigma,No_interactive ,Abstract,58,passive,1.55,92.82,27.45,,,,6,no
+50,Enigma,No_interactive ,Abstract,15.36,active,1.55,92.82,27.45,,,,6,no
+51,Futuro,Interactive ,Abstract,87.82,passive,80.55,87.91,93.73,17.55,86.73,86.45,3,no
+51,Futuro,Interactive ,Abstract,84,active,80.55,87.91,93.73,17.55,86.73,86.45,3,no
+51,Ideale,Interactive ,Abstract,85.82,passive,65.73,80.55,78.45,17,83.45,81.09,2,no
+51,Ideale,Interactive ,Abstract,84.27,active,65.73,80.55,78.45,17,83.45,81.09,2,no
+51,Libreria,Interactive ,Concrete,93.27,passive,92.18,87.73,87.18,8.27,90,90.18,4,no
+51,Libreria,Interactive ,Concrete,92.82,active,92.18,87.73,87.18,8.27,90,90.18,4,no
+51,Muscolo,Interactive ,Concrete,88,passive,76.18,82.64,22.73,15.45,80.73,82.18,3,no
+51,Muscolo,Interactive ,Concrete,87.64,active,76.18,82.64,22.73,15.45,80.73,82.18,3,no
+51,Canoa,No_interactive ,Concrete,87.45,passive,75.55,74.27,76.27,,,,2,no
+51,Canoa,No_interactive ,Concrete,92.64,active,75.55,74.27,76.27,,,,2,no
+51,Cristallo,No_interactive ,Concrete,79.45,passive,68.18,67.27,70.91,,,,1,no
+51,Cristallo,No_interactive ,Concrete,78.27,active,68.18,67.27,70.91,,,,1,no
+51,Destino,No_interactive ,Abstract,85.09,passive,85.36,91.55,87.36,,,,2,no
+51,Destino,No_interactive ,Abstract,79.45,active,85.36,91.55,87.36,,,,2,no
+51,Enigma,No_interactive ,Abstract,87.73,passive,87.09,88.64,72,,,,2,no
+51,Enigma,No_interactive ,Abstract,86.27,active,87.09,88.64,72,,,,2,no
+52,Futuro,Interactive ,Abstract,82.91,passive,99.45,99.45,96.36,1.27,99,98.64,2,no
+52,Futuro,Interactive ,Abstract,82.36,active,99.45,99.45,96.36,1.27,99,98.64,2,no
+52,Ideale,Interactive ,Abstract,78.45,passive,91.91,98.55,90.91,8.55,94.09,93.82,2,no
+52,Ideale,Interactive ,Abstract,76.91,active,91.91,98.55,90.91,8.55,94.09,93.82,2,no
+52,Libreria,Interactive ,Concrete,85.09,passive,99.36,99.73,99.55,0.82,99.45,99.64,2,no
+52,Libreria,Interactive ,Concrete,83.55,active,99.36,99.73,99.55,0.82,99.45,99.64,2,no
+52,Muscolo,Interactive ,Concrete,85.64,passive,95.64,99.36,99.27,1.64,99.55,99.55,3,no
+52,Muscolo,Interactive ,Concrete,85.82,active,95.64,99.36,99.27,1.64,99.55,99.55,3,no
+52,Canoa,No_interactive ,Concrete,77.45,passive,97.91,99.27,94.27,,,,1,no
+52,Canoa,No_interactive ,Concrete,77.45,active,97.91,99.27,94.27,,,,1,no
+52,Cristallo,No_interactive ,Concrete,78.91,passive,99.55,99.45,97.73,,,,1,no
+52,Cristallo,No_interactive ,Concrete,77,active,99.55,99.45,97.73,,,,1,no
+52,Destino,No_interactive ,Abstract,80.82,passive,99.27,99.64,99.27,,,,2,no
+52,Destino,No_interactive ,Abstract,79.55,active,99.27,99.64,99.27,,,,2,no
+52,Enigma,No_interactive ,Abstract,60.45,passive,77.45,80.82,76.82,,,,1,no
+52,Enigma,No_interactive ,Abstract,54.82,active,77.45,80.82,76.82,,,,1,no
+53,Futuro,Interactive ,Abstract,72.18,passive,69.82,71.73,57.36,39.73,47.82,48.36,4,no
+53,Futuro,Interactive ,Abstract,62.18,active,69.82,71.73,57.36,39.73,47.82,48.36,4,no
+53,Ideale,Interactive ,Abstract,78.18,passive,76.45,75.91,76.36,44.82,49.36,49.64,4,no
+53,Ideale,Interactive ,Abstract,80.91,active,76.45,75.91,76.36,44.82,49.36,49.64,4,no
+53,Libreria,Interactive ,Concrete,87,passive,86.73,81.45,62.82,31.55,51.27,51.18,4,no
+53,Libreria,Interactive ,Concrete,86.27,active,86.73,81.45,62.82,31.55,51.27,51.18,4,no
+53,Muscolo,Interactive ,Concrete,80.45,passive,84.45,94.27,59.09,47.55,51.36,51.55,4,no
+53,Muscolo,Interactive ,Concrete,83.36,active,84.45,94.27,59.09,47.55,51.36,51.55,4,no
+53,Canoa,No_interactive ,Concrete,61.82,passive,86.09,88.27,62.45,,,,2,no
+53,Canoa,No_interactive ,Concrete,63.91,active,86.09,88.27,62.45,,,,2,no
+53,Cristallo,No_interactive ,Concrete,71.91,passive,90.36,93.09,92,,,,2,no
+53,Cristallo,No_interactive ,Concrete,85.64,active,90.36,93.09,92,,,,2,no
+53,Destino,No_interactive ,Abstract,60.18,passive,92.27,79.82,96.45,,,,2,no
+53,Destino,No_interactive ,Abstract,76.18,active,92.27,79.82,96.45,,,,2,no
+53,Enigma,No_interactive ,Abstract,60.36,passive,88.18,88.36,66.82,,,,2,no
+53,Enigma,No_interactive ,Abstract,73.36,active,88.18,88.36,66.82,,,,2,no
+54,Futuro,Interactive ,Abstract,42.64,passive,96.27,96.45,97.36,23.45,94.91,95.09,4,yes
+54,Futuro,Interactive ,Abstract,42.36,active,96.27,96.45,97.36,23.45,94.91,95.09,4,yes
+54,Ideale,Interactive ,Abstract,41.09,passive,94,93.91,97.73,23.64,94.27,95.45,3,yes
+54,Ideale,Interactive ,Abstract,38.82,active,94,93.91,97.73,23.64,94.27,95.45,3,yes
+54,Libreria,Interactive ,Concrete,36.91,passive,89,85.36,90.09,9.27,88.45,88.91,3,yes
+54,Libreria,Interactive ,Concrete,40.82,active,89,85.36,90.09,9.27,88.45,88.91,3,yes
+54,Muscolo,Interactive ,Concrete,29.45,passive,81.18,85.18,72,17.73,84.82,84.36,2,yes
+54,Muscolo,Interactive ,Concrete,36.55,active,81.18,85.18,72,17.73,84.82,84.36,2,yes
+54,Canoa,No_interactive ,Concrete,33.73,passive,60.91,70.55,41.27,,,,2,no
+54,Canoa,No_interactive ,Concrete,32.36,active,60.91,70.55,41.27,,,,2,no
+54,Cristallo,No_interactive ,Concrete,32,passive,64.64,65.18,54.82,,,,1,no
+54,Cristallo,No_interactive ,Concrete,33.55,active,64.64,65.18,54.82,,,,1,no
+54,Destino,No_interactive ,Abstract,32.91,passive,98.64,78.09,82.45,,,,2,no
+54,Destino,No_interactive ,Abstract,23.64,active,98.64,78.09,82.45,,,,2,no
+54,Enigma,No_interactive ,Abstract,31.09,passive,68.91,69.36,69.18,,,,2,no
+54,Enigma,No_interactive ,Abstract,27,active,68.91,69.36,69.18,,,,2,no
+55,Futuro,Interactive ,Abstract,86.09,passive,98.27,99.91,100,98,97.36,97.18,2,no
+55,Futuro,Interactive ,Abstract,79.82,active,98.27,99.91,100,98,97.36,97.18,2,no
+55,Ideale,Interactive ,Abstract,87.27,passive,97.82,99.82,99.91,82,99.91,99.82,2,no
+55,Ideale,Interactive ,Abstract,81.45,active,97.82,99.82,99.91,82,99.91,99.82,2,no
+55,Libreria,Interactive ,Concrete,89.45,passive,100,99.91,99.36,0.18,97.91,96.82,3,no
+55,Libreria,Interactive ,Concrete,77.27,active,100,99.91,99.36,0.18,97.91,96.82,3,no
+55,Muscolo,Interactive ,Concrete,88.27,passive,100,99.82,99.73,63.36,74.36,74.91,3,no
+55,Muscolo,Interactive ,Concrete,80.18,active,100,99.82,99.73,63.36,74.36,74.91,3,no
+55,Canoa,No_interactive ,Concrete,83,passive,99.64,100,99.27,,,,3,no
+55,Canoa,No_interactive ,Concrete,81.09,active,99.64,100,99.27,,,,3,no
+55,Cristallo,No_interactive ,Concrete,82.73,passive,99.91,99.64,99.73,,,,3,no
+55,Cristallo,No_interactive ,Concrete,79.36,active,99.91,99.64,99.73,,,,3,no
+55,Destino,No_interactive ,Abstract,83.36,passive,99.91,99.64,99.82,,,,4,no
+55,Destino,No_interactive ,Abstract,80.82,active,99.91,99.64,99.82,,,,4,no
+55,Enigma,No_interactive ,Abstract,80.64,passive,99.73,99.73,99.73,,,,3,no
+55,Enigma,No_interactive ,Abstract,80.55,active,99.73,99.73,99.73,,,,3,no
+56,Futuro,Interactive ,Abstract,24,passive,54.64,98.55,80.18,13.36,61,32.18,2,yes
+56,Futuro,Interactive ,Abstract,29.91,active,54.64,98.55,80.18,13.36,61,32.18,2,yes
+56,Ideale,Interactive ,Abstract,18.64,passive,17.45,98.27,19.45,89.45,51.91,50.73,1,yes
+56,Ideale,Interactive ,Abstract,17.09,active,17.45,98.27,19.45,89.45,51.91,50.73,1,yes
+56,Libreria,Interactive ,Concrete,35.45,passive,88.91,93.82,81.18,11.91,50.73,51.18,2,yes
+56,Libreria,Interactive ,Concrete,34.36,active,88.91,93.82,81.18,11.91,50.73,51.18,2,yes
+56,Muscolo,Interactive ,Concrete,33.64,passive,90.18,94.64,87,11.64,52.27,52.55,2,yes
+56,Muscolo,Interactive ,Concrete,35.36,active,90.18,94.64,87,11.64,52.27,52.55,2,yes
+56,Canoa,No_interactive ,Concrete,0.45,passive,68.91,80.73,73.55,,,,2,no
+56,Canoa,No_interactive ,Concrete,66.82,active,68.91,80.73,73.55,,,,2,no
+56,Cristallo,No_interactive ,Concrete,31.64,passive,87.82,90.91,89,,,,2,no
+56,Cristallo,No_interactive ,Concrete,48.27,active,87.82,90.91,89,,,,2,no
+56,Destino,No_interactive ,Abstract,30.27,passive,83.64,94.27,78.36,,,,2,no
+56,Destino,No_interactive ,Abstract,40.73,active,83.64,94.27,78.36,,,,2,no
+56,Enigma,No_interactive ,Abstract,25.36,passive,38.27,91,47.36,,,,1,no
+56,Enigma,No_interactive ,Abstract,33.91,active,38.27,91,47.36,,,,1,no
+57,Canoa,Interactive ,Concrete,72.09,passive,72.45,85.09,13.73,49.64,74,90.91,3,no
+57,Canoa,Interactive ,Concrete,67.91,active,72.45,85.09,13.73,49.64,74,90.91,3,no
+57,Cristallo,Interactive ,Concrete,73.36,passive,82.27,86.73,2.82,95.55,84.45,88.73,3,no
+57,Cristallo,Interactive ,Concrete,74.45,active,82.27,86.73,2.82,95.55,84.45,88.73,3,no
+57,Destino,Interactive ,Abstract,87.82,passive,99.27,97.09,37.64,10.09,96.27,98.91,4,no
+57,Destino,Interactive ,Abstract,84.27,active,99.27,97.09,37.64,10.09,96.27,98.91,4,no
+57,Enigma,Interactive ,Abstract,88.18,passive,95.64,93.09,27.55,10.36,92.18,92.45,4,no
+57,Enigma,Interactive ,Abstract,86.45,active,95.64,93.09,27.55,10.36,92.18,92.45,4,no
+57,Futuro,No_interactive ,Abstract,27.09,passive,58.55,68,64.73,,,,2,no
+57,Futuro,No_interactive ,Abstract,23.73,active,58.55,68,64.73,,,,2,no
+57,Ideale,No_interactive ,Abstract,31.82,passive,48.45,41.27,51.36,,,,2,no
+57,Ideale,No_interactive ,Abstract,27.36,active,48.45,41.27,51.36,,,,2,no
+57,Libreria,No_interactive ,Concrete,34.36,passive,49.91,65.82,79.27,,,,2,no
+57,Libreria,No_interactive ,Concrete,29.91,active,49.91,65.82,79.27,,,,2,no
+57,Muscolo,No_interactive ,Concrete,24.27,passive,20.27,71.64,50.82,,,,1,no
+57,Muscolo,No_interactive ,Concrete,25.91,active,20.27,71.64,50.82,,,,1,no
+58,Canoa,Interactive ,Concrete,50.18,passive,28.45,51.09,39.82,26.45,46.09,48.64,2,no
+58,Canoa,Interactive ,Concrete,49.36,active,28.45,51.09,39.82,26.45,46.09,48.64,2,no
+58,Cristallo,Interactive ,Concrete,42.55,passive,38.27,28.73,47.18,24.73,38.91,40.27,2,no
+58,Cristallo,Interactive ,Concrete,45,active,38.27,28.73,47.18,24.73,38.91,40.27,2,no
+58,Destino,Interactive ,Abstract,60.64,passive,41.09,39.55,39.18,27.36,38.18,39.55,2,no
+58,Destino,Interactive ,Abstract,52.82,active,41.09,39.55,39.18,27.36,38.18,39.55,2,no
+58,Enigma,Interactive ,Abstract,61.82,passive,36.73,33.55,39.27,24,39.18,37.82,2,no
+58,Enigma,Interactive ,Abstract,54.09,active,36.73,33.55,39.27,24,39.18,37.82,2,no
+58,Futuro,No_interactive ,Abstract,31.82,passive,32.91,31.09,29.45,,,,1,no
+58,Futuro,No_interactive ,Abstract,28.73,active,32.91,31.09,29.45,,,,1,no
+58,Ideale,No_interactive ,Abstract,33.36,passive,25.91,26.91,29.55,,,,1,no
+58,Ideale,No_interactive ,Abstract,23,active,25.91,26.91,29.55,,,,1,no
+58,Libreria,No_interactive ,Concrete,38.18,passive,27.64,32.55,43.45,,,,1,no
+58,Libreria,No_interactive ,Concrete,32,active,27.64,32.55,43.45,,,,1,no
+58,Muscolo,No_interactive ,Concrete,24,passive,24.73,30.91,27.91,,,,1,no
+58,Muscolo,No_interactive ,Concrete,30.36,active,24.73,30.91,27.91,,,,1,no
+59,Canoa,Interactive ,Concrete,16.91,passive,15.91,85.45,34.72,49.82,50.73,50.91,1,yes
+59,Canoa,Interactive ,Concrete,19,active,15.91,85.45,34.72,49.82,50.73,50.91,1,yes
+59,Cristallo,Interactive ,Concrete,12.09,passive,21.09,92,88.55,14.55,62.27,39.91,1,yes
+59,Cristallo,Interactive ,Concrete,9.45,active,21.09,92,88.55,14.55,62.27,39.91,1,yes
+59,Destino,Interactive ,Abstract,55.64,passive,78.18,99.73,48.36,7.82,49.45,49.82,2,yes
+59,Destino,Interactive ,Abstract,53.64,active,78.18,99.73,48.36,7.82,49.45,49.82,2,yes
+59,Enigma,Interactive ,Abstract,48,passive,57.55,82.91,56.18,50.82,69.73,39.46,2,yes
+59,Enigma,Interactive ,Abstract,30.18,active,57.55,82.91,56.18,50.82,69.73,39.46,2,yes
+59,Futuro,No_interactive ,Abstract,27.55,passive,99.64,99.73,99.73,,,,1,yes
+59,Futuro,No_interactive ,Abstract,19.73,active,99.64,99.73,99.73,,,,1,yes
+59,Ideale,No_interactive ,Abstract,0.55,passive,86.55,99.09,72.09,,,,1,yes
+59,Ideale,No_interactive ,Abstract,0.36,active,86.55,99.09,72.09,,,,1,yes
+59,Libreria,No_interactive ,Concrete,0.18,passive,94,99.91,78.82,,,,1,yes
+59,Libreria,No_interactive ,Concrete,0.18,active,94,99.91,78.82,,,,1,yes
+59,Muscolo,No_interactive ,Concrete,0.09,passive,61,91,69.73,,,,1,yes
+59,Muscolo,No_interactive ,Concrete,0.45,active,61,91,69.73,,,,1,yes
+60,Canoa,Interactive ,Concrete,82.27,passive,43.09,69.55,64,74.73,82.09,55.09,3,no
+60,Canoa,Interactive ,Concrete,83.18,active,43.09,69.55,64,74.73,82.09,55.09,3,no
+60,Cristallo,Interactive ,Concrete,88.09,passive,65.82,71.45,39.45,11.64,65.27,77.45,4,no
+60,Cristallo,Interactive ,Concrete,85.36,active,65.82,71.45,39.45,11.64,65.27,77.45,4,no
+60,Destino,Interactive ,Abstract,88.64,passive,86.18,77.09,61.45,38.45,78.09,76.73,4,no
+60,Destino,Interactive ,Abstract,91.18,active,86.18,77.09,61.45,38.45,78.09,76.73,4,no
+60,Enigma,Interactive ,Abstract,85.45,passive,58.45,66.91,54.36,77.64,68.64,71.64,3,no
+60,Enigma,Interactive ,Abstract,85.27,active,58.45,66.91,54.36,77.64,68.64,71.64,3,no
+60,Futuro,No_interactive ,Abstract,77.55,passive,68.36,65.73,46.18,,,,2,no
+60,Futuro,No_interactive ,Abstract,74.45,active,68.36,65.73,46.18,,,,2,no
+60,Ideale,No_interactive ,Abstract,80,passive,69.91,74.18,60,,,,2,no
+60,Ideale,No_interactive ,Abstract,67.82,active,69.91,74.18,60,,,,2,no
+60,Libreria,No_interactive ,Concrete,76.73,passive,34.55,39.82,37.82,,,,2,no
+60,Libreria,No_interactive ,Concrete,77.45,active,34.55,39.82,37.82,,,,2,no
+60,Muscolo,No_interactive ,Concrete,76,passive,11.91,32,31.36,,,,2,no
+60,Muscolo,No_interactive ,Concrete,68.36,active,11.91,32,31.36,,,,2,no
+61,Futuro,Interactive ,Abstract ,64.18,passive,2.09,99,17.82,99.64,77.91,16.18,3,no
+61,Futuro,Interactive ,Abstract ,58.18,active,2.09,99,17.82,99.64,77.91,16.18,3,no
+61,Ideale,Interactive ,Abstract ,66.18,passive,41.73,50.64,58.36,98.27,23.82,68.09,4,no
+61,Ideale,Interactive ,Abstract ,60.82,active,41.73,50.64,58.36,98.27,23.82,68.09,4,no
+61,Libreria,Interactive ,Concrete,83.36,passive,91.18,60,85.55,23.45,71.82,58.82,5,no
+61,Libreria,Interactive ,Concrete,81.55,active,91.18,60,85.55,23.45,71.82,58.82,5,no
+61,Muscolo,Interactive ,Concrete,81.18,passive,95.18,74.55,97.91,38.18,97.27,93.55,5,no
+61,Muscolo,Interactive ,Concrete,76.91,active,95.18,74.55,97.91,38.18,97.27,93.55,5,no
+61,Canoa,No_interactive ,Concrete,44.18,passive,98.64,99.64,98.55,,,,2,no
+61,Canoa,No_interactive ,Concrete,52.91,active,98.64,99.64,98.55,,,,2,no
+61,Cristallo,No_interactive ,Concrete,56.18,passive,43.36,75.09,33,,,,1,no
+61,Cristallo,No_interactive ,Concrete,56.91,active,43.36,75.09,33,,,,1,no
+61,Destino,No_interactive ,Abstract ,58,passive,55.27,62.55,54.64,,,,2,no
+61,Destino,No_interactive ,Abstract ,58.64,active,55.27,62.55,54.64,,,,2,no
+61,Enigma,No_interactive ,Abstract ,54.27,passive,52.45,77.27,63.73,,,,1,no
+61,Enigma,No_interactive ,Abstract ,58.36,active,52.45,77.27,63.73,,,,1,no
+62,Futuro,Interactive ,Abstract ,83.55,passive,58.64,74,88.09,26.64,78.36,71.45,2,no
+62,Futuro,Interactive ,Abstract ,59.09,active,58.64,74,88.09,26.64,78.36,71.45,2,no
+62,Ideale,Interactive ,Abstract ,82.27,passive,72.09,75.27,90.27,55.91,64.55,79.91,3,no
+62,Ideale,Interactive ,Abstract ,80.36,active,72.09,75.27,90.27,55.91,64.55,79.91,3,no
+62,Libreria,Interactive ,Concrete,83.91,passive,83.73,62.36,83.18,44,75.45,77.91,4,no
+62,Libreria,Interactive ,Concrete,82.45,active,83.73,62.36,83.18,44,75.45,77.91,4,no
+62,Muscolo,Interactive ,Concrete,76.55,passive,52.55,55.55,49.09,36.45,53.91,67.09,2,no
+62,Muscolo,Interactive ,Concrete,63.91,active,52.55,55.55,49.09,36.45,53.91,67.09,2,no
+62,Canoa,No_interactive ,Concrete,26.36,passive,37.45,66.73,90.27,,,,3,no
+62,Canoa,No_interactive ,Concrete,43.55,active,37.45,66.73,90.27,,,,3,no
+62,Cristallo,No_interactive ,Concrete,55,passive,68,58,57.55,,,,1,no
+62,Cristallo,No_interactive ,Concrete,54.45,active,68,58,57.55,,,,1,no
+62,Destino,No_interactive ,Abstract ,70.18,passive,41.64,64.64,52.36,,,,1,no
+62,Destino,No_interactive ,Abstract ,57.64,active,41.64,64.64,52.36,,,,1,no
+62,Enigma,No_interactive ,Abstract ,66.18,passive,42,51.45,50.82,,,,2,no
+62,Enigma,No_interactive ,Abstract ,55.18,active,42,51.45,50.82,,,,2,no
+63,Futuro,Interactive ,Abstract ,83.45,passive,83.64,87.09,88,58.27,89.18,87.64,4,no
+63,Futuro,Interactive ,Abstract ,83.18,active,83.64,87.09,88,58.27,89.18,87.64,4,no
+63,Ideale,Interactive ,Abstract ,80,passive,78.36,88.64,54.09,72,78.91,80.27,4,no
+63,Ideale,Interactive ,Abstract ,82.64,active,78.36,88.64,54.09,72,78.91,80.27,4,no
+63,Libreria,Interactive ,Concrete,88.64,passive,77.91,83.18,76.55,13,80.91,82.91,4,no
+63,Libreria,Interactive ,Concrete,86.55,active,77.91,83.18,76.55,13,80.91,82.91,4,no
+63,Muscolo,Interactive ,Concrete,87.55,passive,96.91,84.73,83.64,27.36,64.27,70.64,5,no
+63,Muscolo,Interactive ,Concrete,87.82,active,96.91,84.73,83.64,27.36,64.27,70.64,5,no
+63,Canoa,No_interactive ,Concrete,71.45,passive,14.45,67.73,66.18,,,,1,no
+63,Canoa,No_interactive ,Concrete,71.91,active,14.45,67.73,66.18,,,,1,no
+63,Cristallo,No_interactive ,Concrete,72.09,passive,28.91,72.45,25.73,,,,1,no
+63,Cristallo,No_interactive ,Concrete,67.91,active,28.91,72.45,25.73,,,,1,no
+63,Destino,No_interactive ,Abstract ,65,passive,17.18,78,73.73,,,,1,no
+63,Destino,No_interactive ,Abstract ,68.82,active,17.18,78,73.73,,,,1,no
+63,Enigma,No_interactive ,Abstract ,68.55,passive,6.55,60.45,5.82,,,,1,no
+63,Enigma,No_interactive ,Abstract ,69,active,6.55,60.45,5.82,,,,1,no
+64,Futuro,Interactive ,Abstract ,86.45,passive,75.18,80.82,66.64,11.91,49.64,49.64,3,no
+64,Futuro,Interactive ,Abstract ,86.45,active,75.18,80.82,66.64,11.91,49.64,49.64,3,no
+64,Ideale,Interactive ,Abstract ,89,passive,84.55,87.73,16,13.45,49.91,50,3,no
+64,Ideale,Interactive ,Abstract ,88.45,active,84.55,87.73,16,13.45,49.91,50,3,no
+64,Libreria,Interactive ,Concrete,88.09,passive,89.18,90.82,57.18,2.45,51.09,50.09,3,no
+64,Libreria,Interactive ,Concrete,87.36,active,89.18,90.82,57.18,2.45,51.09,50.09,3,no
+64,Muscolo,Interactive ,Concrete,88.18,passive,89.91,91.73,56.18,6.73,49.55,49.09,3,no
+64,Muscolo,Interactive ,Concrete,88.09,active,89.91,91.73,56.18,6.73,49.55,49.09,3,no
+64,Canoa,No_interactive ,Concrete,88.09,passive,98.27,99.91,98.82,,,,2,no
+64,Canoa,No_interactive ,Concrete,88,active,98.27,99.91,98.82,,,,2,no
+64,Cristallo,No_interactive ,Concrete,90.73,passive,99.36,98.27,98.64,,,,2,no
+64,Cristallo,No_interactive ,Concrete,88.36,active,99.36,98.27,98.64,,,,2,no
+64,Destino,No_interactive ,Abstract ,90.09,passive,95.55,95.27,49.27,,,,2,no
+64,Destino,No_interactive ,Abstract ,87.09,active,95.55,95.27,49.27,,,,2,no
+64,Enigma,No_interactive ,Abstract ,90.64,passive,49.45,98.82,98.45,,,,2,no
+64,Enigma,No_interactive ,Abstract ,86.36,active,49.45,98.82,98.45,,,,2,no
+65,Futuro,Interactive ,Abstract ,37.91,passive,68.55,78.55,42.18,31.36,76.27,79.45,4,yes
+65,Futuro,Interactive ,Abstract ,34.09,active,68.55,78.55,42.18,31.36,76.27,79.45,4,yes
+65,Ideale,Interactive ,Abstract ,41.09,passive,55.27,64.91,55.18,53.82,73.45,66.82,3,yes
+65,Ideale,Interactive ,Abstract ,31.91,active,55.27,64.91,55.18,53.82,73.45,66.82,3,yes
+65,Libreria,Interactive ,Concrete,37.82,passive,63.18,69.91,61.45,30.45,72.45,70.55,3,yes
+65,Libreria,Interactive ,Concrete,29.45,active,63.18,69.91,61.45,30.45,72.45,70.55,3,yes
+65,Muscolo,Interactive ,Concrete,20.82,passive,46,69,56.09,70.73,81.45,35.73,2,yes
+65,Muscolo,Interactive ,Concrete,23.55,active,46,69,56.09,70.73,81.45,35.73,2,yes
+65,Canoa,No_interactive ,Concrete,21.73,passive,39.91,53.55,26.36,,,,1,no
+65,Canoa,No_interactive ,Concrete,23.82,active,39.91,53.55,26.36,,,,1,no
+65,Cristallo,No_interactive ,Concrete,15.27,passive,30.73,57.91,50.36,,,,1,no
+65,Cristallo,No_interactive ,Concrete,10.73,active,30.73,57.91,50.36,,,,1,no
+65,Destino,No_interactive ,Abstract ,29.64,passive,65.73,44.73,35.45,,,,2,no
+65,Destino,No_interactive ,Abstract ,25.91,active,65.73,44.73,35.45,,,,2,no
+65,Enigma,No_interactive ,Abstract ,26,passive,50.18,55.36,55.45,,,,1,no
+65,Enigma,No_interactive ,Abstract ,25,active,50.18,55.36,55.45,,,,1,no
+66,Futuro,Interactive ,Abstract ,96.64,passive,62.09,10.82,27.82,4.82,54,67.64,4,no
+66,Futuro,Interactive ,Abstract ,96.91,active,62.09,10.82,27.82,4.82,54,67.64,4,no
+66,Ideale,Interactive ,Abstract ,94.91,passive,10.18,18.45,25.27,6.45,55.18,10.82,2,no
+66,Ideale,Interactive ,Abstract ,94.82,active,10.18,18.45,25.27,6.45,55.18,10.82,2,no
+66,Libreria,Interactive ,Concrete,93.27,passive,64.36,35.18,31.73,7.91,49.82,38.45,4,no
+66,Libreria,Interactive ,Concrete,90,active,64.36,35.18,31.73,7.91,49.82,38.45,4,no
+66,Muscolo,Interactive ,Concrete,91.64,passive,19.36,27.82,8.36,26.27,14.27,26.45,3,no
+66,Muscolo,Interactive ,Concrete,87.09,active,19.36,27.82,8.36,26.27,14.27,26.45,3,no
+66,Canoa,No_interactive ,Concrete,94.64,passive,3.82,6,4.27,,,,1,no
+66,Canoa,No_interactive ,Concrete,96,active,3.82,6,4.27,,,,1,no
+66,Cristallo,No_interactive ,Concrete,93.55,passive,9,8,7.82,,,,1,no
+66,Cristallo,No_interactive ,Concrete,93.36,active,9,8,7.82,,,,1,no
+66,Destino,No_interactive ,Abstract ,94.09,passive,18.82,13.82,18.73,,,,1,no
+66,Destino,No_interactive ,Abstract ,95.27,active,18.82,13.82,18.73,,,,1,no
+66,Enigma,No_interactive ,Abstract ,93.27,passive,4.09,18.64,4.09,,,,1,no
+66,Enigma,No_interactive ,Abstract ,91.09,active,4.09,18.64,4.09,,,,1,no
+67,Futuro,Interactive ,Abstract ,69.09,passive,49.09,76.09,49.82,50.73,59.36,46.82,3,no
+67,Futuro,Interactive ,Abstract ,68.73,active,49.09,76.09,49.82,50.73,59.36,46.82,3,no
+67,Ideale,Interactive ,Abstract ,45.09,passive,23.55,80.91,75.45,53.18,50.55,50.36,1,no
+67,Ideale,Interactive ,Abstract ,48.09,active,23.55,80.91,75.45,53.18,50.55,50.36,1,no
+67,Libreria,Interactive ,Concrete,78.55,passive,57.09,74.27,76.73,35.91,50.27,48.36,4,no
+67,Libreria,Interactive ,Concrete,80.82,active,57.09,74.27,76.73,35.91,50.27,48.36,4,no
+67,Muscolo,Interactive ,Concrete,83.91,passive,53.18,68.64,70.18,57.91,33.91,55.27,4,no
+67,Muscolo,Interactive ,Concrete,82.91,active,53.18,68.64,70.18,57.91,33.91,55.27,4,no
+67,Canoa,No_interactive ,Concrete,66.18,passive,62.64,77.36,34.55,,,,2,no
+67,Canoa,No_interactive ,Concrete,67.73,active,62.64,77.36,34.55,,,,2,no
+67,Cristallo,No_interactive ,Concrete,66.55,passive,37.45,80.91,17.55,,,,2,no
+67,Cristallo,No_interactive ,Concrete,66.27,active,37.45,80.91,17.55,,,,2,no
+67,Destino,No_interactive ,Abstract ,64.18,passive,53.45,82.09,64.91,,,,2,no
+67,Destino,No_interactive ,Abstract ,65,active,53.45,82.09,64.91,,,,2,no
+67,Enigma,No_interactive ,Abstract ,65.64,passive,64.36,75.36,71.27,,,,2,no
+67,Enigma,No_interactive ,Abstract ,68.55,active,64.36,75.36,71.27,,,,2,no
+68,Futuro,Interactive ,Abstract ,92.55,passive,97.18,88.36,80.36,2.18,71.82,90.64,5,no
+68,Futuro,Interactive ,Abstract ,91,active,97.18,88.36,80.36,2.18,71.82,90.64,5,no
+68,Ideale,Interactive ,Abstract ,88.18,passive,89.82,24.09,87.55,7.18,82.45,88.82,4,no
+68,Ideale,Interactive ,Abstract ,87.36,active,89.82,24.09,87.55,7.18,82.45,88.82,4,no
+68,Libreria,Interactive ,Concrete,77.36,passive,77.91,63.45,46.73,15.55,60.18,70,2,no
+68,Libreria,Interactive ,Concrete,74.73,active,77.91,63.45,46.73,15.55,60.18,70,2,no
+68,Muscolo,Interactive ,Concrete,52.36,passive,25.73,30.73,35.45,43.82,38.45,35.18,1,no
+68,Muscolo,Interactive ,Concrete,48.27,active,25.73,30.73,35.45,43.82,38.45,35.18,1,no
+68,Canoa,No_interactive ,Concrete,23.45,passive,8.55,86.36,10.82,,,,1,no
+68,Canoa,No_interactive ,Concrete,37.36,active,8.55,86.36,10.82,,,,1,no
+68,Cristallo,No_interactive ,Concrete,51.64,passive,60.91,33.27,44.73,,,,2,no
+68,Cristallo,No_interactive ,Concrete,52.64,active,60.91,33.27,44.73,,,,2,no
+68,Destino,No_interactive ,Abstract ,58,passive,63.45,42.73,53.27,,,,3,no
+68,Destino,No_interactive ,Abstract ,47.55,active,63.45,42.73,53.27,,,,3,no
+68,Enigma,No_interactive ,Abstract ,54.36,passive,74.55,35.73,65.27,,,,3,no
+68,Enigma,No_interactive ,Abstract ,52.36,active,74.55,35.73,65.27,,,,3,no
