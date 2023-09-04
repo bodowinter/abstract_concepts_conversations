@@ -78,6 +78,16 @@ df <- read_csv('../data/abstract_concepts_conversations_all_E2.csv')
 sample_n(df, 5)
 ```
 
+Define color ramp function to cycle between the two colors Chiara chose, to be used in joy plots below:
+
+```{r}
+col_func <- colorRampPalette(c('lightblue', '#DE77AE'))
+
+# Test function:
+
+col_func(7)
+```
+
 # Data cleaning and processing
 
 For the main model later, we want to look at how category influences IOS when interacting with `other_contribution`. For this we need to center `other_contribution` first. We'll do this here already so that subsets of this data also contain the centered covariate `other_contribution_c`. We'll later also use `difficulty` as a control covariate, so let's center that as well just in case.
@@ -611,9 +621,8 @@ Pleasantness and IOS:
 # Plot core:
 
 pleasant_joy_p <- df %>% 
-  ggplot(aes(x = pleasantness, y = factor(IOS))) +
-  geom_density_ridges(fill = 'steelblue',
-                      jittered_points = TRUE,
+  ggplot(aes(x = pleasantness, y = factor(IOS), fill = factor(IOS))) +
+  geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
                       point_shape = '|', point_size = 2,
@@ -622,6 +631,9 @@ pleasant_joy_p <- df %>%
 # Scales and axes:
 
 pleasant_joy_p <- pleasant_joy_p +
+  coord_cartesian(clip = 'off') +
+  scale_fill_manual(values = col_func(6),
+                    guide = 'none') +
   ylab('IOS\n(inclusion of other scale)') +
   xlab('Pleasantness') +
   scale_x_continuous(breaks = seq(0, 100, 20),
@@ -655,9 +667,8 @@ Commitment and IOS:
 # Plot core:
 
 commit_joy_p <- df %>% 
-  ggplot(aes(x = commitment, y = factor(IOS))) +
-  geom_density_ridges(fill = 'steelblue',
-                      jittered_points = TRUE,
+  ggplot(aes(x = commitment, y = factor(IOS), fill = factor(IOS))) +
+  geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
                       point_shape = '|', point_size = 2,
@@ -666,6 +677,9 @@ commit_joy_p <- df %>%
 # Scales and axes:
 
 commit_joy_p <- commit_joy_p +
+  coord_cartesian(clip = 'off') +
+  scale_fill_manual(values = col_func(6),
+                    guide = 'none') +
   ylab('IOS\n(inclusion of other scale)') +
   xlab('Commitment') +
   scale_x_continuous(breaks = seq(0, 100, 20),
@@ -699,9 +713,8 @@ Intimacy and IOS:
 # Plot core:
 
 intimate_joy_p <- df %>% 
-  ggplot(aes(x = intimacy, y = factor(IOS))) +
-  geom_density_ridges(fill = 'steelblue',
-                      jittered_points = TRUE,
+  ggplot(aes(x = intimacy, y = factor(IOS), fill = factor(IOS))) +
+  geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
                       point_shape = '|', point_size = 2,
@@ -710,6 +723,9 @@ intimate_joy_p <- df %>%
 # Scales and axes:
 
 intimate_joy_p <- intimate_joy_p +
+  coord_cartesian(clip = 'off') +
+  scale_fill_manual(values = col_func(6),
+                    guide = 'none') +
   ylab('IOS\n(inclusion of other scale)') +
   xlab('Intimacy') +
   scale_x_continuous(breaks = seq(0, 100, 20),
@@ -743,9 +759,8 @@ Difficulty and IOS:
 # Plot core:
 
 difficult_joy_p <- df %>% 
-  ggplot(aes(x = difficulty, y = factor(IOS)))+
-  geom_density_ridges(fill = 'steelblue',
-                      jittered_points = TRUE,
+  ggplot(aes(x = difficulty, y = factor(IOS), fill = factor(IOS)))+
+  geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
                       point_shape = '|', point_size = 2,
@@ -754,6 +769,9 @@ difficult_joy_p <- df %>%
 # Scales and axes:
 
 difficult_joy_p <- difficult_joy_p +
+  coord_cartesian(clip = 'off') +
+  scale_fill_manual(values = col_func(6),
+                    guide = 'none') +
   ylab('IOS\n(inclusion of other scale)') +
   xlab('Difficulty') +
   scale_x_continuous(breaks = seq(0, 100, 20),
@@ -787,9 +805,8 @@ Self contribution and IOS:
 # Plot core:
 
 self_joy_p <- df %>% 
-  ggplot(aes(x = self_contribution, y = factor(IOS))) +
-  geom_density_ridges(fill = 'steelblue',
-                      jittered_points = TRUE,
+  ggplot(aes(x = self_contribution, y = factor(IOS), fill = factor(IOS))) +
+  geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
                       point_shape = '|', point_size = 2,
@@ -798,6 +815,9 @@ self_joy_p <- df %>%
 # Scales and axes:
 
 self_joy_p <- self_joy_p +
+  coord_cartesian(clip = 'off') +
+  scale_fill_manual(values = col_func(6),
+                    guide = 'none') +
   ylab('IOS\n(inclusion of other scale)') +
   xlab('Self contribution') +
   scale_x_continuous(breaks = seq(0, 100, 20),
@@ -831,9 +851,8 @@ Other contribution and IOS:
 # Plot core:
 
 other_joy_p <- df %>% 
-  ggplot(aes(x = other_contribution, y = factor(IOS))) +
-  geom_density_ridges(fill = 'steelblue',
-                      jittered_points = TRUE,
+  ggplot(aes(x = other_contribution, y = factor(IOS), fill = factor(IOS))) +
+  geom_density_ridges(jittered_points = TRUE,
                       position = position_points_jitter(width = 0.05,
                                                         height = 0),
                       point_shape = '|', point_size = 2,
@@ -842,6 +861,9 @@ other_joy_p <- df %>%
 # Scales and axes:
 
 other_joy_p <- other_joy_p +
+  coord_cartesian(clip = 'off') +
+  scale_fill_manual(values = col_func(6),
+                    guide = 'none') +
   ylab('IOS\n(inclusion of other scale)') +
   xlab('Other contribution') +
   scale_x_continuous(breaks = seq(0, 100, 20),
